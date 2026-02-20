@@ -6,7 +6,7 @@ body {
 
 input[type="text"] {
     /* 1. Sizing & Spacing */
-    width: 100%;             /* Make it fill the container */
+    width: 250px;             /* Make it fill the container */
     padding: 12px 16px;      /* Space inside the box */
     margin: 8px 0;           /* Space outside the box */
     box-sizing: border-box;  /* Ensures padding doesn't break the width */
