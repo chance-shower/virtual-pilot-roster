@@ -4,6 +4,8 @@ body {
     color: white;
 }
 
+/* CSS text inputs */
+
 input[type="text"] {
     /* 1. Sizing & Spacing */
     width: 250px;             /* Make it fill the container */
@@ -25,4 +27,28 @@ input[type="text"] {
 input[type="text"]:focus {
     border-color: #007bff;   /* Change border to blue */
     box-shadow: 0 0 8px rgba(0, 123, 255, 0.2); /* Soft glow */
+}
+
+/* Loading spinner */
+
+#loader-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    z-index: 1000; color: white;
+}
+
+.spinner {
+    width: 50px; height: 50px;
+    border: 5px solid #333;
+    border-top: 5px solid #00a2ed; /* MSFS Blue */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
 }
