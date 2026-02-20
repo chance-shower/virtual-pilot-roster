@@ -11,11 +11,51 @@
 </head>
 <body>
     <div id="app">
-        <h1>Example text</h1>
-        <button id="testbtn">Test button</button>
-        <div id="schedule">
-
+        <div id="startPage">
+            <h1>Create your duty trip</h1>
+            <label for="airlineCode">Airline (ICAO code)</label>
+            <input type="text" id="airlineCode" placeholder="UAL">
+            <label for="equipmentCode">Aircraft (ICAO code)</label>
+            <input type="text" id="equipmentCode" placeholder="B38M">
+            <label for="homeBase">Home base</label>
+            <input type="text" id="homeBase" placeholder="KORD">
+            <label for="dutyLength">Duty length (days)</label>
+            <input type="text" id="dutyLength" placeholder="4">
+            <label for="maxDutyTime">Max duty time (hours per day)</label>
+            <input type="text" id="maxDutyTime" placeholder="40">
+            <label for="desiredAirports">Preferred airports (optional)</label>
+            <input type="text" id="desiredAirports" placeholder="KDEN,KSFO,...">
+            <label for="excludedAirports">Airports to exclude (optional)</label>
+            <input type="text" id="excludedAirports" placeholder="KJFK,KLGA,...">
+            <br><br>
+            <button id="generateFlightRoster">Generate flight roster</button>
+        <div id="flightSchedule" style="display: none;">
+            <h1>Trip schedule</h1>
+            Here is your X day trip, based at XXXX, flying the XXXX
+            <table id="rosterTable">
+                <thead>
+                    <tr>
+                        <td>Day</td>
+                        <td>Airline</td>
+                        <td>Flight number</td>
+                        <td>Departure airport</td>
+                        <td>Arrival airport</td>
+                        <td>Departure gate</td>
+                        <td>Arrival gate</td>
+                        <td>STD (local)</td>
+                        <td>STD (UTC)</td>
+                        <td>STA (local)</td>
+                        <td>STA (UTC)</td>
+                        <td>ATD</td>
+                        <td>ATA</td>
+                    </tr>
+                </thead>
+                <tbody id="rosterTableBody">
+                    
+                </tbody>
+            </table>
         </div>
+    </div>
     </div>
     <script src="src/app.js"></script>
 </body>
