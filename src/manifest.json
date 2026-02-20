@@ -1,7 +1,8 @@
 {
   "name": "Virtual Pilot Scheduler",
   "short_name": "VPS",
-  "start_url": "index.html",
+  "start_url": "/virtual-pilot-roster/index.html",
+  "scope": "/virtual-pilot-roster/",
   "display": "standalone",
   "background_color": "#1a1a1a",
   "theme_color": "#00a2ed",
