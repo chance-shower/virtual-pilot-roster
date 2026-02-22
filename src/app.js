@@ -59,7 +59,7 @@ async function createTrip() {
 }
 
 function renderTable(data) {
-    const tbody = document.getElementById('tripBody');
+    const tbody = document.getElementById('rosterTableBody');
     tbody.innerHTML = ""; // Clear existing rows
 
     data.forEach((leg, index) => {
