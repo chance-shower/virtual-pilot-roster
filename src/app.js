@@ -81,11 +81,15 @@ async function createTrip() {
             return isMorning || isAfternoon || isDesired;
         });
 
+        console.log(preferredFlights);
+
         // Final selection
         const sourcePool = preferredFlights.length > 0 ? preferredFlights : pool;
         const firstFlight = sourcePool[Math.floor(Math.random() * sourcePool.length)];
 
         // Update UI
+        console.log(firstFlight);
+        
         renderTable([firstFlight]);
 
         document.getElementById('startPage').style.display = 'none';
