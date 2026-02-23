@@ -131,5 +131,12 @@ function renderTable(legs) {
     });
 }
 
-// Event listener for the generate button
+function closeToWelcomeScreen() {
+    document.getElementById('startPage').style.display = 'block';
+    document.getElementById('flightSchedule').style.display = 'none';
+}
+
+// Event listeners
 document.getElementById('generateFlightRoster').addEventListener('click', createTrip);
+
+document.getElementById('closethisflighttrip').addEventListener('click', closeToWelcomeScreen)
