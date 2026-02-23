@@ -59,13 +59,14 @@ async function createTrip() {
                 Object.keys(firstLegData[aircraft]).forEach(dest => {
                     // Check if destination is in excluded list
                     if (excludedAirports.includes(dest)) return;
-
                     firstLegData[aircraft][dest].forEach(flt => {
                         pool.push({ ...flt, dep: homeBase, arr: dest, equip: aircraft });
                     });
                 });
             }      
         });
+
+        console.log(pool);
 
         if (pool.length === 0) throw "No flights found for the specified aircraft types...";
 
