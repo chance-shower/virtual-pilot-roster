@@ -24,7 +24,18 @@ loadFlightData();
 // Function to generate roster
 
 async function createTrip() {
-    // ... (Keep your existing inputs and safety checks) ...
+    
+    if (!flightData) {
+        alert("Schedules loading...");
+        return; 
+    }
+
+    const airline = document.getElementById('airlineCode').value.toUpperCase().trim();
+    const homeBase = document.getElementById('homeBase').value.toUpperCase().trim();
+    const equipment = document.getElementById('equipmentCode').value.split(',').map(s => s.trim().toUpperCase()).filter(s => s !== "");
+    const dutyLength = parseInt(document.getElementById('dutyLength').value) || 1;
+
+    document.getElementById('loader-overlay').style.display = 'flex';
 
     try {
         let fullRoster = [];
@@ -44,7 +55,10 @@ async function createTrip() {
         }
 
         renderTable(fullRoster);
-        // ... (rest of UI logic) ...
+        
+        document.getElementById('startPage').style.display = 'none';
+        document.getElementById('flightSchedule').style.display = 'block';
+
     } catch (err) {
         alert(err);
     } finally {
@@ -52,7 +66,7 @@ async function createTrip() {
     }
 }
 
-// NEW: A dedicated function to try and build a 2-6 leg day
+// A dedicated function to try and build a 2-6 leg day
 function generateDay(dayNum, startCity, isFinalDay, airline, equipment, homeBase) {
     let attempts = 0;
     while (attempts < 20) { // Try 20 different random paths for this day
