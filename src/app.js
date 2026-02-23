@@ -148,7 +148,7 @@ function renderTable(legs) {
         
         // SimBrief URL requires Airline, Flight Number, Origin, and Destination
         const airlineCode = document.getElementById('airlineCode').value.toUpperCase();
-        const simBriefUrl = `https://www.simbrief.com/system/dispatch.php?type=briefing&airline=${airlineCode}&flightnum=${leg.callsign}&orig=${leg.dep}&dest=${leg.arr}&aircraft=${leg.equip}`;
+        const simBriefUrl = `https://www.simbrief.com/system/dispatch.php?type=briefing&airline=${airlineCode}&flightnum=${leg.callsign}&orig=${leg.dep}&dest=${leg.arr}&type=${leg.equip}`;
 
         row.innerHTML = `
             <td>${leg.day}</td>
