@@ -24,46 +24,107 @@ loadFlightData();
 // Function to generate roster
 
 async function createTrip() {
-
+    // 1. Safety check - must return to stop execution
     if (!flightData) {
         alert("Flight schedules are still loading - please try again in a few seconds...");
+        return; 
     }
-    // Get user input
+
+    // 2. Get user input with safety checks for optional fields
     const airline = document.getElementById('airlineCode').value.toUpperCase().trim();
-    // Handle multiple aircraft
+    const homeBase = document.getElementById('homeBase').value.toUpperCase().trim();
     const equipment = document.getElementById('equipmentCode').value
         .split(',')
-        .map(s => s.trim().toUpperCase());
-    const homeBase = document.getElementById('homeBase').value.toUpperCase().trim();
-    const dutyLength = document.getElementById('dutyLength').value;
-    const desiredAirports = document.getElementById('desiredAirports')?.value
-        .split(',')
-        .map(s => s.trim().toUpperCase());
-    const excludedAirports = document.getElementById('excludedAirports')?.value
-        .split(',')
-        .map(s => s.trim().toUpperCase());
+        .map(s => s.trim().toUpperCase())
+        .filter(s => s !== ""); // Remove empty strings if user typed "B738, "
 
-    // Show spinner while timetable is generated
+    // Safety for optional inputs: only map if value exists
+    const desiredInput = document.getElementById('desiredAirports')?.value;
+    const desiredAirports = desiredInput ? desiredInput.split(',').map(s => s.trim().toUpperCase()).filter(s => s !== "") : [];
+
+    const excludedInput = document.getElementById('excludedAirports')?.value;
+    const excludedAirports = excludedInput ? excludedInput.split(',').map(s => s.trim().toUpperCase()).filter(s => s !== "") : [];
+
+    // 3. Show spinner
     document.getElementById('loader-overlay').style.display = 'flex';
 
-    // Build first route
-
     try {
-        // Filter by homebase and airline to start
+        // Navigate JSON
         const firstLegData = flightData[homeBase]?.[airline];
         if (!firstLegData) throw `No flights found for ${airline} at ${homeBase}...`;
 
-        // Filter all flights from above for the chosen aircraft type
         let pool = [];
         equipment.forEach(aircraft => {
             if (firstLegData[aircraft]) {
                 Object.keys(firstLegData[aircraft]).forEach(dest => {
+                    // Check if destination is in excluded list
+                    if (excludedAirports.includes(dest)) return;
+
                     firstLegData[aircraft][dest].forEach(flt => {
-                        pool.push({ ...flt, dep: homeBase, arr: dest, equip: aircraft});
+                        pool.push({ ...flt, dep: homeBase, arr: dest, equip: aircraft });
                     });
                 });
             }      
         });
-    }
 
+        if (pool.length === 0) throw "No flights found for the specified aircraft types...";
+
+        // 5. Time filtering (0500-1000 or 1300-1700)
+        const preferredFlights = pool.filter(f => {
+            const depMins = toMins(f.dep_local);
+            const isMorning = depMins >= 300 && depMins <= 600;
+            const isAfternoon = depMins >= 780 && depMins <= 1020;
+            
+            // Boost preference if the airport is in desiredAirports
+            const isDesired = desiredAirports.includes(f.arr);
+            
+            return isMorning || isAfternoon || isDesired;
+        });
+
+        // Final selection
+        const sourcePool = preferredFlights.length > 0 ? preferredFlights : pool;
+        const firstFlight = sourcePool[Math.floor(Math.random() * sourcePool.length)];
+
+        // Update UI
+        renderTable([firstFlight]);
+
+        document.getElementById('startPage').style.display = 'none';
+        document.getElementById('flightSchedule').style.display = 'block';
+
+    } catch (err) {
+        console.error(err);
+        alert(err);
+    } finally {
+        document.getElementById('loader-overlay').style.display = 'none';
+    }
 }
+
+// Render first leg into table
+
+function renderTable(legs) {
+    const tbody = document.getElementById('rosterTableBody');
+    tbody.innerHTML = ""; 
+
+    legs.forEach((leg, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${document.getElementById('airlineCode').value.toUpperCase()}</td>
+            <td>${leg.callsign}</td>
+            <td>${leg.origin}</td>
+            <td>${leg.destination}</td>
+            <td>-</td>
+            <td>-</td>
+            <td>${leg.dep_local}</td>
+            <td>${leg.std_utc || leg.dep_utc}</td>
+            <td>${leg.arr_local}</td>
+            <td>${leg.sta_utc || leg.arr_utc}</td>
+            <td>-</td>
+            <td>-</td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+// Event listener for the generate button
+document.getElementById('generateFlightRoster').addEventListener('click', createTrip);
