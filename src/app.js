@@ -157,14 +157,14 @@ function renderTable(legs) {
             <td contenteditable="true" inputmode="text" class="editable-cell">${leg.equip}</td>
             <td>${leg.dep}</td>
             <td>${leg.arr}</td>
-            <td contenteditable="true" inputmode="text" class="editable-cell">-</td>
-            <td contenteditable="true" inputmode="text" class="editable-cell">-</td>
+            <td contenteditable="true" inputmode="text" class="editable-cell"></td>
+            <td contenteditable="true" inputmode="text" class="editable-cell"></td>
             <td>${leg.dep_local}</td>
             <td>${leg.dep_utc}</td>
             <td>${leg.arr_local}</td>
             <td>${leg.arr_utc}</td>
-            <td contenteditable="true" inputmode="text" class="editable-cell">-</td>
-            <td contenteditable="true" inputmode="text" class="editable-cell">-</td>
+            <td contenteditable="true" inputmode="text" class="editable-cell"></td>
+            <td contenteditable="true" inputmode="text" class="editable-cell"></td>
             <td>${leg.note}</td>
         `;
         tbody.appendChild(row);
@@ -185,5 +185,17 @@ function closeToWelcomeScreen() {
 
 // Event listeners
 document.getElementById('generateFlightRoster').addEventListener('click', createTrip);
-
 document.getElementById('closethisflighttrip').addEventListener('click', closeToWelcomeScreen)
+
+document.addEventListener('focusin', (e) => {
+    if (e.target.classList.contains('editable-cell')) {
+        // Short delay ensures the keyboard doesn't interfere with selection
+        setTimeout(() => {
+            const range = document.createRange();
+            range.selectNodeContents(e.target);
+            const sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+        }, 50);
+    }
+});
