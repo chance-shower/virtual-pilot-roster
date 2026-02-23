@@ -116,8 +116,8 @@ function renderTable(legs) {
             <td>${index + 1}</td>
             <td>${document.getElementById('airlineCode').value.toUpperCase()}</td>
             <td>${leg.callsign}</td>
-            <td>${leg.origin}</td>
-            <td>${leg.destination}</td>
+            <td>${leg.dep}</td>
+            <td>${leg.arr}</td>
             <td>-</td>
             <td>-</td>
             <td>${leg.dep_local}</td>
