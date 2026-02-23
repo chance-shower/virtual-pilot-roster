@@ -154,17 +154,17 @@ function renderTable(legs) {
             <td>${leg.day}</td>
             <td>${airlineCode}</td>
             <td><a href="${simBriefUrl}" target="_blank" class="simbrief-link">${leg.callsign}</a></td>
-            <td contenteditable="true">${leg.equip}</td>
+            <td contenteditable="true" inputmode="text" class="editable-cell">${leg.equip}</td>
             <td>${leg.dep}</td>
             <td>${leg.arr}</td>
-            <td contenteditable="true">-</td>
-            <td contenteditable="true">-</td>
+            <td contenteditable="true" inputmode="text" class="editable-cell">-</td>
+            <td contenteditable="true" inputmode="text" class="editable-cell">-</td>
             <td>${leg.dep_local}</td>
             <td>${leg.dep_utc}</td>
             <td>${leg.arr_local}</td>
             <td>${leg.arr_utc}</td>
-            <td contenteditable="true">-</td>
-            <td contenteditable="true">-</td>
+            <td contenteditable="true" inputmode="text" class="editable-cell">-</td>
+            <td contenteditable="true" inputmode="text" class="editable-cell">-</td>
             <td>${leg.note}</td>
         `;
         tbody.appendChild(row);
