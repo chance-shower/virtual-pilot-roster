@@ -62,6 +62,7 @@ input[type="text"]:focus {
     margin: 20px 0;
     font-family: 'Courier New', Courier, monospace; /* Monospace for alignment */
     font-size: 0.9rem;
+    color: #333;
     background-color: #fff;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
@@ -80,19 +81,21 @@ input[type="text"]:focus {
 
 /* Zebra Striping for readability */
 #rosterTable tbody tr:nth-child(even) {
-    background-color: #f8f9fa;
+    background-color: #acbac9;
+    color: #ecf0f1;
 }
 
 /* Highlighting the Day column or Notes */
 #rosterTable td:first-child {
     font-weight: bold;
     background-color: #f1f1f1;
+    color: #333;
 }
 
 /* Make "End of Tour" and "Equipment Change" stand out */
 #rosterTable td:last-child {
-    font-style: italic;
-    color: #e67e22;
+    font-style: bold;
+    color: #ffffff;
     font-weight: 500;
 }
 

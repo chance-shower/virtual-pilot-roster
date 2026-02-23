@@ -106,7 +106,7 @@ async function createTrip() {
                 let note = "-";
                 const turnTime = i > 0 ? (chosen.absDep - currentArrivalTimeMins) : 0;
                 if (i > 0 && turnTime < 45) note = "Equipment change";
-                if (isFinalDay && chosen.arr === homeBase) note = "End of Tour";
+                if (isFinalDay && chosen.arr === homeBase) note = "End of dayTour";
 
                 dayLegs.push({ ...chosen, day: day, note: note });
                 currentCity = chosen.arr;
