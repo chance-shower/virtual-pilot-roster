@@ -137,27 +137,27 @@ function renderTable(legs) {
     const tbody = document.getElementById('rosterTableBody');
     tbody.innerHTML = ""; 
 
-    legs.forEach((leg, index) => {
+    legs.forEach((leg) => {
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${index + 1}</td>
+            <td>${leg.day}</td>
             <td>${document.getElementById('airlineCode').value.toUpperCase()}</td>
             <td>${leg.callsign}</td>
-            <td>${leg.equip}</td>
             <td>${leg.dep}</td>
             <td>${leg.arr}</td>
-            <td>-</td>
+            <td>${String.fromCharCode(65 + Math.floor(Math.random() * 5))}${Math.floor(Math.random() * 20 + 1)}</td>
             <td>-</td>
             <td>${leg.dep_local}</td>
-            <td>${leg.std_utc || leg.dep_utc}</td>
+            <td>${leg.dep_utc}</td>
             <td>${leg.arr_local}</td>
-            <td>${leg.sta_utc || leg.arr_utc}</td>
+            <td>${leg.arr_utc}</td>
             <td>-</td>
             <td>-</td>
-            <td>-</td>
+            <td>${leg.note}</td>
         `;
         tbody.appendChild(row);
     });
+}
 
     // Preamble sentence here
     const tripDays = document.getElementById('dutyLength').value;
