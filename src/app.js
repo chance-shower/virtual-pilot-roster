@@ -157,7 +157,6 @@ function renderTable(legs) {
         `;
         tbody.appendChild(row);
     });
-}
 
     // Preamble sentence here
     const tripDays = document.getElementById('dutyLength').value;
