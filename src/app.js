@@ -89,7 +89,7 @@ async function createTrip() {
 
         // Update UI
         console.log(firstFlight);
-        
+
         renderTable([firstFlight]);
 
         document.getElementById('startPage').style.display = 'none';
