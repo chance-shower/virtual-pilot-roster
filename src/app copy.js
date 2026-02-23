@@ -24,13 +24,13 @@ loadFlightData();
 // Function to generate roster
 
 async function createTrip() {
-    // 1. Safety check - must return to stop execution
+    // Safety check - must return to stop execution
     if (!flightData) {
         alert("Flight schedules are still loading - please try again in a few seconds...");
         return; 
     }
 
-    // 2. Get user input with safety checks for optional fields
+    // Get user input with safety checks for optional fields
     const airline = document.getElementById('airlineCode').value.toUpperCase().trim();
     const homeBase = document.getElementById('homeBase').value.toUpperCase().trim();
     const equipment = document.getElementById('equipmentCode').value
@@ -46,18 +46,21 @@ async function createTrip() {
     const excludedInput = document.getElementById('excludedAirports')?.value;
     const excludedAirports = excludedInput ? excludedInput.split(',').map(s => s.trim().toUpperCase()).filter(s => s !== "") : [];
 
-    // 3. Show spinner
+    // Show spinner while generating trip
     document.getElementById('loader-overlay').style.display = 'flex';
 
     try {
         let roster = [];
         let currentCity = homeBase;
-        let currentTimeMins = 0; 
+        let dutyStartMins = null;
+        let currentArrivalTimeMins = 0;
         
-        // Let's target 4 legs for a standard short-haul day for now
-        const targetLegs = 4;
+        const MAX_DUTY_MINS = 14 * 60; // 14h = 840 mins
+        const PRE_FLIGHT = 30; // 30min before flight counting towards duty time
+        const POST_FLIGHT = 15; // 15min after flight counting towards duty time
 
-        for (let i = 0; i < targetLegs; i++) {
+        // Loop up to 6 legs, but we might break early
+        for (let i = 0; i < 6; i++) {
             const possibleData = flightData[currentCity]?.[airline];
             if (!possibleData) break;
 
@@ -67,19 +70,29 @@ async function createTrip() {
                     Object.keys(possibleData[ac]).forEach(dest => {
                         possibleData[ac][dest].forEach(flt => {
                             const depMins = toMins(flt.dep_utc);
+                            const arrMins = toMins(flt.arr_utc);
                             
-                            // FIRST LEG logic: Time windows (0500-1000 or 1300-1700 local)
+                            // Adjust for flights crossing midnight (e.g., Arr 01:00 is 1500 mins)
+                            let absoluteArrMins = arrMins < depMins ? arrMins + 1440 : arrMins;
+
+                            // FIRST LEG: Morning/Afternoon window
                             if (i === 0) {
                                 const depLocal = toMins(flt.dep_local);
                                 if ((depLocal >= 300 && depLocal <= 600) || (depLocal >= 780 && depLocal <= 1020)) {
-                                    legPool.push({ ...flt, dep: currentCity, arr: dest, equip: ac });
+                                    legPool.push({ ...flt, dep: currentCity, arr: dest, equip: ac, absArr: absoluteArrMins });
                                 }
                             } 
-                            // SUBSEQUENT LEGS logic: 15min to 90min turnaround
+                            // SUBSEQUENT LEGS: 15-90min turn
                             else {
-                                const turnaround = depMins - currentTimeMins;
+                                const turnaround = depMins - currentArrivalTimeMins;
                                 if (turnaround >= 15 && turnaround <= 90) {
-                                    legPool.push({ ...flt, dep: currentCity, arr: dest, equip: ac });
+                                    // CHECK DUTY LIMIT: (This flight's arrival + 15m) - (First flight departure - 30m)
+                                    const potentialDutyEnd = absoluteArrMins + POST_FLIGHT;
+                                    const totalDuty = potentialDutyEnd - dutyStartMins;
+
+                                    if (totalDuty <= MAX_DUTY_MINS) {
+                                        legPool.push({ ...flt, dep: currentCity, arr: dest, equip: ac, absArr: absoluteArrMins });
+                                    }
                                 }
                             }
                         });
@@ -89,24 +102,32 @@ async function createTrip() {
 
             if (legPool.length === 0) break;
 
-            // Pick a random flight from the valid options
+            // Pick a random flight
             const chosen = legPool[Math.floor(Math.random() * legPool.length)];
             
-            // Logic for the Notes (Equipment Change)
+            // Set the duty start time based on the first flight
+            if (i === 0) {
+                dutyStartMins = toMins(chosen.dep_utc) - PRE_FLIGHT;
+            }
+
+            // Note logic
             let note = "-";
             if (i > 0) {
-                const turnTime = toMins(chosen.dep_utc) - currentTimeMins;
-                if (turnTime < 45) {
-                    note = "Equipment change";
-                }
+                const turnTime = toMins(chosen.dep_utc) - currentArrivalTimeMins;
+                if (turnTime < 45) note = "Equipment change";
             }
 
             roster.push({ ...chosen, note: note });
 
-            // Update state for next iteration
+            // Update state
             currentCity = chosen.arr;
-            currentTimeMins = toMins(chosen.arr_utc);
+            currentArrivalTimeMins = chosen.absArr;
+
+            // Optional: If we've reached at least 2 legs and we are back at base, we could stop.
+            // (But for now, it will keep going until it hits 6 legs or the 14h limit)
         }
+
+        if (roster.length < 2) throw "Could not generate a valid roster of at least 2 legs within duty limits.";
 
         renderTable(roster);
         document.getElementById('startPage').style.display = 'none';
