@@ -116,6 +116,7 @@ function renderTable(legs) {
             <td>${index + 1}</td>
             <td>${document.getElementById('airlineCode').value.toUpperCase()}</td>
             <td>${leg.callsign}</td>
+            <td>${leg.equip}</td>
             <td>${leg.dep}</td>
             <td>${leg.arr}</td>
             <td>-</td>
@@ -129,6 +130,13 @@ function renderTable(legs) {
         `;
         tbody.appendChild(row);
     });
+
+    // Preamble sentence here
+    const tripDays = document.getElementById('dutyLength').value;
+    const homeBase = document.getElementById('homeBase').value.toUpperCase().trim();
+    const equipment = document.getElementById('equipmentCode').value;
+
+    document.getElementById('preamble').innerHTML = `Here is your ${tripDays} day trip, based at ${homeBase}, flying the ${equipment}`
 }
 
 function closeToWelcomeScreen() {
