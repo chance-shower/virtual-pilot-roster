@@ -4,7 +4,8 @@ body {
     color: white;
 }
 
-/* CSS text inputs */
+/* Welcome page */
+/* Text fields */
 
 input[type="text"] {
     /* 1. Sizing & Spacing */
@@ -53,7 +54,7 @@ input[type="text"]:focus {
     to { transform: rotate(360deg); }
 }
 
-
+/* Table page */
 /* Table Styles */
 
 #rosterTable {
@@ -117,4 +118,34 @@ input[type="text"]:focus {
 
 #rosterTable button:hover {
     background-color: #219150;
+}
+
+/* Style for the clickable Flight Number */
+.simbrief-link {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.simbrief-link:hover {
+    text-decoration: underline;
+    color: #2980b9;
+}
+
+/* Visual cue for editable cells */
+[contenteditable="true"] {
+    outline: none;
+    cursor: text;
+    transition: background 0.2s;
+}
+
+/* Highlight the cell being edited */
+[contenteditable="true"]:focus {
+    background-color: #fff9c4; /* Light yellow background when typing */
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+}
+
+/* Subtle border on hover to show it can be edited */
+[contenteditable="true"]:hover {
+    background-color: #f1f1f1;
 }

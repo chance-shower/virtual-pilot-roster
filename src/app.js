@@ -145,21 +145,26 @@ function renderTable(legs) {
 
     legs.forEach((leg) => {
         const row = document.createElement('tr');
+        
+        // SimBrief URL requires Airline, Flight Number, Origin, and Destination
+        const airlineCode = document.getElementById('airlineCode').value.toUpperCase();
+        const simBriefUrl = `https://www.simbrief.com/system/dispatch.php?type=briefing&airline=${airlineCode}&flightnum=${leg.callsign}&orig=${leg.dep}&dest=${leg.arr}&aircraft=${leg.equip}`;
+
         row.innerHTML = `
             <td>${leg.day}</td>
-            <td>${document.getElementById('airlineCode').value.toUpperCase()}</td>
-            <td>${leg.callsign}</td>
-            <td>${leg.equip}</td>
+            <td>${airlineCode}</td>
+            <td><a href="${simBriefUrl}" target="_blank" class="simbrief-link">${leg.callsign}</a></td>
+            <td contenteditable="true">${leg.equip}</td>
             <td>${leg.dep}</td>
             <td>${leg.arr}</td>
-            <td>-</td>
-            <td>-</td>
+            <td contenteditable="true">-</td>
+            <td contenteditable="true">-</td>
             <td>${leg.dep_local}</td>
             <td>${leg.dep_utc}</td>
             <td>${leg.arr_local}</td>
             <td>${leg.arr_utc}</td>
-            <td>-</td>
-            <td>-</td>
+            <td contenteditable="true">-</td>
+            <td contenteditable="true">-</td>
             <td>${leg.note}</td>
         `;
         tbody.appendChild(row);
