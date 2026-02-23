@@ -52,3 +52,66 @@ input[type="text"]:focus {
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
+
+
+/* Table Styles */
+
+#rosterTable {
+    width: 100%;
+    border-collapse: collapse; /* Removes the double border look */
+    margin: 20px 0;
+    font-family: 'Courier New', Courier, monospace; /* Monospace for alignment */
+    font-size: 0.9rem;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+#rosterTable thead {
+    background-color: #2c3e50;
+    color: #ffffff;
+}
+
+#rosterTable th, 
+#rosterTable td {
+    border: 1px solid #bdc3c7; /* Gray borders */
+    padding: 10px 8px;
+    text-align: center;
+}
+
+/* Zebra Striping for readability */
+#rosterTable tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+/* Highlighting the Day column or Notes */
+#rosterTable td:first-child {
+    font-weight: bold;
+    background-color: #f1f1f1;
+}
+
+/* Make "End of Tour" and "Equipment Change" stand out */
+#rosterTable td:last-child {
+    font-style: italic;
+    color: #e67e22;
+    font-weight: 500;
+}
+
+/* Hover effect */
+#rosterTable tbody tr:hover {
+    background-color: #ecf0f1;
+}
+
+/* Dispatch Button Styling inside the table */
+#rosterTable button {
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+#rosterTable button:hover {
+    background-color: #219150;
+}

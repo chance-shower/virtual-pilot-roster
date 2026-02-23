@@ -143,9 +143,10 @@ function renderTable(legs) {
             <td>${leg.day}</td>
             <td>${document.getElementById('airlineCode').value.toUpperCase()}</td>
             <td>${leg.callsign}</td>
+            <td>${leg.equip}</td>
             <td>${leg.dep}</td>
             <td>${leg.arr}</td>
-            <td>${String.fromCharCode(65 + Math.floor(Math.random() * 5))}${Math.floor(Math.random() * 20 + 1)}</td>
+            <td>-</td>
             <td>-</td>
             <td>${leg.dep_local}</td>
             <td>${leg.dep_utc}</td>
