@@ -24,91 +24,103 @@ loadFlightData();
 // Function to generate roster
 
 async function createTrip() {
-    // 1. Safety check - must return to stop execution
     if (!flightData) {
-        alert("Flight schedules are still loading - please try again in a few seconds...");
+        alert("Schedules loading...");
         return; 
     }
 
-    // 2. Get user input with safety checks for optional fields
     const airline = document.getElementById('airlineCode').value.toUpperCase().trim();
     const homeBase = document.getElementById('homeBase').value.toUpperCase().trim();
-    const equipment = document.getElementById('equipmentCode').value
-        .split(',')
-        .map(s => s.trim().toUpperCase())
-        .filter(s => s !== ""); // Remove empty strings if user typed "B738, "
-    const dutyLength = parseInt(document.getElementById('dutyLength').value) || 4;
+    const equipment = document.getElementById('equipmentCode').value.split(',').map(s => s.trim().toUpperCase()).filter(s => s !== "");
+    const dutyLength = parseInt(document.getElementById('dutyLength').value) || 1;
 
-    // Safety for optional inputs: only map if value exists
-    const desiredInput = document.getElementById('desiredAirports')?.value;
-    const desiredAirports = desiredInput ? desiredInput.split(',').map(s => s.trim().toUpperCase()).filter(s => s !== "") : [];
-
-    const excludedInput = document.getElementById('excludedAirports')?.value;
-    const excludedAirports = excludedInput ? excludedInput.split(',').map(s => s.trim().toUpperCase()).filter(s => s !== "") : [];
-
-    // 3. Show spinner
     document.getElementById('loader-overlay').style.display = 'flex';
 
     try {
-        let roster = [];
+        let fullRoster = [];
         let currentCity = homeBase;
-        let currentTimeMins = 0; 
-        
-        // Let's target 4 legs for a standard short-haul day for now
-        const targetLegs = 4;
 
-        for (let i = 0; i < targetLegs; i++) {
-            const possibleData = flightData[currentCity]?.[airline];
-            if (!possibleData) break;
+        for (let day = 1; day <= dutyLength; day++) {
+            let dayLegs = [];
+            let dutyStartMins = null;
+            let currentArrivalTimeMins = 0;
+            const isFinalDay = (day === dutyLength);
 
-            let legPool = [];
-            equipment.forEach(ac => {
-                if (possibleData[ac]) {
-                    Object.keys(possibleData[ac]).forEach(dest => {
-                        possibleData[ac][dest].forEach(flt => {
-                            const depMins = toMins(flt.dep_utc);
-                            
-                            // FIRST LEG logic: Time windows (0500-1000 or 1300-1700 local)
-                            if (i === 0) {
-                                const depLocal = toMins(flt.dep_local);
-                                if ((depLocal >= 300 && depLocal <= 600) || (depLocal >= 780 && depLocal <= 1020)) {
-                                    legPool.push({ ...flt, dep: currentCity, arr: dest, equip: ac });
-                                }
-                            } 
-                            // SUBSEQUENT LEGS logic: 15min to 90min turnaround
-                            else {
-                                const turnaround = depMins - currentTimeMins;
-                                if (turnaround >= 15 && turnaround <= 90) {
-                                    legPool.push({ ...flt, dep: currentCity, arr: dest, equip: ac });
-                                }
+            // Inner Loop: Try to build a valid day (2-6 legs)
+            // We use a labeled loop so we can break out of the day easily
+            dayLoop: for (let i = 0; i < 6; i++) {
+                const possibleData = flightData[currentCity]?.[airline];
+                if (!possibleData) break dayLoop;
+
+                let legPool = [];
+                equipment.forEach(ac => {
+                    if (possibleData[ac]) {
+                        Object.keys(possibleData[ac]).forEach(dest => {
+                            // On final day, if we have >2 legs, start looking for a way home
+                            if (isFinalDay && i >= 1 && dest !== homeBase) {
+                                // We prioritize the home base on the final leg
+                                if (Object.keys(possibleData[ac]).includes(homeBase)) return; 
                             }
+
+                            possibleData[ac][dest].forEach(flt => {
+                                const depMinsRaw = toMins(flt.dep_utc);
+                                const arrMinsRaw = toMins(flt.arr_utc);
+                                
+                                let depMins = depMinsRaw;
+                                if (i > 0 && depMins < (currentArrivalTimeMins % 1440)) depMins += 1440;
+
+                                let absArr = arrMinsRaw < depMinsRaw ? arrMinsRaw + 1440 : arrMinsRaw;
+                                if (depMins >= 1440) absArr += 1440;
+
+                                if (i === 0) {
+                                    const depLocal = toMins(flt.dep_local);
+                                    if ((depLocal >= 300 && depLocal <= 600) || (depLocal >= 780 && depLocal <= 1020)) {
+                                        legPool.push({ ...flt, dep: currentCity, arr: dest, equip: ac, absArr: absArr, absDep: depMins });
+                                    }
+                                } else {
+                                    const turn = depMins - currentArrivalTimeMins;
+                                    const totalDuty = (absArr + 15) - dutyStartMins;
+                                    
+                                    if (turn >= 15 && turn <= 180 && totalDuty <= 840) {
+                                        legPool.push({ ...flt, dep: currentCity, arr: dest, equip: ac, absArr: absArr, absDep: depMins });
+                                    }
+                                }
+                            });
                         });
-                    });
-                }
-            });
+                    }
+                });
 
-            if (legPool.length === 0) break;
+                if (legPool.length === 0) break dayLoop;
 
-            // Pick a random flight from the valid options
-            const chosen = legPool[Math.floor(Math.random() * legPool.length)];
-            
-            // Logic for the Notes (Equipment Change)
-            let note = "-";
-            if (i > 0) {
-                const turnTime = toMins(chosen.dep_utc) - currentTimeMins;
-                if (turnTime < 45) {
-                    note = "Equipment change";
+                // Priority: If it's the final day and we can go home, take it.
+                let chosen;
+                const homeFlight = legPool.find(f => f.arr === homeBase);
+                if (isFinalDay && i >= 1 && homeFlight) {
+                    chosen = homeFlight;
+                } else {
+                    chosen = legPool[Math.floor(Math.random() * legPool.length)];
                 }
+                
+                if (i === 0) dutyStartMins = chosen.absDep - 30;
+
+                let note = "-";
+                const turnTime = i > 0 ? (chosen.absDep - currentArrivalTimeMins) : 0;
+                if (i > 0 && turnTime < 45) note = "Equipment change";
+                if (isFinalDay && chosen.arr === homeBase) note = "End of trip";
+
+                dayLegs.push({ ...chosen, day: day, note: note });
+                currentCity = chosen.arr;
+                currentArrivalTimeMins = chosen.absArr;
+
+                // If we returned home on the final day, we are done!
+                if (isFinalDay && currentCity === homeBase && dayLegs.length >= 2) break dayLoop;
             }
 
-            roster.push({ ...chosen, note: note });
-
-            // Update state for next iteration
-            currentCity = chosen.arr;
-            currentTimeMins = toMins(chosen.arr_utc);
+            if (dayLegs.length < 1) throw `Could not find flights to continue trip on Day ${day} from ${currentCity}`;
+            fullRoster = fullRoster.concat(dayLegs);
         }
 
-        renderTable(roster);
+        renderTable(fullRoster);
         document.getElementById('startPage').style.display = 'none';
         document.getElementById('flightSchedule').style.display = 'block';
 
@@ -125,10 +137,10 @@ function renderTable(legs) {
     const tbody = document.getElementById('rosterTableBody');
     tbody.innerHTML = ""; 
 
-    legs.forEach((leg, index) => {
+    legs.forEach((leg) => {
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${index + 1}</td>
+            <td>${leg.day}</td>
             <td>${document.getElementById('airlineCode').value.toUpperCase()}</td>
             <td>${leg.callsign}</td>
             <td>${leg.equip}</td>
@@ -137,12 +149,12 @@ function renderTable(legs) {
             <td>-</td>
             <td>-</td>
             <td>${leg.dep_local}</td>
-            <td>${leg.std_utc || leg.dep_utc}</td>
+            <td>${leg.dep_utc}</td>
             <td>${leg.arr_local}</td>
-            <td>${leg.sta_utc || leg.arr_utc}</td>
+            <td>${leg.arr_utc}</td>
             <td>-</td>
             <td>-</td>
-            <td>-</td>
+            <td>${leg.note}</td>
         `;
         tbody.appendChild(row);
     });
