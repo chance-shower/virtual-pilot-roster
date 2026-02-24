@@ -323,9 +323,23 @@ window.onload = function() {
                 // User clicked RESUME
                 const legs = JSON.parse(savedData);
                 const airline = localStorage.getItem('savedAirline');
-                document.getElementById('airlineCode').value = airline || "";
-                document.getElementById('inputdata').style.display = 'none';
-                document.getElementById('flightSchedule').style.display = 'block';
+                
+                if (document.getElementById('airlineCode')) {
+                    document.getElementById('airlineCode').value = airline || "";
+                }
+
+                // HIDE the entire start page (Header, Inputs, and Button)
+                const startPage = document.getElementById('startPage');
+                if (startPage) {
+                    startPage.style.display = 'none';
+                }
+
+                // SHOW the schedule container
+                const scheduleSection = document.getElementById('flightSchedule');
+                if (scheduleSection) {
+                    scheduleSection.style.display = 'block';
+                }
+                
                 renderTable(legs);
             },
             function() {
