@@ -159,12 +159,12 @@ function renderTable(legs) {
             <td>${leg.arr}</td>
             <td contenteditable="true" inputmode="text" class="editable-cell"></td>
             <td contenteditable="true" inputmode="text" class="editable-cell"></td>
-            <td>${leg.dep_local}</td>
-            <td>${leg.dep_utc}</td>
-            <td>${leg.arr_local}</td>
-            <td>${leg.arr_utc}</td>
-            <td contenteditable="true" inputmode="numeric" class="editable-cell"></td>
-            <td contenteditable="true" inputmode="numeric" class="editable-cell"></td>
+            <td class="time-td">${leg.dep_local}</td>
+            <td class="time-td">${leg.dep_utc}</td>
+            <td class="time-td">${leg.arr_local}</td>
+            <td class="time-td">${leg.arr_utc}</td>
+            <td class="time-td" contenteditable="true" inputmode="numeric" class="editable-cell"></td>
+            <td class="time-td" contenteditable="true" inputmode="numeric" class="editable-cell"></td>
             <td>${leg.note}</td>
         `;
         tbody.appendChild(row);
