@@ -33,7 +33,7 @@ async function createTrip() {
     const airline = document.getElementById('airlineCode').value.toUpperCase().trim();
     const homeBase = document.getElementById('homeBase').value.toUpperCase().trim();
     const equipment = document.getElementById('equipmentCode').value.split(',').map(s => s.trim().toUpperCase()).filter(s => s !== "");
-    const dutyLength = parseInt(document.getElementById('dutyLength').value) || 1;
+    const dutyLength = parseInt(document.getElementById('dutyLength').value) || 4;
 
     document.getElementById('loader-overlay').style.display = 'flex';
 
@@ -237,7 +237,7 @@ window.onload = function() {
             
             // Hide the input screen and show the schedule
             document.getElementById('startPage').style.display = 'none';
-            document.getElementById('flightschedule').style.display = 'block';
+            document.getElementById('flightSchedule').style.display = 'block';
             
             // Re-render the table with the saved data
             renderTable(legs);
