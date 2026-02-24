@@ -163,8 +163,8 @@ function renderTable(legs) {
             <td>${leg.dep_utc}</td>
             <td>${leg.arr_local}</td>
             <td>${leg.arr_utc}</td>
-            <td contenteditable="true" inputmode="text" class="editable-cell"></td>
-            <td contenteditable="true" inputmode="text" class="editable-cell"></td>
+            <td contenteditable="true" inputmode="numeric" class="editable-cell"></td>
+            <td contenteditable="true" inputmode="numeric" class="editable-cell"></td>
             <td>${leg.note}</td>
         `;
         tbody.appendChild(row);
