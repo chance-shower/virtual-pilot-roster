@@ -264,7 +264,7 @@ window.onload = function() {
                 const airline = localStorage.getItem('savedAirline');
                 document.getElementById('airlineCode').value = airline || "";
                 document.getElementById('inputdata').style.display = 'none';
-                document.getElementById('flightschedule').style.display = 'block';
+                document.getElementById('flightSchedule').style.display = 'block';
                 renderTable(legs);
             },
             function() {
