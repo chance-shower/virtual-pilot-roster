@@ -70,7 +70,9 @@ html, body {
   box-shadow: 4px 6px #f1f1f1;
   width: 100%;
   max-width: 300px;
+  height: 30px;
   font-family: 'IBM Plex Mono', monospace;
+  margin-bottom: 10px;
 }
 
 #inputdata label {
