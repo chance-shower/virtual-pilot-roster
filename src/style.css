@@ -40,6 +40,7 @@ html, body {
     width: 300px;
     margin: 40px auto;
     text-align: left;
+    font-size: 1vw;
     color:#e3f2fd;
 }
 
@@ -55,9 +56,9 @@ html, body {
 /* Input text fields */
 
 .input {
-  max-width: 190px;
+  max-width: 250px;
   padding: 0.875rem;
-  font-size: 1rem;
+  font-size: 1vw;
   border: 1.5px solid #000;
   border-radius: 0.5rem;
   box-shadow: 2.5px 3px 0 #000;
