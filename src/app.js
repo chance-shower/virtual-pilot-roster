@@ -236,7 +236,7 @@ window.onload = function() {
             document.getElementById('airlineCode').value = airline || "";
             
             // Hide the input screen and show the schedule
-            document.getElementById('input-container').style.display = 'none';
+            document.getElementById('startPage').style.display = 'none';
             document.getElementById('flightschedule').style.display = 'block';
             
             // Re-render the table with the saved data
