@@ -175,7 +175,7 @@ function renderTable(legs) {
     const homeBase = document.getElementById('homeBase').value.toUpperCase().trim();
     const equipment = document.getElementById('equipmentCode').value;
 
-    document.getElementById('preamble').innerHTML = `Here is your ${tripDays} day trip, based at ${homeBase}, flying the ${equipment}`
+    document.getElementById('preamble').innerHTML = `Here is your ${tripDays} day trip, based at ${homeBase}, flying the ${equipment} <br><br>`
 }
 
 function closeToWelcomeScreen() {
