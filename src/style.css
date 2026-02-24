@@ -200,9 +200,8 @@ html, body {
 
 /* Make "End of Tour" and "Equipment Change" stand out */
 #rosterTable td:last-child {
-    font-style: bold;
-    color: #ffffff;
-    font-weight: 500;
+    color: #5a3030;
+    font-weight: 400;
 }
 
 /* Prevent iOS from zooming in on input (happens if font < 16px) */
@@ -223,4 +222,5 @@ html, body {
     display: block;
     padding: 10px;
     margin: -10px;
+    color:#943a3a;
 }
