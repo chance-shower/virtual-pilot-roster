@@ -37,10 +37,11 @@ html, body {
 }
 
 #inputdata {
-    width: 300px;
+    width: 325px;
     margin: 40px auto;
     text-align: left;
-    font-size: 12px;
+    font-weight: 300;
+    font-size: 16px;
     color:#e3f2fd;
 }
 
@@ -62,7 +63,7 @@ html, body {
 /* Input text fields */
 
 .input {
-  max-width: 250px;
+  width: 250px;
   padding: 0.875rem;
   font-size: 12px;
   border: 1.5px solid #000;
