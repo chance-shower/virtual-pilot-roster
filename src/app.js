@@ -194,13 +194,27 @@ function renderTable(legs) {
 
 /* Event listeners */ 
 document.getElementById('generateFlightRoster').addEventListener('click', createTrip);
-//document.getElementById('closethisflighttrip').addEventListener('click', closeToWelcomeScreen)
+//document.getElementById('closethisflighttrip').addEventListener('click', function() {
+//    if(confirm("Are you sure? This will delete the current trip data.")) {
+//        localStorage.removeItem('savedRoster');
+//        localStorage.removeItem('savedAirline');
+//        location.reload(); // Refresh to show the input screen again
+//    }
+//});
 document.getElementById('closethisflighttrip').addEventListener('click', function() {
-    if(confirm("Are you sure? This will delete the current trip data.")) {
-        localStorage.removeItem('savedRoster');
-        localStorage.removeItem('savedAirline');
-        location.reload(); // Refresh to show the input screen again
-    }
+    showModal(
+        "DELETE TRIP?", 
+        "This will permanently remove the current roster. Are you sure?", 
+        function() {
+            // Confirm: Clear and reload
+            localStorage.removeItem('savedRoster');
+            localStorage.removeItem('savedAirline');
+            location.reload();
+        },
+        function() {
+            // Cancel: Do nothing, just closes the modal
+        }
+    );
 });
 
 document.addEventListener('focusin', (e) => {
@@ -219,6 +233,50 @@ document.addEventListener('focusin', (e) => {
 
 /* Startup functions */
 
+function showModal(title, message, onConfirm, onCancel) {
+    const overlay = document.getElementById('modalOverlay');
+    document.getElementById('modalTitle').innerText = title;
+    document.getElementById('modalMessage').innerText = message;
+    
+    overlay.classList.remove('modal-hidden');
+
+    document.getElementById('modalConfirm').onclick = function() {
+        overlay.classList.add('modal-hidden');
+        if (onConfirm) onConfirm();
+    };
+
+    document.getElementById('modalCancel').onclick = function() {
+        overlay.classList.add('modal-hidden');
+        if (onCancel) onCancel();
+    };
+}
+
+window.onload = function() {
+    const savedData = localStorage.getItem('savedRoster');
+    
+    if (savedData) {
+        showModal(
+            "PREVIOUS TRIP", 
+            "A previous flight roster was found. Do you want to continue?",
+            function() {
+                // User clicked RESUME
+                const legs = JSON.parse(savedData);
+                const airline = localStorage.getItem('savedAirline');
+                document.getElementById('airlineCode').value = airline || "";
+                document.getElementById('inputdata').style.display = 'none';
+                document.getElementById('flightschedule').style.display = 'block';
+                renderTable(legs);
+            },
+            function() {
+                // User clicked NEW TRIP
+                localStorage.removeItem('savedRoster');
+                localStorage.removeItem('savedAirline');
+            }
+        );
+    }
+};
+
+/* OLD
 window.onload = function() {
     const savedData = localStorage.getItem('savedRoster');
     
@@ -248,3 +306,5 @@ window.onload = function() {
         }
     }
 };
+
+*/

@@ -225,3 +225,64 @@ html, body {
     margin: -10px;
     color:#943a3a;
 }
+
+/* Alert popup */
+
+#modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* Dim the background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.modal-hidden {
+    display: none !important;
+}
+
+#customModal {
+    background: white;
+    padding: 25px;
+    width: 85%;
+    max-width: 320px;
+    border: 3px solid #323232;
+    box-shadow: 8px 8px #e2db99; /* Matches your input shadow style */
+    text-align: center;
+    font-family: 'IBM Plex Mono', monospace;
+}
+
+#customModal h3 {
+    margin-top: 0;
+    font-size: 1.2rem;
+    color: #323232;
+}
+
+#customModal p {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+/* These reuse your global button styles but allow for color overrides */
+#modalConfirm {
+    background-color: #e2db99;
+    color: #323232;
+}
+
+#modalCancel {
+    background-color: #fff;
+    color: #e74c3c;
+    border-color: #e74c3c;
+    box-shadow: 4px 4px #e74c3c;
+}
