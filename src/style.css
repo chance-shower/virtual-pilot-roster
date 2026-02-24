@@ -66,34 +66,32 @@ html, body {
 
 #inputdata input {
   --input-focus: #2d8cf0;
-  --font-color: #323232;
-  --font-color-sub: #666;
+  --font-color: #363636;
+  --font-color-sub: #363636;
   --bg-color: #fff;
-  --main-color: #e2db99;
+  --main-color: #fffcdf;
   
   font-family: 'IBM Plex Mono', monospace; /* Use your new font */
   width: 100%; /* Take up the width of the container we centered earlier */
-  max-width: 300px;
-  height: 40px;
-  border-radius: 5px;
+  max-width: 280px;
+  height: 30px;
+  border-radius: 0;
   border: 2px solid var(--main-color);
   background-color: var(--bg-color);
-  box-shadow: 4px 4px var(--main-color);
+  box-shadow: 2px 2px var(--main-color);
   font-size: 15px;
   font-weight: 600;
   color: var(--font-color);
-  padding: 5px 10px;
+  padding: 0 10px;
   outline: none;
-  margin-bottom: 20px; /* Space between the input and the next label */
   display: block; /* Ensures they stack without needing <br> */
 }
 
 #inputdata label {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #555;
-  text-transform: uppercase;
+  font-size: 16px;
+  font-weight: 300;
+  color: #e9e9e9;
   margin-bottom: 5px;
   display: block;
 }
