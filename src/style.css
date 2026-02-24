@@ -34,6 +34,13 @@ html, body {
     /* div position */
 }
 
+#inputdata {
+    width: 350px;
+    margin: 20px auto;
+    text-align: left;
+    color:#e3f2fd;
+}
+
 /* Avoid oversized text on large screens */
 @media (min-width: 768px) {
     #websiteheader {
