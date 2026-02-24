@@ -166,6 +166,17 @@ html, body {
     font-weight: 500;
 }
 
+.time-td{
+    width: 108px; /* Adjust this number to fit your preference */
+    text-align: center;
+    white-space: nowrap;
+}
+
+#rosterTable td:not(.time-td) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 /* Prevent iOS from zooming in on input (happens if font < 16px) */
 .editable-cell {
     font-size: 16px !important; 
