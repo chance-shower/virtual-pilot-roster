@@ -16,7 +16,7 @@ html, body {
     text-align: right;
     font-size: 8vw;
     /* padding (text offscreen)*/
-    padding: 20px 5%;
+    padding: 5px 0 5px 5%;
     box-sizing: border-box;
     /* div position */
     position: relative;
