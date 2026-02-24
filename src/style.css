@@ -74,9 +74,14 @@ html, body {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 16px;
   font-weight: 300;
-  color: #707070;
+  color: #f1f1f1;
   margin-bottom: 5px;
   display: block;
+}
+
+#inputdata :placeholder {
+    color: #363636;
+    font-weight: 300;
 }
 
 #inputdata input:focus {
