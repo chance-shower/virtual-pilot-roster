@@ -192,7 +192,7 @@ function renderTable(legs) {
 //    document.getElementById('flightSchedule').style.display = 'none';
 //}
 
-// Event listeners
+/* Event listeners */ 
 document.getElementById('generateFlightRoster').addEventListener('click', createTrip);
 //document.getElementById('closethisflighttrip').addEventListener('click', closeToWelcomeScreen)
 document.getElementById('closethisflighttrip').addEventListener('click', function() {
@@ -216,7 +216,8 @@ document.addEventListener('focusin', (e) => {
     }
 });
 
-// Startup functions
+
+/* Startup functions */
 
 window.onload = function() {
     const savedData = localStorage.getItem('savedRoster');
@@ -228,6 +229,9 @@ window.onload = function() {
             const legs = JSON.parse(savedData);
             const airline = localStorage.getItem('savedAirline');
             
+            console.log(legs);
+            console.log(airline);
+
             // Restore the airline code input
             document.getElementById('airlineCode').value = airline || "";
             
