@@ -104,6 +104,11 @@ html, body {
 }
 
 /* Table page */
+
+#flightSchedule {
+    color: #fffcdf;
+}
+
 /* Table Styles */
 
 .table-container {
