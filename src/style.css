@@ -45,7 +45,9 @@ html, body {
 }
 
 #flightschedulebutton {
-    
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Avoid oversized text on large screens */
@@ -62,9 +64,9 @@ html, body {
 .input {
   max-width: 250px;
   padding: 0.875rem;
-  font-size: 1vw;
+  font-size: 12px;
   border: 1.5px solid #000;
-  border-radius: 0.5rem;
+  border-radius: 0.5px;
   box-shadow: 2.5px 3px 0 #000;
   outline: none;
   transition: ease 0.25s;
