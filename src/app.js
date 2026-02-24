@@ -143,6 +143,58 @@ function renderTable(legs) {
     const tbody = document.getElementById('rosterTableBody');
     tbody.innerHTML = ""; 
 
+    const airlineCode = document.getElementById('airlineCode').value.toUpperCase();
+
+    legs.forEach((leg, index) => {
+        const row = document.createElement('tr');
+        
+        // Equipment Change Logic: Check if current equip is different from previous leg
+        if (index > 0 && leg.equip !== legs[index - 1].equip) {
+            row.style.borderTop = "3px solid #e74c3c"; // Visual indicator
+        }
+
+        const simBriefUrl = `https://www.simbrief.com/system/dispatch.php?type=briefing&airline=${airlineCode}&flightnum=${leg.callsign}&orig=${leg.dep}&dest=${leg.arr}&type=${leg.equip}`;
+
+        // Note the 'data-field' attributes and the ternary operators ${leg.field || ''} 
+        // which ensure that if data was previously saved, it shows up on reload.
+        row.innerHTML = `
+            <td>${leg.day}</td>
+            <td>${airlineCode}</td>
+            <td><a href="${simBriefUrl}" target="_blank" class="simbrief-link">${leg.callsign}</a></td>
+            <td contenteditable="true" data-field="equip" class="editable-cell">${leg.equip}</td>
+            <td>${leg.dep}</td>
+            <td>${leg.arr}</td>
+            <td contenteditable="true" data-field="depGate" class="editable-cell">${leg.depGate || ''}</td>
+            <td contenteditable="true" data-field="arrGate" class="editable-cell">${leg.arrGate || ''}</td>
+            <td>${leg.dep_local}</td>
+            <td>${leg.dep_utc}</td>
+            <td>${leg.arr_local}</td>
+            <td>${leg.arr_utc}</td>
+            <td contenteditable="true" inputmode="numeric" data-field="atd" class="editable-cell">${leg.atd || ''}</td>
+            <td contenteditable="true" inputmode="numeric" data-field="ata" class="editable-cell">${leg.ata || ''}</td>
+            <td>${leg.note}</td>
+        `;
+        tbody.appendChild(row);
+    });
+
+    // Global Save (Moved outside the loop so it only fires once)
+    localStorage.setItem('savedRoster', JSON.stringify(legs));
+    localStorage.setItem('savedAirline', airlineCode);
+
+    // Update Preamble
+    const tripDays = document.getElementById('dutyLength').value || "?";
+    const homeBase = (document.getElementById('homeBase').value || "BASE").toUpperCase().trim();
+    const equipment = document.getElementById('equipmentCode').value || "ACFT";
+
+    document.getElementById('preamble').innerHTML = `Here is your ${tripDays} day trip, based at ${homeBase}, flying the ${equipment}<br><br>`;
+}
+
+/* OLD 
+
+function renderTable(legs) {
+    const tbody = document.getElementById('rosterTableBody');
+    tbody.innerHTML = ""; 
+
     legs.forEach((leg) => {
         const row = document.createElement('tr');
         
@@ -186,21 +238,30 @@ function renderTable(legs) {
 
     document.getElementById('preamble').innerHTML = `Here is your ${tripDays} day trip, based at ${homeBase}, flying the ${equipment} <br><br>`
 }
-
-//function closeToWelcomeScreen() {
-//    document.getElementById('startPage').style.display = 'block';
-//    document.getElementById('flightSchedule').style.display = 'none';
-//}
+ */
 
 /* Event listeners */ 
 document.getElementById('generateFlightRoster').addEventListener('click', createTrip);
-//document.getElementById('closethisflighttrip').addEventListener('click', function() {
-//    if(confirm("Are you sure? This will delete the current trip data.")) {
-//        localStorage.removeItem('savedRoster');
-//        localStorage.removeItem('savedAirline');
-//        location.reload(); // Refresh to show the input screen again
-//    }
-//});
+
+// Saving edited fields
+document.getElementById('rosterTable').addEventListener('input', (e) => {
+    if (e.target.classList.contains('editable-cell')) {
+        const cell = e.target;
+        const field = cell.getAttribute('data-field');
+        const rowIndex = cell.closest('tr').sectionRowIndex;
+
+        let savedData = localStorage.getItem('savedRoster');
+        if (savedData) {
+            let legs = JSON.parse(savedData);
+            if (legs[rowIndex]) {
+                // Update the specific field (depGate, atd, etc.)
+                legs[rowIndex][field] = cell.innerText;
+                localStorage.setItem('savedRoster', JSON.stringify(legs));
+            }
+        }
+    }
+});
+
 document.getElementById('closethisflighttrip').addEventListener('click', function() {
     showModal(
         "DELETE TRIP?", 
@@ -275,36 +336,3 @@ window.onload = function() {
         );
     }
 };
-
-/* OLD
-window.onload = function() {
-    const savedData = localStorage.getItem('savedRoster');
-    
-    if (savedData) {
-        const confirmLoad = confirm("A previous trip was found. Do you want to continue your previous trip?");
-        
-        if (confirmLoad) {
-            const legs = JSON.parse(savedData);
-            const airline = localStorage.getItem('savedAirline');
-            
-            console.log(legs);
-            console.log(airline);
-
-            // Restore the airline code input
-            document.getElementById('airlineCode').value = airline || "";
-            
-            // Hide the input screen and show the schedule
-            document.getElementById('startPage').style.display = 'none';
-            document.getElementById('flightSchedule').style.display = 'block';
-            
-            // Re-render the table with the saved data
-            renderTable(legs);
-        } else {
-            // User said no, so clear the old data to start fresh
-            localStorage.removeItem('savedRoster');
-            localStorage.removeItem('savedAirline');
-        }
-    }
-};
-
-*/
