@@ -67,7 +67,10 @@ html, body {
 #inputdata input {
   border: 2px solid #fffcdf;
   padding: 1px;
-  box-shadow: 4px 6px #f1f1f1,;
+  box-shadow: 4px 6px #f1f1f1;
+  width: 100%;
+  max-width: 300px;
+  font-family: 'IBM Plex Mono', monospace;
 }
 
 #inputdata label {
