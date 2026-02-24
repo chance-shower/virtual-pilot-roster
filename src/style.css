@@ -65,40 +65,22 @@ html, body {
 /* Input text fields */
 
 #inputdata input {
-  --input-focus: #2d8cf0;
-  --font-color: #363636;
-  --font-color-sub: #363636;
-  --bg-color: #fff;
-  --main-color: #fffcdf;
-  
-  font-family: 'IBM Plex Mono', monospace; /* Use your new font */
-  width: 100%; /* Take up the width of the container we centered earlier */
-  max-width: 280px;
-  height: 30px;
-  border-radius: 0;
-  border: 2px solid var(--main-color);
-  background-color: var(--bg-color);
-  box-shadow: 2px 2px var(--main-color);
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--font-color);
-  padding: 0 10px;
-  outline: none;
-  display: block; /* Ensures they stack without needing <br> */
+  border: 2px solid #fffcdf;
+  padding: 1px;
+  box-shadow: 4px 6px #f1f1f1,;
 }
 
 #inputdata label {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 16px;
   font-weight: 300;
-  color: #e9e9e9;
+  color: #707070;
   margin-bottom: 5px;
   display: block;
 }
 
 #inputdata input:focus {
-  border: 2px solid var(--input-focus);
-  box-shadow: 4px 4px var(--input-focus); /* Optional: change shadow on focus too */
+  border: 3px solid #f1e894
 }
 
 /* Loading spinner */
