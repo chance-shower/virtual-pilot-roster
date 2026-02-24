@@ -64,13 +64,16 @@ html, body {
 
 /* Input text fields */
 
-.input {
+#inputdata input {
   --input-focus: #2d8cf0;
   --font-color: #323232;
   --font-color-sub: #666;
   --bg-color: #fff;
   --main-color: #e2db99;
-  width: 250px;
+  
+  font-family: 'IBM Plex Mono', monospace; /* Use your new font */
+  width: 100%; /* Take up the width of the container we centered earlier */
+  max-width: 300px;
   height: 40px;
   border-radius: 5px;
   border: 2px solid var(--main-color);
@@ -81,15 +84,23 @@ html, body {
   color: var(--font-color);
   padding: 5px 10px;
   outline: none;
+  margin-bottom: 20px; /* Space between the input and the next label */
+  display: block; /* Ensures they stack without needing <br> */
 }
 
-.input::placeholder {
-  color: var(--font-color-sub);
-  opacity: 0.8;
+#inputdata label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #555;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+  display: block;
 }
 
-.input:focus {
+#inputdata input:focus {
   border: 2px solid var(--input-focus);
+  box-shadow: 4px 4px var(--input-focus); /* Optional: change shadow on focus too */
 }
 
 /* Loading spinner */
