@@ -87,6 +87,7 @@ html, body {
 #inputdata :placeholder {
     color: #363636;
     font-weight: 300;
+    font-size: 16px;
 }
 
 #inputdata input:focus {
