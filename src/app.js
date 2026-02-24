@@ -56,6 +56,10 @@ async function createTrip() {
 
         renderTable(fullRoster);
         
+        localStorage.setItem('savedHomeBase', homeBase);
+        localStorage.setItem('savedDutyLength', dutyLength);
+        localStorage.setItem('savedEquipment', equipment.join(', '));
+
         document.getElementById('startPage').style.display = 'none';
         document.getElementById('flightSchedule').style.display = 'block';
 
@@ -189,57 +193,6 @@ function renderTable(legs) {
     document.getElementById('preamble').innerHTML = `Here is your ${tripDays} day trip, based at ${homeBase}, flying the ${equipment}<br><br>`;
 }
 
-/* OLD 
-
-function renderTable(legs) {
-    const tbody = document.getElementById('rosterTableBody');
-    tbody.innerHTML = ""; 
-
-    legs.forEach((leg) => {
-        const row = document.createElement('tr');
-        
-        // SimBrief URL requires Airline, Flight Number, Origin, and Destination
-        const airlineCode = document.getElementById('airlineCode').value.toUpperCase();
-        const simBriefUrl = `https://www.simbrief.com/system/dispatch.php?type=briefing&airline=${airlineCode}&flightnum=${leg.callsign}&orig=${leg.dep}&dest=${leg.arr}&type=${leg.equip}`;
-
-        row.innerHTML = `
-            <td>${leg.day}</td>
-            <td>${airlineCode}</td>
-            <td><a href="${simBriefUrl}" target="_blank" class="simbrief-link">${leg.callsign}</a></td>
-            <td contenteditable="true" inputmode="text" class="editable-cell">${leg.equip}</td>
-            <td>${leg.dep}</td>
-            <td>${leg.arr}</td>
-            <td contenteditable="true" inputmode="text" class="editable-cell"></td>
-            <td contenteditable="true" inputmode="text" class="editable-cell"></td>
-            <td>${leg.dep_local}</td>
-            <td>${leg.dep_utc}</td>
-            <td>${leg.arr_local}</td>
-            <td>${leg.arr_utc}</td>
-            <td contenteditable="true" inputmode="numeric" class="editable-cell"></td>
-            <td contenteditable="true" inputmode="numeric" class="editable-cell"></td>
-            <td>${leg.note}</td>
-        `;
-        tbody.appendChild(row);
-
-        // Save data in LocalStorage
-
-        const airline = document.getElementById('airlineCode').value;
-        localStorage.setItem('savedRoster', JSON.stringify(legs));
-        localStorage.setItem('savedAirline', airline);
-
-        console.log(airline, localStorage.getItem('savedRoster'), localStorage.getItem('savedAirline'));
-
-    });
-
-    // Preamble sentence here
-    const tripDays = document.getElementById('dutyLength').value;
-    const homeBase = document.getElementById('homeBase').value.toUpperCase().trim();
-    const equipment = document.getElementById('equipmentCode').value;
-
-    document.getElementById('preamble').innerHTML = `Here is your ${tripDays} day trip, based at ${homeBase}, flying the ${equipment} <br><br>`
-}
- */
-
 /* Event listeners */ 
 document.getElementById('generateFlightRoster').addEventListener('click', createTrip);
 
@@ -320,32 +273,28 @@ window.onload = function() {
             "PREVIOUS TRIP", 
             "A previous flight roster was found. Do you want to continue?",
             function() {
-                // User clicked RESUME
-                const legs = JSON.parse(savedData);
+                // 1. Restore all inputs so renderTable() has data to build the preamble
                 const airline = localStorage.getItem('savedAirline');
-                
-                if (document.getElementById('airlineCode')) {
-                    document.getElementById('airlineCode').value = airline || "";
-                }
+                const homeBase = localStorage.getItem('savedHomeBase');
+                const dutyLength = localStorage.getItem('savedDutyLength');
+                const equipment = localStorage.getItem('savedEquipment');
 
-                // HIDE the entire start page (Header, Inputs, and Button)
-                const startPage = document.getElementById('startPage');
-                if (startPage) {
-                    startPage.style.display = 'none';
-                }
+                if(airline) document.getElementById('airlineCode').value = airline;
+                if(homeBase) document.getElementById('homeBase').value = homeBase;
+                if(dutyLength) document.getElementById('dutyLength').value = dutyLength;
+                if(equipment) document.getElementById('equipmentCode').value = equipment;
 
-                // SHOW the schedule container
-                const scheduleSection = document.getElementById('flightSchedule');
-                if (scheduleSection) {
-                    scheduleSection.style.display = 'block';
-                }
+                // 2. Hide Start Page / Show Schedule
+                document.getElementById('startPage').style.display = 'none';
+                document.getElementById('flightSchedule').style.display = 'block';
                 
+                // 3. Render
+                const legs = JSON.parse(savedData);
                 renderTable(legs);
             },
             function() {
-                // User clicked NEW TRIP
-                localStorage.removeItem('savedRoster');
-                localStorage.removeItem('savedAirline');
+                // User clicked NEW TRIP - Clear everything
+                localStorage.clear(); 
             }
         );
     }
