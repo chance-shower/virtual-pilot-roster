@@ -1,6 +1,23 @@
 /* Importing fonts */
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
 
+/* Global CSS changes */
+
+button {
+    background: #fff7b3;
+    font-family: 'IBM Plex Mono', monospace;
+    padding: 0.6em 1.3em;
+    font-weight: 600;
+    font-size: 16px;
+    border: 3px solid black;
+    box-shadow: 0.1em 0.1em;
+}
+
+button:active {
+  transform: translate(0.05em, 0.05em);
+  box-shadow: 0.05em 0.05em;
+}
+
 html, body {
     background-color: #363636;
     font-family: 'IBM Plex Mono', monospace;
@@ -67,7 +84,7 @@ html, body {
 #inputdata input {
   border: 2px solid #fffcdf;
   padding: 1px;
-  box-shadow: 4px 6px #f1f1f1;
+  box-shadow: 4px 6px #fff7b3;
   width: 100%;
   max-width: 300px;
   height: 30px;
