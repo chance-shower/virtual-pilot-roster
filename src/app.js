@@ -168,6 +168,15 @@ function renderTable(legs) {
             <td>${leg.note}</td>
         `;
         tbody.appendChild(row);
+
+        // Save data in LocalStorage
+
+        const airline = document.getElementById('airlineCode').value;
+        localStorage.setItem('savedRoster', JSON.stringify(legs));
+        localStorage.setItem('savedAirline', airline);
+
+        console.log(airline, localStorage.getItem('savedRoster'), localStorage.getItem('savedAirline'));
+
     });
 
     // Preamble sentence here
@@ -178,14 +187,21 @@ function renderTable(legs) {
     document.getElementById('preamble').innerHTML = `Here is your ${tripDays} day trip, based at ${homeBase}, flying the ${equipment} <br><br>`
 }
 
-function closeToWelcomeScreen() {
-    document.getElementById('startPage').style.display = 'block';
-    document.getElementById('flightSchedule').style.display = 'none';
-}
+//function closeToWelcomeScreen() {
+//    document.getElementById('startPage').style.display = 'block';
+//    document.getElementById('flightSchedule').style.display = 'none';
+//}
 
 // Event listeners
 document.getElementById('generateFlightRoster').addEventListener('click', createTrip);
-document.getElementById('closethisflighttrip').addEventListener('click', closeToWelcomeScreen)
+//document.getElementById('closethisflighttrip').addEventListener('click', closeToWelcomeScreen)
+document.getElementById('closethisflighttrip').addEventListener('click', function() {
+    if(confirm("Are you sure? This will delete the current trip data.")) {
+        localStorage.removeItem('savedRoster');
+        localStorage.removeItem('savedAirline');
+        location.reload(); // Refresh to show the input screen again
+    }
+});
 
 document.addEventListener('focusin', (e) => {
     if (e.target.classList.contains('editable-cell')) {
@@ -199,3 +215,32 @@ document.addEventListener('focusin', (e) => {
         }, 50);
     }
 });
+
+// Startup functions
+
+window.onload = function() {
+    const savedData = localStorage.getItem('savedRoster');
+    
+    if (savedData) {
+        const confirmLoad = confirm("A previous trip was found. Do you want to continue your previous trip?");
+        
+        if (confirmLoad) {
+            const legs = JSON.parse(savedData);
+            const airline = localStorage.getItem('savedAirline');
+            
+            // Restore the airline code input
+            document.getElementById('airlineCode').value = airline || "";
+            
+            // Hide the input screen and show the schedule
+            document.getElementById('input-container').style.display = 'none';
+            document.getElementById('flightschedule').style.display = 'block';
+            
+            // Re-render the table with the saved data
+            renderTable(legs);
+        } else {
+            // User said no, so clear the old data to start fresh
+            localStorage.removeItem('savedRoster');
+            localStorage.removeItem('savedAirline');
+        }
+    }
+};
