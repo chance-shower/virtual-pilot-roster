@@ -144,9 +144,23 @@ function generateDay(dayNum, startCity, isFinalDay, airline, equipment, homeBase
             if (i === 0) dutyStart = chosen.absDep - 30;
             
             let note = "-";
-            if (i > 0 && (chosen.absDep - arrivalTime) < 45) note = "Equipment change";
-            if (isFinalDay && chosen.arr === homeBase) note = "End of trip";
+            
+            if (legs.length > 0) {
+                const prevLeg = legs[legs.length - 1];
+                if (chosen.equip !== prevLeg.equip) {
+                    note = "Equipment change";
+                }
+            }
 
+            // 2. Existing check for short turns (overrides note if turn is tight)
+            if (i > 0 && (chosen.absDep - arrivalTime) < 45) {
+                note = "Equipment change"; 
+            }
+
+            // 3. Final day check
+            if (isFinalDay && chosen.arr === homeBase) {
+                note = "End of trip";
+            }
             legs.push({ ...chosen, day: dayNum, note });
             city = chosen.arr;
             arrivalTime = chosen.absArr;

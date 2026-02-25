@@ -1,34 +1,15 @@
-document.getElementById('loader-overlay').style.display = 'flex';
+// Pick a flight, favoring home on final day
+            let chosen = isFinalDay && i >= 1 && pool.find(f => f.arr === homeBase) || pool[Math.floor(Math.random() * pool.length)];
+            
+            if (i === 0) dutyStart = chosen.absDep - 30;
+            
+            let note = "-";
+            if (i > 0 && (chosen.absDep - arrivalTime) < 45) note = "Equipment change";
+            if (isFinalDay && chosen.arr === homeBase) note = "End of trip";
 
-    try {
-        let fullRoster = [];
-        let currentCity = homeBase;
+            legs.push({ ...chosen, day: dayNum, note });
+            city = chosen.arr;
+            arrivalTime = chosen.absArr;
 
-        for (let day = 1; day <= dutyLength; day++) {
-            // We use a helper function to "attempt" a full day
-            //let dayLegs = generateDay(day, currentCity, (day === dutyLength), airline, equipment, homeBase);
-            let dayLegs = generateDay(day, currentCity, (day === dutyLength), airline, equipment, homeBase, desired, excluded);
-
-            if (!dayLegs || dayLegs.length === 0) {
-                 throw `Could not find a valid flight path for Day ${day} starting from ${currentCity}.`;
-            }
-
-            fullRoster = fullRoster.concat(dayLegs);
-            // Update currentCity to the last arrival of the day for the next morning
-            currentCity = dayLegs[dayLegs.length - 1].arr;
-        }
-
-        renderTable(fullRoster);
+            if (isFinalDay && city === homeBase && legs.length >= 2) return legs;
         
-        localStorage.setItem('savedHomeBase', homeBase);
-        localStorage.setItem('savedDutyLength', dutyLength);
-        localStorage.setItem('savedEquipment', equipment.join(', '));
-
-        document.getElementById('startPage').style.display = 'none';
-        document.getElementById('flightSchedule').style.display = 'block';
-
-    } catch (err) {
-        alert(err);
-    } finally {
-        document.getElementById('loader-overlay').style.display = 'none';
-    }
