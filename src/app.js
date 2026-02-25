@@ -115,41 +115,41 @@ function generateDay(dayNum, startCity, isFinalDay, airline, equipment, homeBase
             equipment.forEach(ac => {
                 if (possibleData[ac]) {
                     Object.keys(possibleData[ac]).forEach(dest => {
-                        // Final day priority: if home is available, only consider home
                         if (isFinalDay && i >= 1 && dest !== homeBase && Object.keys(possibleData[ac]).includes(homeBase)) return;
 
                         possibleData[ac][dest].forEach(flt => {
-                            // 1. Airport filters
                             if (desired.length > 0 && dest !== homeBase && !desired.includes(dest)) return;
                             if (excluded.includes(dest)) return;
 
-                            // 2. Duration Logic
+                            // 1. Duration & Preference Logic
                             const rawDep = toMins(flt.dep_utc);
                             const rawArr = toMins(flt.arr_utc);
-                            let duration = rawArr - rawDep;
-                            if (duration < 0) duration += 1440; 
+                            let duration = (rawArr - rawDep + 1440) % 1440; 
 
-                            // Mixed (no preference) skips these checks entirely
                             if (haulPref === 'short' && duration > 180) return; 
-                            if (haulPref === 'medium' && duration <= 180) return;
+                            if (haulPref === 'medium' && duration < 45) return; // Hard floor for realism
 
-                            // 3. Time Syncing Logic
+                            // 2. Time Syncing (The fix for -99m and UTC crossing)
                             let depM = rawDep;
-                            // If this isn't the first flight, and dep is "earlier" than arrival, it's the next day
-                            if (i > 0 && depM < (arrivalTime % 1440)) depM += 1440;
+                            if (i > 0) {
+                                while (depM < (arrivalTime + 15)) {
+                                    depM += 1440;
+                                }
+                            }
                             
-                            let absArr = rawArr < rawDep ? rawArr + 1440 : rawArr;
-                            if (depM >= 1440 && (rawArr >= rawDep)) absArr += 1440;
-                            if (depM >= 1440 && (rawArr < rawDep)) absArr += 0; // Already added 1440
+                            let absArr = depM + duration;
 
-                            // 4. Mode-Based Flexibility
+                            // 3. Logic for Initial Departure and Connections
                             if (i === 0) {
                                 const local = toMins(flt.dep_local);
-                                // MEDIUM REMOVES RESTRICTIONS: If medium, allow any time. If not, stick to windows.
                                 const isInsideWindow = (local >= 300 && local <= 600) || (local >= 780 && local <= 1020);
                                 
                                 if (haulPref === 'medium' || isInsideWindow) {
-                                    pool.push({ ...flt, dep: city, arr: dest, equip: ac, absArr, absDep: depM });
+                                    // Assign Priority
+                                    let priority = (haulPref === 'medium' && duration > 180) ? 2 : 1;
+                                    if (haulPref === 'mixed' || haulPref === 'short') priority = 2;
+
+                                    pool.push({ ...flt, dep: city, arr: dest, equip: ac, absArr, absDep: depM, priority });
                                 }
                             } else {
                                 const turn = depM - arrivalTime;
@@ -157,7 +157,12 @@ function generateDay(dayNum, startCity, isFinalDay, airline, equipment, homeBase
                                 const maxTurn = (haulPref === 'medium') ? 300 : 180;
                                 
                                 if (turn >= 15 && turn <= maxTurn && duty <= 840) {
-                                    pool.push({ ...flt, dep: city, arr: dest, equip: ac, absArr, absDep: depM });
+                                    // Assign Priority
+                                    let priority = (haulPref === 'medium' && duration > 180) ? 2 : 1;
+                                    if (haulPref === 'mixed') priority = 2;
+                                    if (haulPref === 'short' && duration <= 180) priority = 2;
+
+                                    pool.push({ ...flt, dep: city, arr: dest, equip: ac, absArr, absDep: depM, priority });
                                 }
                             }
                         });
@@ -167,10 +172,31 @@ function generateDay(dayNum, startCity, isFinalDay, airline, equipment, homeBase
 
             if (pool.length === 0) break;
 
-            let chosen = isFinalDay && i >= 1 && pool.find(f => f.arr === homeBase) || pool[Math.floor(Math.random() * pool.length)];
+            // --- SMART SELECTION LOGIC ---
+            let chosen = null;
+            
+            // Try to go home on final day
+            if (isFinalDay && i >= 1) {
+                chosen = pool.find(f => f.arr === homeBase);
+            }
+
+            if (!chosen) {
+                // Filter for "High Priority" (the Medium Haul targets)
+                const highPriorityPool = pool.filter(f => f.priority === 2);
+                if (highPriorityPool.length > 0) {
+                    chosen = highPriorityPool[Math.floor(Math.random() * highPriorityPool.length)];
+                } else {
+                    // Fallback to "Priority 1" (the shorter flights)
+                    chosen = pool[Math.floor(Math.random() * pool.length)];
+                    chosen.isFallback = true; 
+                }
+            }
+            // -----------------------------
+
             if (i === 0) dutyStart = chosen.absDep - 30;
             
             let note = "-";
+            if (chosen.isFallback && haulPref === 'medium') note = "Short Leg Fallback";
             if (legs.length > 0 && chosen.equip !== legs[legs.length - 1].equip) note = "Equipment change";
             if (isFinalDay && chosen.arr === homeBase) note = "End of trip";
 
@@ -181,7 +207,6 @@ function generateDay(dayNum, startCity, isFinalDay, airline, equipment, homeBase
             if (isFinalDay && city === homeBase && legs.length >= 2) return legs;
         }
 
-        // Return if we have a valid day (3+ legs or 2+ legs if finishing at base)
         if (legs.length >= 3 || (isFinalDay && legs.length >= 2 && legs[legs.length-1].arr === homeBase)) {
             return legs;
         }
