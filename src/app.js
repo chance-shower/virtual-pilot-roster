@@ -99,13 +99,14 @@ async function createTrip() {
 // A dedicated function to try and build a 2-6 leg day
 function generateDay(dayNum, startCity, isFinalDay, airline, equipment, homeBase, desired, excluded, haulPref) {
     let attempts = 0;
-    const maxDayAttempts = (haulPref === 'medium') ? 100 : 20;
+    const maxDayAttempts = (haulPref === 'short') ? 20 : 150;
 
     while (attempts < maxDayAttempts) {
         let legs = [];
         let city = startCity;
         let arrivalTime = 0;
         let dutyStart = null;
+        let lastFlightDuration = 0;
 
         for (let i = 0; i < 6; i++) {
             const possibleData = flightData[city]?.[airline];
@@ -121,48 +122,58 @@ function generateDay(dayNum, startCity, isFinalDay, airline, equipment, homeBase
                             if (desired.length > 0 && dest !== homeBase && !desired.includes(dest)) return;
                             if (excluded.includes(dest)) return;
 
-                            // 1. Duration & Preference Logic
                             const rawDep = toMins(flt.dep_utc);
                             const rawArr = toMins(flt.arr_utc);
                             let duration = (rawArr - rawDep + 1440) % 1440; 
 
+                            // 1. HAUL FILTERS
                             if (haulPref === 'short' && duration > 180) return; 
-                            if (haulPref === 'medium' && duration < 45) return; // Hard floor for realism
+                            if (haulPref === 'medium' && duration < 45) return; 
+                            if (haulPref === 'long' && duration < 60) return; 
 
-                            // 2. Time Syncing (The fix for -99m and UTC crossing)
+                            // 2. TIME & REST LOGIC
                             let depM = rawDep;
                             if (i > 0) {
-                                while (depM < (arrivalTime + 15)) {
+                                let requiredMinRest = 15; 
+                                if (lastFlightDuration > 300) {
+                                    requiredMinRest = Math.floor(lastFlightDuration / 2);
+                                }
+                                while (depM < (arrivalTime + requiredMinRest)) {
                                     depM += 1440;
                                 }
                             }
                             
                             let absArr = depM + duration;
+                            let currentDutyStart = dutyStart || (depM - 30);
+                            const turn = i > 0 ? (depM - arrivalTime) : 0;
+                            const duty = (absArr + 15) - currentDutyStart;
 
-                            // 3. Logic for Initial Departure and Connections
+                            // 3. START TIME RESTRICTIONS
                             if (i === 0) {
                                 const local = toMins(flt.dep_local);
+                                // ONLY Short haul is restricted to specific morning/afternoon blocks
                                 const isInsideWindow = (local >= 300 && local <= 600) || (local >= 780 && local <= 1020);
                                 
-                                if (haulPref === 'medium' || isInsideWindow) {
-                                    // Assign Priority
-                                    let priority = (haulPref === 'medium' && duration > 180) ? 2 : 1;
-                                    if (haulPref === 'mixed' || haulPref === 'short') priority = 2;
+                                if (haulPref !== 'short' || isInsideWindow) {
+                                    let priority = 1;
+                                    if (haulPref === 'medium' && (duration > 180 && duration < 480)) priority = 2;
+                                    if (haulPref === 'long' && duration > 480) priority = 3;
+                                    if (haulPref === 'long' && (duration > 180 && duration <= 480)) priority = 2;
 
-                                    pool.push({ ...flt, dep: city, arr: dest, equip: ac, absArr, absDep: depM, priority });
+                                    pool.push({ ...flt, dep: city, arr: dest, equip: ac, absArr, absDep: depM, priority, duration });
                                 }
                             } else {
-                                const turn = depM - arrivalTime;
-                                const duty = (absArr + 15) - dutyStart;
-                                const maxTurn = (haulPref === 'medium') ? 300 : 180;
-                                
-                                if (turn >= 15 && turn <= maxTurn && duty <= 840) {
-                                    // Assign Priority
-                                    let priority = (haulPref === 'medium' && duration > 180) ? 2 : 1;
-                                    if (haulPref === 'mixed') priority = 2;
-                                    if (haulPref === 'short' && duration <= 180) priority = 2;
+                                // CONNECTION LOGIC
+                                const maxDuty = (haulPref === 'long') ? 1080 : 840;
+                                const maxTurn = (haulPref === 'short') ? 180 : 600; // 10 hour max turn for long haul
 
-                                    pool.push({ ...flt, dep: city, arr: dest, equip: ac, absArr, absDep: depM, priority });
+                                if (turn >= 15 && turn <= maxTurn && duty <= maxDuty) {
+                                    let priority = 1;
+                                    if (haulPref === 'medium' && (duration > 180 && duration < 480)) priority = 2;
+                                    if (haulPref === 'long' && duration > 480) priority = 3;
+                                    if (haulPref === 'long' && (duration > 180 && duration <= 480)) priority = 2;
+
+                                    pool.push({ ...flt, dep: city, arr: dest, equip: ac, absArr, absDep: depM, priority, duration });
                                 }
                             }
                         });
@@ -172,42 +183,40 @@ function generateDay(dayNum, startCity, isFinalDay, airline, equipment, homeBase
 
             if (pool.length === 0) break;
 
-            // --- SMART SELECTION LOGIC ---
+            // SMART PICKER
             let chosen = null;
-            
-            // Try to go home on final day
-            if (isFinalDay && i >= 1) {
-                chosen = pool.find(f => f.arr === homeBase);
-            }
+            if (isFinalDay && i >= 1) chosen = pool.find(f => f.arr === homeBase);
 
             if (!chosen) {
-                // Filter for "High Priority" (the Medium Haul targets)
-                const highPriorityPool = pool.filter(f => f.priority === 2);
-                if (highPriorityPool.length > 0) {
-                    chosen = highPriorityPool[Math.floor(Math.random() * highPriorityPool.length)];
-                } else {
-                    // Fallback to "Priority 1" (the shorter flights)
+                const p3 = pool.filter(f => f.priority === 3);
+                const p2 = pool.filter(f => f.priority === 2);
+                if (p3.length > 0) chosen = p3[Math.floor(Math.random() * p3.length)];
+                else if (p2.length > 0) chosen = p2[Math.floor(Math.random() * p2.length)];
+                else {
                     chosen = pool[Math.floor(Math.random() * pool.length)];
-                    chosen.isFallback = true; 
+                    chosen.isFallback = true;
                 }
             }
-            // -----------------------------
 
             if (i === 0) dutyStart = chosen.absDep - 30;
             
             let note = "-";
-            if (chosen.isFallback && haulPref === 'medium') note = "Short Leg Fallback";
-            if (legs.length > 0 && chosen.equip !== legs[legs.length - 1].equip) note = "Equipment change";
+            if (chosen.isFallback && haulPref !== 'short') note = "Duration Fallback";
+            if (chosen.duration > 300 && i > 0) note = "Crew Rest Applied";
             if (isFinalDay && chosen.arr === homeBase) note = "End of trip";
 
             legs.push({ ...chosen, day: dayNum, note });
             city = chosen.arr;
             arrivalTime = chosen.absArr;
+            lastFlightDuration = chosen.duration;
 
-            if (isFinalDay && city === homeBase && legs.length >= 2) return legs;
+            if (isFinalDay && city === homeBase) return legs;
+            // Stop adding legs if we are deep into a long haul duty day
+            if (dutyStart && (arrivalTime - dutyStart) > 900) break; 
         }
 
-        if (legs.length >= 3 || (isFinalDay && legs.length >= 2 && legs[legs.length-1].arr === homeBase)) {
+        const minLegs = (haulPref === 'long') ? 1 : 2;
+        if (legs.length >= minLegs || (isFinalDay && legs.length >= 1 && legs[legs.length-1].arr === homeBase)) {
             return legs;
         }
         attempts++;
