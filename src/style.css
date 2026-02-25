@@ -82,7 +82,7 @@ html, body {
 
 /* Input text fields */
 
-#inputdata input {
+#inputdata input[type="text"] {
   border: 2px solid #fffcdf;
   padding: 1px;
   box-shadow: 4px 6px #fff7b3;
@@ -110,6 +110,44 @@ html, body {
 
 #inputdata input:focus {
   border: 3px solid #f1e894
+}
+
+.radio-group {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 300px; /* Matches the text box width */
+}
+
+.radio-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    flex: 1;
+    gap: 8px;
+}
+
+/* Specific reset for the radio inputs */
+.radio-container input[type="radio"] {
+    appearance: auto; /* Restores standard radio look */
+    width: 14px !important; /* Forces the small size */
+    height: 14px !important;
+    margin: 0;
+    padding: 0;
+    box-shadow: none !important; /* Removes the heavy yellow shadow */
+    border: none;
+    cursor: pointer;
+    accent-color: #fff7b3; /* Matches your button color */
+}
+
+.radio-label {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 /* Loading spinner */
@@ -162,7 +200,7 @@ html, body {
 }
 
 #rosterTable {
-    min-width: 1000px;
+    min-width: 1150px;
     border-collapse: collapse; /* Removes the double border look */
     margin: 0 0;
     font-family: 'IBM Plex Mono', monospace; /* Updated to your new font! */

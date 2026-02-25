@@ -33,6 +33,21 @@
                 <input type="text" id="homeBase" placeholder="KORD">
                 <label for="dutyLength">Duty length (days)</label>
                 <input type="text" id="dutyLength" placeholder="4">
+                <label>Main flight Duration</label>
+                <div class="radio-group">
+                    <label class="radio-container">
+                        <input type="radio" name="haulPreference" value="short">
+                        <span class="radio-label">Short</span>
+                    </label>
+                    <label class="radio-container">
+                        <input type="radio" name="haulPreference" value="mixed" checked>
+                        <span class="radio-label">Mixed</span>
+                    </label>
+                    <label class="radio-container">
+                        <input type="radio" name="haulPreference" value="medium">
+                        <span class="radio-label">Medium</span>
+                    </label>
+                </div>
                 <label for="desiredAirports">Preferred airports (optional)</label>
                 <input type="text" id="desiredAirports" placeholder="KDEN,KSFO,...">
                 <label for="excludedAirports">Excluded airports (optional)</label>
@@ -61,6 +76,7 @@
                             <td>STD (UTC)</td>
                             <td>STA (local)</td>
                             <td>STA (UTC)</td>
+                            <td>Duration</td>
                             <td>ATD</td>
                             <td>ATA</td>
                             <td>Notes</td>
