@@ -181,14 +181,19 @@ function renderTable(legs) {
         tbody.appendChild(row);
     });
 
-    // Global Save (Moved outside the loop so it only fires once)
+    // Global Save
     localStorage.setItem('savedRoster', JSON.stringify(legs));
     localStorage.setItem('savedAirline', airlineCode);
 
-    // Update Preamble
+    // Get values for the preamble
     const tripDays = document.getElementById('dutyLength').value || "?";
     const homeBase = (document.getElementById('homeBase').value || "BASE").toUpperCase().trim();
     const equipment = document.getElementById('equipmentCode').value || "ACFT";
+
+    // SAVE these so window.onload can find them later
+    localStorage.setItem('savedHomeBase', homeBase);
+    localStorage.setItem('savedDutyLength', tripDays);
+    localStorage.setItem('savedEquipment', equipment);
 
     document.getElementById('preamble').innerHTML = `Here is your ${tripDays} day trip, based at ${homeBase}, flying the ${equipment}<br><br>`;
 }
@@ -278,12 +283,26 @@ window.onload = function() {
         showModal(
             "PREVIOUS TRIP", 
             "A previous flight roster was found. Do you want to continue?",
-            "RESUME",   // Confirm Text
-            "NEW TRIP",  // Cancel Text
+            "RESUME", 
+            "NEW TRIP",
             function() {
-                // ... your existing resume logic ...
+                // Restore inputs
+                const airline = localStorage.getItem('savedAirline');
+                const homeBase = localStorage.getItem('savedHomeBase');
+                const dutyLength = localStorage.getItem('savedDutyLength');
+                const equipment = localStorage.getItem('savedEquipment');
+
+                if(airline) document.getElementById('airlineCode').value = airline;
+                if(homeBase) document.getElementById('homeBase').value = homeBase;
+                if(dutyLength) document.getElementById('dutyLength').value = dutyLength;
+                if(equipment) document.getElementById('equipmentCode').value = equipment;
+
+                // --- THE MISSING ACTION LINES ---
+                document.getElementById('startPage').style.display = 'none';
+                document.getElementById('flightSchedule').style.display = 'block';
+                // --------------------------------
+
                 const legs = JSON.parse(savedData);
-                // (Rest of your code to restore inputs and hide startPage)
                 renderTable(legs);
             },
             function() {
