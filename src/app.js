@@ -34,44 +34,60 @@ async function createTrip() {
     const homeBase = document.getElementById('homeBase').value.toUpperCase().trim();
     const equipment = document.getElementById('equipmentCode').value.split(',').map(s => s.trim().toUpperCase()).filter(s => s !== "");
     const dutyLength = parseInt(document.getElementById('dutyLength').value) || 4;
+    const desired = document.getElementById('desiredAirports').value.split(',').map(s => s.trim().toUpperCase()).filter(s => s !== "");
+    const excluded = document.getElementById('excludedAirports').value.split(',').map(s => s.trim().toUpperCase()).filter(s => s !== "");
 
     document.getElementById('loader-overlay').style.display = 'flex';
 
-    try {
-        let fullRoster = [];
-        let currentCity = homeBase;
+    // We wrap the generation in a retry loop
+    let success = false;
+    let maxAttempts = 10;
 
-        for (let day = 1; day <= dutyLength; day++) {
-            // We use a helper function to "attempt" a full day
-            let dayLegs = generateDay(day, currentCity, (day === dutyLength), airline, equipment, homeBase);
-            
-            if (!dayLegs || dayLegs.length === 0) {
-                 throw `Could not find a valid flight path for Day ${day} starting from ${currentCity}.`;
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+        try {
+            let fullRoster = [];
+            let currentCity = homeBase;
+
+            for (let day = 1; day <= dutyLength; day++) {
+                let dayLegs = generateDay(day, currentCity, (day === dutyLength), airline, equipment, homeBase, desired, excluded);
+                
+                if (!dayLegs || dayLegs.length === 0) {
+                    // Instead of alert, we throw an error to trigger a retry for the WHOLE trip
+                    throw `Failed on day ${day}`; 
+                }
+
+                fullRoster = fullRoster.concat(dayLegs);
+                currentCity = dayLegs[dayLegs.length - 1].arr;
             }
 
-            fullRoster = fullRoster.concat(dayLegs);
-            // Update currentCity to the last arrival of the day for the next morning
-            currentCity = dayLegs[dayLegs.length - 1].arr;
+            // If we reach this point, the entire trip was successful!
+            renderTable(fullRoster);
+            
+            localStorage.setItem('savedHomeBase', homeBase);
+            localStorage.setItem('savedDutyLength', dutyLength);
+            localStorage.setItem('savedEquipment', equipment.join(', '));
+
+            document.getElementById('startPage').style.display = 'none';
+            document.getElementById('flightSchedule').style.display = 'block';
+            
+            success = true;
+            break; // Exit the 10-attempt loop
+
+        } catch (err) {
+            console.warn(`Attempt ${attempt} failed: ${err}`);
+            // If it's the 10th attempt and we still haven't succeeded:
+            if (attempt === maxAttempts) {
+                alert("We couldn't find a valid flight path after 10 tries. Try changing your airport restrictions or duty length to give the generator more options.");
+            }
+            // Otherwise, the loop continues to the next attempt...
         }
-
-        renderTable(fullRoster);
-        
-        localStorage.setItem('savedHomeBase', homeBase);
-        localStorage.setItem('savedDutyLength', dutyLength);
-        localStorage.setItem('savedEquipment', equipment.join(', '));
-
-        document.getElementById('startPage').style.display = 'none';
-        document.getElementById('flightSchedule').style.display = 'block';
-
-    } catch (err) {
-        alert(err);
-    } finally {
-        document.getElementById('loader-overlay').style.display = 'none';
     }
+
+    document.getElementById('loader-overlay').style.display = 'none';
 }
 
 // A dedicated function to try and build a 2-6 leg day
-function generateDay(dayNum, startCity, isFinalDay, airline, equipment, homeBase) {
+function generateDay(dayNum, startCity, isFinalDay, airline, equipment, homeBase, desired, excluded) {
     let attempts = 0;
     while (attempts < 20) { // Try 20 different random paths for this day
         let legs = [];
@@ -91,6 +107,12 @@ function generateDay(dayNum, startCity, isFinalDay, airline, equipment, homeBase
                         if (isFinalDay && i >= 1 && dest !== homeBase && Object.keys(possibleData[ac]).includes(homeBase)) return;
 
                         possibleData[ac][dest].forEach(flt => {
+                            
+                            //new code
+                            if (desired.length > 0 && dest !== homeBase && !desired.includes(dest)) return;
+                            if (excluded.includes(dest)) return;
+
+                            //old code
                             let depM = toMins(flt.dep_utc);
                             if (i > 0 && depM < (arrivalTime % 1440)) depM += 1440;
                             
