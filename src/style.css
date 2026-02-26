@@ -190,16 +190,19 @@ html, body {
 }
 
 #preamble {
-    flex: 0 0 75%;
+    flex: 1; /* Allows text to take remaining space and wrap */
     font-size: 14px;
     line-height: 1.4;
     color: #fffcdf;
+    padding-right: 15px; /* Space between text and button */
+    word-break: break-word; /* Ensures long strings of text don't overflow */
+    overflow-wrap: break-word;
 }
 
 #rerun-container {
-    flex: 0 0 25%;
+    flex: 0 0 40px; /* Give it a fixed width so it doesn't shrink */
     display: flex;
-    justify-content: flex-end; /* Pushes button to the far right */
+    justify-content: flex-end;
 }
 
 #rerunButton {
@@ -259,6 +262,11 @@ html, body {
     font-weight: 400;
 }
 
+/* Ensure the standard table cells don't override the day-break style */
+#rosterTable tr {
+    border-top: 1px solid #bdc3c7; /* default */
+}
+
 #rosterTable th, 
 #rosterTable td {
     border: 1px solid #bdc3c7; /* Gray borders */
@@ -305,6 +313,11 @@ html, body {
     padding: 10px;
     margin: -10px;
     color:#943a3a;
+}
+
+/* Styling for the dashed equipment change */
+.equip-change-row td {
+    border-top: 2px dashed #e74c3c !important;
 }
 
 /* Alert popup */

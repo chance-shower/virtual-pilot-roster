@@ -234,7 +234,20 @@ function renderTable(legs) {
 
     legs.forEach((leg, index) => {
         const row = document.createElement('tr');
-        
+    
+        // --- BORDER LOGIC ---
+        if (index > 0) {
+            const prevLeg = legs[index - 1];
+            
+            // 1. Bold line between different Days
+            if (leg.day !== prevLeg.day) {
+                row.style.borderTop = "3px solid #fff"; // Bold white line for new day
+            } 
+            // 2. Dashed line for Equipment changes (only if it's the same day)
+            else if (leg.equip !== prevLeg.equip) {
+                row.classList.add('equip-change-row');
+            }
+        }    
         // Calculate duration for this leg
         const depM = toMins(leg.dep_utc);
         const arrM = toMins(leg.arr_utc);
