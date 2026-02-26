@@ -307,6 +307,17 @@ html, body {
     background-color: #e3f2fd;
 }
 
+/* Styling for the thick RED day-break border */
+.day-break-row td {
+    /* Applying the 3px RED solid border from your image to the BOTTOM of cells */
+    border-bottom: 3px solid #bb5050 !important;
+}
+
+/* Styling for the dashed equipment change border */
+.equip-change-row td {
+    border-top: 2px dashed #943a3a !important; /* Dashing the TOP of the current row's cells */
+}
+
 /* Make sure links are easy to hit */
 .simbrief-link {
     display: block;

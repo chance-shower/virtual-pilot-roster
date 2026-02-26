@@ -234,20 +234,24 @@ function renderTable(legs) {
 
     legs.forEach((leg, index) => {
         const row = document.createElement('tr');
-    
-        // --- BORDER LOGIC ---
+        
+        // --- The new row-border logic ---
         if (index > 0) {
             const prevLeg = legs[index - 1];
             
-            // 1. Bold line between different Days
+            // 1. If it's a new day, we apply the thick RED border
             if (leg.day !== prevLeg.day) {
-                row.style.borderTop = "3px solid #fff"; // Bold white line for new day
+                // Find the *previous* row and apply the border to its CELLS
+                const allTbodyRows = tbody.getElementsByTagName('tr');
+                const rowAbove = allTbodyRows[allTbodyRows.length - 1]; // The most recently added row
+                rowAbove.classList.add('day-break-row'); // Add a class to the whole row
             } 
-            // 2. Dashed line for Equipment changes (only if it's the same day)
+            // 2. Otherwise, if the aircraft type changes on the same day, we make it dashed
             else if (leg.equip !== prevLeg.equip) {
-                row.classList.add('equip-change-row');
+                row.classList.add('equip-change-row'); // Standard approach: dashed border at the top of the *current* row
             }
-        }    
+        }
+        
         // Calculate duration for this leg
         const depM = toMins(leg.dep_utc);
         const arrM = toMins(leg.arr_utc);
