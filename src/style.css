@@ -326,11 +326,6 @@ html, body {
     color:#943a3a;
 }
 
-/* Styling for the dashed equipment change */
-.equip-change-row td {
-    border-top: 2px dashed #e74c3c !important;
-}
-
 /* Alert popup */
 
 #modalOverlay {
