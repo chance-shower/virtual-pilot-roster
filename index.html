@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Virtual Pilot Scheduler</title>
     <link rel="manifest" href="/virtual-pilot-roster/src/manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
@@ -26,13 +26,13 @@
             </div>
             <div id="inputdata">
                 <label for="airlineCode">Airline (ICAO code)</label>
-                <input type="text" id="airlineCode" placeholder="UAL">
+                <input type="text" id="airlineCode" placeholder="UAL" autocomplete="off" autocapitalize="characters">
                 <label for="equipmentCode">Aircraft (ICAO code)</label>
-                <input type="text" id="equipmentCode" placeholder="B38M">
+                <input type="text" id="equipmentCode" placeholder="B38M" autocomplete="off" autocapitalize="characters">
                 <label for="homeBase">Home base</label>
-                <input type="text" id="homeBase" placeholder="KORD">
+                <input type="text" id="homeBase" placeholder="KORD" autocomplete="off" autocapitalize="characters">
                 <label for="dutyLength">Duty length (days)</label>
-                <input type="text" id="dutyLength" placeholder="4">
+                <input type="number" id="dutyLength" placeholder="4" inputmode="numeric">
                 <label>Flight Type Preference</label>
                 <div class="radio-group">
                     <label class="radio-container">
@@ -49,9 +49,9 @@
                     </label>
                 </div>
                 <label for="desiredAirports">Preferred airports (optional)</label>
-                <input type="text" id="desiredAirports" placeholder="KDEN,KSFO,...">
+                <input type="text" id="desiredAirports" placeholder="KDEN,KSFO,..." autocomplete="off" autocapitalize="characters">
                 <label for="excludedAirports">Excluded airports (optional)</label>
-                <input type="text" id="excludedAirports" placeholder="KJFK,KLGA,...">
+                <input type="text" id="excludedAirports" placeholder="KJFK,KLGA,..." autocomplete="off" autocapitalize="characters">
             </div>
             <div id="flightschedulebutton">
                 <button id="generateFlightRoster">Generate flight roster</button>
@@ -71,22 +71,22 @@
                 <table id="rosterTable">
                     <thead>
                         <tr>
-                            <td>Day</td>
-                            <td>Airline</td>
-                            <td>Flight number</td>
-                            <td>Aircraft</td>
-                            <td>Dep</td>
-                            <td>Arr</td>
-                            <td>Dep gate</td>
-                            <td>Arr gate</td>
-                            <td>STD (local)</td>
-                            <td>STD (UTC)</td>
-                            <td>STA (local)</td>
-                            <td>STA (UTC)</td>
-                            <td>Duration</td>
-                            <td>ATD</td>
-                            <td>ATA</td>
-                            <td>Notes</td>
+                            <th>Day</th>
+                            <th>Airline</th>
+                            <th>Flight number</th>
+                            <th>Aircraft</th>
+                            <th>Dep</th>
+                            <th>Arr</th>
+                            <th>Dep gate</th>
+                            <th>Arr gate</th>
+                            <th>STD (local)</th>
+                            <th>STD (UTC)</th>
+                            <th>STA (local)</th>
+                            <th>STA (UTC)</th>
+                            <th>Duration</th>
+                            <th>ATD</th>
+                            <th>ATA</th>
+                            <th>Notes</th>
                         </tr>
                     </thead>
                     <tbody id="rosterTableBody">
