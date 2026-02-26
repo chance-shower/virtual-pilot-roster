@@ -180,6 +180,49 @@ html, body {
     color: #fffcdf;
 }
 
+#roster-header-container {
+    display: flex;
+    width: 100%;
+    align-items: flex-start; /* Aligns button to the top of the text block */
+    margin-bottom: 20px;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+#preamble {
+    flex: 0 0 75%;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #fffcdf;
+}
+
+#rerun-container {
+    flex: 0 0 25%;
+    display: flex;
+    justify-content: flex-end; /* Pushes button to the far right */
+}
+
+#rerunButton {
+    /* Forces the button to be a square */
+    width: 38px; 
+    height: 38px;
+    
+    /* Centers the icon perfectly */
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* Font adjustments */
+    font-size: 20px;
+    line-height: 1;
+    
+    /* Keeps your existing styling */
+    background-color: #e2db99;
+    border: 3px solid #fdfced;
+    cursor: pointer;
+}
+
 /* Table Styles */
 
 .table-container {

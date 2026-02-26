@@ -335,6 +335,14 @@ document.addEventListener('focusin', (e) => {
     }
 });
 
+// Re-roll button logic
+document.getElementById('rerunButton').addEventListener('click', () => {
+    // Scroll to top so user sees the loader
+    window.scrollTo(0, 0);
+    // Simply trigger the main generation function again
+    createTrip();
+});
+
 
 /* Startup functions */
 
