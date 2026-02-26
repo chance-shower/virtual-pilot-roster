@@ -265,14 +265,14 @@ html, body {
 }
 
 #rosterTable td:first-child, #rosterTable th:first-child {
-    border-left: 1px solid #bb5050c0;
+    border-left: 1px solid #d46f6f;
 }
 
 #rosterTable th, 
 #rosterTable td {
     /* Use a very light border as the default for all sides */
-    border-right: 1px solid #bb5050c0;
-    border-bottom: 1px solid #bb5050c0;
+    border-right: 1px solid #d46f6f;
+    border-bottom: 1px solid #d46f6f;
     padding: 0px 5px;
     text-align: center;
     white-space: nowrap;
@@ -312,7 +312,7 @@ html, body {
 
 /* Styling for the thick RED day-break border */
 .day-break-row td {
-    border-bottom: 3px solid #bb5050c0 !important;
+    border-bottom: 3px solid #d46f6f !important;
 }
 
 /* Dashed line for equipment change */
