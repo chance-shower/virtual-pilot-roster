@@ -70,27 +70,23 @@ async function createTrip() {
             localStorage.setItem('savedEquipment', equipment.join(', '));
             localStorage.setItem('savedAirline', airline);
 
-            // AUTO-SAVE TO BRIEFCASE LOGIC
-            const timestamp = new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'short'});
-            const tripName = `${airline} | ${homeBase} | ${equipment[0]} (${timestamp})`;
+            // --- TRIP SUCCESSFUL: UPDATE ACTIVE SESSION ONLY ---
+            renderTable(fullRoster);
+            
+            localStorage.setItem('savedHomeBase', homeBase);
+            localStorage.setItem('savedDutyLength', dutyLength);
+            localStorage.setItem('savedEquipment', equipment.join(', '));
+            localStorage.setItem('savedAirline', airline);
+            localStorage.setItem('savedRoster', JSON.stringify(fullRoster));
 
-            let briefcase = JSON.parse(localStorage.getItem('tripBriefcase') || "[]");
-            const newId = Date.now();
-            const newEntry = {
-                id: newId,
-                name: tripName,
-                data: fullRoster,
-                settings: { 
-                    airline, 
-                    home: homeBase, 
-                    equip: equipment.join(', '), 
-                    len: dutyLength 
-                }
-            };
+            // Reset the dropdown so we know this is a "Draft"
+            document.getElementById('tripSelect').value = ""; 
 
-            briefcase.push(newEntry);
-            localStorage.setItem('tripBriefcase', JSON.stringify(briefcase));
-            updateBriefcaseDropdown();
+            document.getElementById('startPage').style.display = 'none';
+            document.getElementById('flightSchedule').style.display = 'block';
+            
+            success = true;
+            break;
             
             // Switch UI
             document.getElementById('tripSelect').value = newId; 
@@ -463,18 +459,24 @@ function saveToBriefcase() {
     const legs = JSON.parse(localStorage.getItem('savedRoster'));
     if (!legs || legs.length === 0) return;
 
+    // Check if this trip is already in the briefcase
+    const currentTripId = document.getElementById('tripSelect').value;
+    if (currentTripId) {
+        alert("This trip is already in your briefcase and auto-syncing!");
+        return;
+    }
+
     const airline = localStorage.getItem('savedAirline') || "FLT";
     const home = localStorage.getItem('savedHomeBase') || "BASE";
     const equip = localStorage.getItem('savedEquipment') || "ACFT";
-    
-    // Create a unique name
     const timestamp = new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'short'});
     const tripName = `${airline} | ${home} | ${equip} (${timestamp})`;
 
     let briefcase = JSON.parse(localStorage.getItem('tripBriefcase') || "[]");
+    const newId = Date.now(); // Create the unique ID
     
     const newEntry = {
-        id: Date.now(),
+        id: newId,
         name: tripName,
         data: legs,
         settings: {
@@ -486,7 +488,10 @@ function saveToBriefcase() {
     briefcase.push(newEntry);
     localStorage.setItem('tripBriefcase', JSON.stringify(briefcase));
     updateBriefcaseDropdown();
-    alert("Trip saved!");
+    
+    // LOCK the dropdown to this new trip so live-sync works immediately
+    document.getElementById('tripSelect').value = newId; 
+    alert("Trip saved to briefcase!");
 }
 
 // Event: Loading from Briefcase
