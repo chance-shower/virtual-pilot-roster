@@ -62,17 +62,10 @@ async function createTrip() {
                 currentCity = dayLegs[dayLegs.length - 1].arr;
             }
 
-            // --- TRIP SUCCESSFUL: START SAVING ---
+            // --- TRIP SUCCESSFUL: UPDATE ACTIVE SESSION & UI ---
             renderTable(fullRoster);
             
-            localStorage.setItem('savedHomeBase', homeBase);
-            localStorage.setItem('savedDutyLength', dutyLength);
-            localStorage.setItem('savedEquipment', equipment.join(', '));
-            localStorage.setItem('savedAirline', airline);
-
-            // --- TRIP SUCCESSFUL: UPDATE ACTIVE SESSION ONLY ---
-            renderTable(fullRoster);
-            
+            // Save settings for the active session (Draft mode)
             localStorage.setItem('savedHomeBase', homeBase);
             localStorage.setItem('savedDutyLength', dutyLength);
             localStorage.setItem('savedEquipment', equipment.join(', '));
@@ -82,14 +75,7 @@ async function createTrip() {
             // Reset the dropdown so we know this is a "Draft"
             document.getElementById('tripSelect').value = ""; 
 
-            document.getElementById('startPage').style.display = 'none';
-            document.getElementById('flightSchedule').style.display = 'block';
-            
-            success = true;
-            break;
-            
-            // Switch UI
-            document.getElementById('tripSelect').value = newId; 
+            // Switch to the schedule view
             document.getElementById('startPage').style.display = 'none';
             document.getElementById('flightSchedule').style.display = 'block';
             
