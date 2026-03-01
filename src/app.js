@@ -326,7 +326,7 @@ document.getElementById('rosterTable').addEventListener('input', (e) => {
 document.getElementById('closethisflighttrip').addEventListener('click', function() {
     showModal(
         "EXIT TO MENU?", 
-        "Return to the start page? (Your rosters are safe!)", 
+        "Return to the start page? (Your roster is safe!)", 
         "GO TO MENU", 
         "STAY HERE", 
         function() {
@@ -391,7 +391,7 @@ window.onload = function() {
     if (savedData) {
         showModal(
             "PREVIOUS TRIP", 
-            "A previous flight roster was found. Do you want to continue?",
+            "A previous flight trip was found. Do you want to continue?",
             "RESUME", 
             "NEW TRIP",
             function() {
@@ -426,7 +426,7 @@ function updateBriefcaseDropdown() {
     const briefcase = JSON.parse(localStorage.getItem('tripBriefcase') || "[]");
     
     // Clear but keep first option
-    select.innerHTML = '<option value="">-- List of rosters --</option>';
+    select.innerHTML = '<option value="">-- List of trips --</option>';
     
     briefcase.forEach(trip => {
         const opt = document.createElement('option');
@@ -463,7 +463,7 @@ function saveToBriefcase() {
     briefcase.push(newEntry);
     localStorage.setItem('tripBriefcase', JSON.stringify(briefcase));
     updateBriefcaseDropdown();
-    alert("Trip added to saved rosters!");
+    alert("Trip saved!");
 }
 
 // Event: Loading from Briefcase
@@ -500,7 +500,7 @@ document.getElementById('exportBackup').addEventListener('click', () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `pilot_roster_backup.json`;
+    a.download = `pilot_roster_trip_backup.json`;
     a.click();
     URL.revokeObjectURL(url);
 });
@@ -520,7 +520,7 @@ document.getElementById('importFile').addEventListener('change', (e) => {
             if (Array.isArray(imported)) {
                 localStorage.setItem('tripBriefcase', JSON.stringify(imported));
                 updateBriefcaseDropdown();
-                alert("Roster imported successfully!");
+                alert("Trip imported successfully!");
             }
         } catch (err) { alert("Error reading backup file."); }
     };
@@ -532,7 +532,7 @@ document.getElementById('deleteSelectedTrip').addEventListener('click', () => {
     const id = document.getElementById('tripSelect').value;
     if (!id) return;
 
-    showModal("DELETE SAVED TRIP?", "Remove this from your set of rosters permanently?", "YES", "NO", () => {
+    showModal("DELETE SAVED TRIP?", "Remove this from your roster permanently?", "YES", "NO", () => {
         let briefcase = JSON.parse(localStorage.getItem('tripBriefcase') || "[]");
         briefcase = briefcase.filter(t => t.id != id);
         localStorage.setItem('tripBriefcase', JSON.stringify(briefcase));
