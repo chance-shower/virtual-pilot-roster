@@ -326,7 +326,7 @@ document.getElementById('rosterTable').addEventListener('input', (e) => {
 document.getElementById('closethisflighttrip').addEventListener('click', function() {
     showModal(
         "EXIT TO MENU?", 
-        "Return to the start page? (Your briefcase is safe!)", 
+        "Return to the start page? (Your rosters are safe!)", 
         "GO TO MENU", 
         "STAY HERE", 
         function() {
@@ -426,7 +426,7 @@ function updateBriefcaseDropdown() {
     const briefcase = JSON.parse(localStorage.getItem('tripBriefcase') || "[]");
     
     // Clear but keep first option
-    select.innerHTML = '<option value="">-- MY BRIEFCASE --</option>';
+    select.innerHTML = '<option value="">-- List of rosters --</option>';
     
     briefcase.forEach(trip => {
         const opt = document.createElement('option');
@@ -463,7 +463,7 @@ function saveToBriefcase() {
     briefcase.push(newEntry);
     localStorage.setItem('tripBriefcase', JSON.stringify(briefcase));
     updateBriefcaseDropdown();
-    alert("Trip added to briefcase!");
+    alert("Trip added to saved rosters!");
 }
 
 // Event: Loading from Briefcase
@@ -500,7 +500,7 @@ document.getElementById('exportBackup').addEventListener('click', () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `pilot_briefcase_backup.json`;
+    a.download = `pilot_roster_backup.json`;
     a.click();
     URL.revokeObjectURL(url);
 });
@@ -520,7 +520,7 @@ document.getElementById('importFile').addEventListener('change', (e) => {
             if (Array.isArray(imported)) {
                 localStorage.setItem('tripBriefcase', JSON.stringify(imported));
                 updateBriefcaseDropdown();
-                alert("Briefcase imported successfully!");
+                alert("Roster imported successfully!");
             }
         } catch (err) { alert("Error reading backup file."); }
     };
@@ -532,7 +532,7 @@ document.getElementById('deleteSelectedTrip').addEventListener('click', () => {
     const id = document.getElementById('tripSelect').value;
     if (!id) return;
 
-    showModal("DELETE SAVED TRIP?", "Remove this from your briefcase permanently?", "YES", "NO", () => {
+    showModal("DELETE SAVED TRIP?", "Remove this from your set of rosters permanently?", "YES", "NO", () => {
         let briefcase = JSON.parse(localStorage.getItem('tripBriefcase') || "[]");
         briefcase = briefcase.filter(t => t.id != id);
         localStorage.setItem('tripBriefcase', JSON.stringify(briefcase));
