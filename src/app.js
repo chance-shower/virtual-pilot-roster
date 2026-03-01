@@ -32,7 +32,6 @@ loadFlightData();
 // Function to generate roster
 
 async function createTrip() {
-    
     if (!flightData) {
         alert("Schedules loading...");
         return; 
@@ -46,10 +45,8 @@ async function createTrip() {
     const excluded = document.getElementById('excludedAirports').value.split(',').map(s => s.trim().toUpperCase()).filter(s => s !== "");
 
     document.getElementById('loader-overlay').style.display = 'flex';
-
     const haulPref = document.querySelector('input[name="haulPreference"]:checked').value;
 
-    // We wrap the generation in a retry loop
     let success = false;
     let maxAttempts = 10;
 
@@ -60,36 +57,54 @@ async function createTrip() {
 
             for (let day = 1; day <= dutyLength; day++) {
                 let dayLegs = generateDay(day, currentCity, (day === dutyLength), airline, equipment, homeBase, desired, excluded, haulPref);
-
-                if (!dayLegs || dayLegs.length === 0) {
-                    // Instead of alert, we throw an error to trigger a retry for the WHOLE trip
-                    throw `Failed on day ${day}`; 
-                }
-
+                if (!dayLegs || dayLegs.length === 0) throw `Failed on day ${day}`; 
                 fullRoster = fullRoster.concat(dayLegs);
                 currentCity = dayLegs[dayLegs.length - 1].arr;
             }
 
-            // If we reach this point, the entire trip was successful!
+            // --- TRIP SUCCESSFUL: START SAVING ---
             renderTable(fullRoster);
             
             localStorage.setItem('savedHomeBase', homeBase);
             localStorage.setItem('savedDutyLength', dutyLength);
             localStorage.setItem('savedEquipment', equipment.join(', '));
+            localStorage.setItem('savedAirline', airline);
 
+            // AUTO-SAVE TO BRIEFCASE LOGIC
+            const timestamp = new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'short'});
+            const tripName = `${airline} | ${homeBase} | ${equipment[0]} (${timestamp})`;
+
+            let briefcase = JSON.parse(localStorage.getItem('tripBriefcase') || "[]");
+            const newId = Date.now();
+            const newEntry = {
+                id: newId,
+                name: tripName,
+                data: fullRoster,
+                settings: { 
+                    airline, 
+                    home: homeBase, 
+                    equip: equipment.join(', '), 
+                    len: dutyLength 
+                }
+            };
+
+            briefcase.push(newEntry);
+            localStorage.setItem('tripBriefcase', JSON.stringify(briefcase));
+            updateBriefcaseDropdown();
+            
+            // Switch UI
+            document.getElementById('tripSelect').value = newId; 
             document.getElementById('startPage').style.display = 'none';
             document.getElementById('flightSchedule').style.display = 'block';
             
             success = true;
-            break; // Exit the 10-attempt loop
+            break; 
 
         } catch (err) {
             console.warn(`Attempt ${attempt} failed: ${err}`);
-            // If it's the 10th attempt and we still haven't succeeded:
             if (attempt === maxAttempts) {
-                alert("We couldn't find a valid flight path after 10 tries. Try changing your airport restrictions or duty length to give the generator more options.");
+                alert("We couldn't find a valid flight path after 10 tries.");
             }
-            // Otherwise, the loop continues to the next attempt...
         }
     }
 
@@ -315,9 +330,21 @@ document.getElementById('rosterTable').addEventListener('input', (e) => {
         if (savedData) {
             let legs = JSON.parse(savedData);
             if (legs[rowIndex]) {
-                // Update the specific field (depGate, atd, etc.)
+                // 1. Update Active Session
                 legs[rowIndex][field] = cell.innerText;
                 localStorage.setItem('savedRoster', JSON.stringify(legs));
+
+                // 2. LIVE-SAVE TO BRIEFCASE (if a trip is currently selected)
+                const currentTripId = document.getElementById('tripSelect').value;
+                if (currentTripId) {
+                    let briefcase = JSON.parse(localStorage.getItem('tripBriefcase') || "[]");
+                    const tripIndex = briefcase.findIndex(t => t.id == currentTripId);
+                    if (tripIndex !== -1) {
+                        briefcase[tripIndex].data = legs;
+                        localStorage.setItem('tripBriefcase', JSON.stringify(briefcase));
+                        console.log("Briefcase synced");
+                    }
+                }
             }
         }
     }
@@ -386,6 +413,7 @@ function showModal(title, message, confirmText, cancelText, onConfirm, onCancel)
 }
 
 window.onload = function() {
+    updateBriefcaseDropdown(); // Ensure list is populated on load
     const savedData = localStorage.getItem('savedRoster');
     
     if (savedData) {
@@ -396,26 +424,21 @@ window.onload = function() {
             "NEW TRIP",
             function() {
                 // Restore inputs
-                const airline = localStorage.getItem('savedAirline');
-                const homeBase = localStorage.getItem('savedHomeBase');
-                const dutyLength = localStorage.getItem('savedDutyLength');
-                const equipment = localStorage.getItem('savedEquipment');
+                document.getElementById('airlineCode').value = localStorage.getItem('savedAirline') || "";
+                document.getElementById('homeBase').value = localStorage.getItem('savedHomeBase') || "";
+                document.getElementById('dutyLength').value = localStorage.getItem('savedDutyLength') || "";
+                document.getElementById('equipmentCode').value = localStorage.getItem('savedEquipment') || "";
 
-                if(airline) document.getElementById('airlineCode').value = airline;
-                if(homeBase) document.getElementById('homeBase').value = homeBase;
-                if(dutyLength) document.getElementById('dutyLength').value = dutyLength;
-                if(equipment) document.getElementById('equipmentCode').value = equipment;
-
-                // --- THE MISSING ACTION LINES ---
                 document.getElementById('startPage').style.display = 'none';
                 document.getElementById('flightSchedule').style.display = 'block';
-                // --------------------------------
 
                 const legs = JSON.parse(savedData);
                 renderTable(legs);
             },
             function() {
-                localStorage.clear(); 
+                // FIXED: Only clear session keys, NOT the briefcase
+                const sessionKeys = ['savedRoster', 'savedAirline', 'savedHomeBase', 'savedDutyLength', 'savedEquipment'];
+                sessionKeys.forEach(key => localStorage.removeItem(key));
             }
         );
     }
