@@ -224,6 +224,55 @@ html, body {
     cursor: pointer;
 }
 
+/* Briefcase Styling */
+#briefcase-area {
+    background: #444;
+    padding: 10px;
+    margin: 20px 10px; /* Added side margin for breathing room */
+    border: 2px solid #fff7b3;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.briefcase-row {
+    display: flex;
+    gap: 10px;
+}
+
+.briefcase-row:first-child {
+    display: grid;
+    grid-template-columns: 1fr auto; /* Dropdown takes 1fr, Button takes auto */
+    gap: 10px;
+    align-items: stretch;
+}
+
+#tripSelect {
+    width: 100%; /* Ensures it fills its grid cell */
+    min-width: 0; /* Prevents flex/grid blowouts */
+    background: #fff;
+    font-family: 'IBM Plex Mono', monospace;
+    border: 2px solid #fff7b3;
+    padding: 5px;
+}
+
+#saveCurrentTrip {
+    white-space: nowrap; /* Prevents the text from wrapping */
+    padding: 0 15px;
+    height: 100%;
+}
+
+.buttons-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+}
+
+.buttons-grid button {
+    font-size: 11px;
+    padding: 5px 2px;
+}
+
 /* Table Styles */
 
 .table-container {
@@ -384,4 +433,42 @@ html, body {
     color: #e74c3c;
     border-color: #e74c3c;
     box-shadow: 4px 4px #e74c3c;
+}
+
+/* Print / PDF Formatting */
+@media print {
+    /* 1. Reset containers so they don't clip the table */
+    html, body, #app, #flightSchedule {
+        overflow: visible !important;
+        height: auto !important;
+        width: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .table-container {
+        overflow: visible !important; /* This is the key fix */
+        display: block !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    #rosterTable {
+        table-layout: auto !important;
+        width: 100% !important;
+        min-width: 100% !important; /* Force it to fit page width */
+        font-size: 8pt !important; /* Shrink font slightly for PDF fit */
+    }
+
+    /* 2. Hide UI elements */
+    #startPage, #loader-overlay, #briefcase-area, #rerun-container, #closethisflighttrip, h1 {
+        display: none !important;
+    }
+
+    /* 3. Column adjustments for PDF */
+    /* If the table is still too wide, we can hide less important columns for PDF only */
+    #rosterTable th:nth-child(7), #rosterTable td:nth-child(7), /* Dep Gate */
+    #rosterTable th:nth-child(8), #rosterTable td:nth-child(8)  /* Arr Gate */ {
+        display: none; 
+    }
 }

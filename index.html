@@ -22,7 +22,7 @@
                 Virtual Pilot<br>Scheduler
             </div>
             <div id="websitesubheader">
-                Create your simulated<br>pilot's roster below...
+                Create your simulated<br>pilot's rostered trip below...
             </div>
             <div id="inputdata">
                 <label for="airlineCode">Airline (ICAO code)</label>
@@ -54,12 +54,27 @@
                 <input type="text" id="excludedAirports" placeholder="KJFK,KLGA,..." autocomplete="off" autocapitalize="characters">
             </div>
             <div id="flightschedulebutton">
-                <button id="generateFlightRoster">Generate flight roster</button>
+                <button id="generateFlightRoster">Generate flight trip</button>
             </div>
         </div>
         <div id="flightSchedule" style="display: none;">
             <h1>Trip schedule</h1>
-            
+            <div id="briefcase-area">
+                <div class="briefcase-row">
+                    <select id="tripSelect">
+                        <option value="">-- List of trips --</option>
+                    </select>
+                    <button id="saveCurrentTrip" title="Save this trip">SAVE</button>
+                </div>
+                <div class="briefcase-row buttons-grid">
+                    <button id="exportPDF">PDF</button>
+                    <button id="exportBackup">BACKUP</button>
+                    <button id="importBackup">IMPORT</button>
+                    <button id="deleteSelectedTrip" style="color: #e74c3c; border-color: #e74c3c;">DEL</button>
+                </div>
+            </div>
+            <input type="file" id="importFile" style="display: none;" accept=".json">
+
             <div id="roster-header-container">
                 <div id="preamble"></div>
                 <div id="rerun-container">
