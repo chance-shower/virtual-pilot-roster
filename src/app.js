@@ -325,16 +325,14 @@ document.getElementById('rosterTable').addEventListener('input', (e) => {
 
 document.getElementById('closethisflighttrip').addEventListener('click', function() {
     showModal(
-        "DELETE TRIP?", 
-        "This will permanently remove the current roster. Are you sure?", 
-        "YES, DELETE", // Confirm Text
-        "KEEP TRIP",   // Cancel Text
+        "EXIT TO MENU?", 
+        "Return to the start page? (Your briefcase is safe!)", 
+        "GO TO MENU", 
+        "STAY HERE", 
         function() {
-            localStorage.clear();
-            location.reload();
-        },
-        function() {
-            // Do nothing, modal just closes
+            // Only hide/show, don't clear storage!
+            document.getElementById('flightSchedule').style.display = 'none';
+            document.getElementById('startPage').style.display = 'block';
         }
     );
 });
@@ -422,3 +420,127 @@ window.onload = function() {
         );
     }
 };
+
+function updateBriefcaseDropdown() {
+    const select = document.getElementById('tripSelect');
+    const briefcase = JSON.parse(localStorage.getItem('tripBriefcase') || "[]");
+    
+    // Clear but keep first option
+    select.innerHTML = '<option value="">-- MY BRIEFCASE --</option>';
+    
+    briefcase.forEach(trip => {
+        const opt = document.createElement('option');
+        opt.value = trip.id;
+        opt.innerText = trip.name;
+        select.appendChild(opt);
+    });
+}
+
+function saveToBriefcase() {
+    const legs = JSON.parse(localStorage.getItem('savedRoster'));
+    if (!legs || legs.length === 0) return;
+
+    const airline = localStorage.getItem('savedAirline') || "FLT";
+    const home = localStorage.getItem('savedHomeBase') || "BASE";
+    const equip = localStorage.getItem('savedEquipment') || "ACFT";
+    
+    // Create a unique name
+    const timestamp = new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'short'});
+    const tripName = `${airline} | ${home} | ${equip} (${timestamp})`;
+
+    let briefcase = JSON.parse(localStorage.getItem('tripBriefcase') || "[]");
+    
+    const newEntry = {
+        id: Date.now(),
+        name: tripName,
+        data: legs,
+        settings: {
+            airline, home, equip,
+            len: localStorage.getItem('savedDutyLength')
+        }
+    };
+
+    briefcase.push(newEntry);
+    localStorage.setItem('tripBriefcase', JSON.stringify(briefcase));
+    updateBriefcaseDropdown();
+    alert("Trip added to briefcase!");
+}
+
+// Event: Loading from Briefcase
+document.getElementById('tripSelect').addEventListener('change', (e) => {
+    const id = e.target.value;
+    if (!id) return;
+
+    const briefcase = JSON.parse(localStorage.getItem('tripBriefcase') || "[]");
+    const trip = briefcase.find(t => t.id == id);
+
+    if (trip) {
+        // Update inputs and active storage
+        document.getElementById('airlineCode').value = trip.settings.airline;
+        document.getElementById('homeBase').value = trip.settings.home;
+        document.getElementById('equipmentCode').value = trip.settings.equip;
+        document.getElementById('dutyLength').value = trip.settings.len;
+
+        localStorage.setItem('savedRoster', JSON.stringify(trip.data));
+        renderTable(trip.data);
+    }
+});
+
+// Event: PDF Export
+document.getElementById('exportPDF').addEventListener('click', () => {
+    const airline = document.getElementById('airlineCode').value || "PILOT";
+    document.title = `Roster_${airline}_${new Date().getTime()}`;
+    window.print();
+});
+
+// Event: Backup Export (JSON)
+document.getElementById('exportBackup').addEventListener('click', () => {
+    const briefcase = localStorage.getItem('tripBriefcase') || "[]";
+    const blob = new Blob([briefcase], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `pilot_briefcase_backup.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+});
+
+// Event: Import Backup
+document.getElementById('importBackup').addEventListener('click', () => {
+    document.getElementById('importFile').click();
+});
+
+document.getElementById('importFile').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        try {
+            const imported = JSON.parse(event.target.result);
+            if (Array.isArray(imported)) {
+                localStorage.setItem('tripBriefcase', JSON.stringify(imported));
+                updateBriefcaseDropdown();
+                alert("Briefcase imported successfully!");
+            }
+        } catch (err) { alert("Error reading backup file."); }
+    };
+    reader.readAsText(file);
+});
+
+// Event: Delete Single Trip
+document.getElementById('deleteSelectedTrip').addEventListener('click', () => {
+    const id = document.getElementById('tripSelect').value;
+    if (!id) return;
+
+    showModal("DELETE SAVED TRIP?", "Remove this from your briefcase permanently?", "YES", "NO", () => {
+        let briefcase = JSON.parse(localStorage.getItem('tripBriefcase') || "[]");
+        briefcase = briefcase.filter(t => t.id != id);
+        localStorage.setItem('tripBriefcase', JSON.stringify(briefcase));
+        updateBriefcaseDropdown();
+    });
+});
+
+document.getElementById('saveCurrentTrip').addEventListener('click', saveToBriefcase);
+
+// Update your window.onload to include:
+window.addEventListener('DOMContentLoaded', updateBriefcaseDropdown);

@@ -224,6 +224,41 @@ html, body {
     cursor: pointer;
 }
 
+/* Briefcase Styling */
+#briefcase-area {
+    background: #444;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 2px solid #fff7b3;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.briefcase-row {
+    display: flex;
+    gap: 10px;
+}
+
+#tripSelect {
+    flex: 1;
+    background: #fff;
+    font-family: 'IBM Plex Mono', monospace;
+    border: 2px solid #fff7b3;
+    padding: 5px;
+}
+
+.buttons-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+}
+
+.buttons-grid button {
+    font-size: 11px;
+    padding: 5px 2px;
+}
+
 /* Table Styles */
 
 .table-container {
@@ -384,4 +419,19 @@ html, body {
     color: #e74c3c;
     border-color: #e74c3c;
     box-shadow: 4px 4px #e74c3c;
+}
+
+/* Print / PDF Formatting */
+@media print {
+    #startPage, #loader-overlay, #briefcase-area, #rerun-container, #closethisflighttrip, h1 {
+        display: none !important;
+    }
+    body { background: white !important; }
+    #flightSchedule { color: black !important; padding: 0; }
+    #preamble { color: black !important; font-weight: bold; }
+    .table-container { overflow: visible !important; border: none !important; box-shadow: none !important; }
+    #rosterTable { min-width: 100% !important; border: 1px solid #000 !important; }
+    #rosterTable td, #rosterTable th { border: 1px solid #000 !important; color: black !important; }
+    #rosterTable td:first-child { background-color: #eee !important; color: black !important; }
+    tr { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
