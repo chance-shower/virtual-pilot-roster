@@ -46,9 +46,6 @@ html, body {
     text-align: left;
     font-size: 14px;
     /* XP Style border */
-    border-left: 3px solid #0052d1;
-    border-right: 3px solid #0052d1;
-    border-bottom: 3px solid #0052d1;
     border-top-left-radius: 8px;
     border-top-right-radius: 7px;
     box-sizing: border-box;
@@ -85,17 +82,24 @@ html, body {
     width: 100%;
     /* padding (text offscreen)*/
     padding: 5px;
+    border-left: 3px solid #0052d1;
+    border-right: 3px solid #0052d1;
     box-sizing: border-box;
 }
 
 #inputdata-container {
     width: 100%;
     background-color: #ece9d8;
-    /* This ensures the container expands to show the background */
     display: flex; 
     flex-direction: column;
-    align-items: center; /* Centers the child #inputdata horizontally */
+    align-items: center;
     padding-bottom: 20px;
+
+    /* The container provides the side and bottom blue borders */
+    border-left: 3px solid #0052d1;
+    border-right: 3px solid #0052d1;
+    border-bottom: 3px solid #0052d1;
+    box-sizing: border-box;
 }
 
 #inputdata {
