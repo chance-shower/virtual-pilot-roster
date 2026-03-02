@@ -163,33 +163,66 @@ html, body {
 
 }
 
+/* Container alignment */
 .radio-group {
     display: flex;
-    flex-wrap: wrap; /* Allows labels to wrap if screen is tiny */
-    gap: 10px;
-    width: 100%;
+    gap: 15px;
+    padding: 5px 0;
 }
 
 .radio-container {
-    display: flex;
-    flex-direction: column;
+    display: inline-flex;
     align-items: center;
     cursor: pointer;
-    flex: 1;
-    gap: 8px;
+    font-family: "Pixelated MS Sans Serif", Tahoma, sans-serif;
+    font-size: 11px;
+    -webkit-font-smoothing: none;
 }
 
 /* Specific reset for the radio inputs */
 .radio-container input[type="radio"] {
-
+    display: none;
 }
 
+/* The Outer Circle */
 .radio-label {
-    color: #ffffff;
-    font-size: 14px;
-    font-weight: 300;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.radio-label::before {
+    content: "";
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-right: 6px;
+    background: #fff;
+    /* The distinctive dark-blue XP outer ring */
+    border: 1px solid #003c74; 
+    border-radius: 50%;
+    box-sizing: border-box;
+}
+
+/* The Selected State: Green Pixel Dot */
+.radio-container input:checked + .radio-label::after {
+    content: "";
+    position: absolute;
+    left: 3px;
+    top: 3px;
+    width: 6px;
+    height: 6px;
+    /* The classic XP "Success" Green */
+    background: #21a121; 
+    border-radius: 50%;
+    /* Subtle inner-dot shading */
+    box-shadow: inset 1px 1px #107c10; 
+}
+
+/* Fix text contrast in your subheader */
+.radio-label {
+    color: #000;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
 }
 
 /* Loading spinner */

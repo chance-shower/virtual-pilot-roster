@@ -22,9 +22,12 @@ html, body {
     height: 100%; /* Necessary for the parent to know how tall "middle" is */
     margin: 0;
     background: #018281; /* Classic Teal Desktop Color */
-    font-family: 'Tahoma', sans-serif;
+    font-family: "Tahoma", sans-serif;
     -webkit-font-smoothing: none;
-    overflow: hidden; /* Prevents stray scrollbars on the desktop */
+    -moz-osx-font-smoothing: grayscale;
+    font-smooth: never;
+    text-rendering: pixelated;
+    overflow-x: hidden; /* Prevents stray scrollbars on the desktop */
 }
 
 /* Welcome page */
@@ -66,9 +69,7 @@ html, body {
     /* font setting */
 
     color: #fff;
-    font-weight: 400;
     text-align: left;
-    font-size: 18px;
     text-shadow: 1px 1px #0f1089;
 
     /* Layout */
@@ -81,9 +82,10 @@ html, body {
 #websitesubheader {
     width: 100%;
     /* padding (text offscreen)*/
-    padding: 5px;
-    border-left: 3px solid #0052d1;
-    border-right: 3px solid #0052d1;
+    font-size: 12px;
+    padding: 5px 5px 0 10px;
+    border-left: 1px solid #0052d1;
+    border-right: 1px solid #0052d1;
     box-sizing: border-box;
 }
 
@@ -94,19 +96,20 @@ html, body {
     flex-direction: column;
     align-items: center;
     padding-bottom: 20px;
+    font-size: 12px;
 
     /* The container provides the side and bottom blue borders */
-    border-left: 3px solid #0052d1;
-    border-right: 3px solid #0052d1;
-    border-bottom: 3px solid #0052d1;
+    border-left: 1px solid #0052d1;
+    border-right: 1px solid #0052d1;
+    border-bottom: 1px solid #0052d1;
     box-sizing: border-box;
 }
 
 #inputdata {
     max-width: 325px;
-    width: 90%;
+    width: 85%;
     background-color: #f9f8f6;
-    padding: 15px;
+    padding: 10px;
     text-align: left;
     
     /* Centering logic */
@@ -135,16 +138,25 @@ html, body {
 /* Input text fields */
 
 #inputdata input[type="text"] {
-  width: 100%;
-  max-width: 300px;
+    width: 200px;
+    height: 23px;
+    padding: 3px 4px;
+    border: 1px solid #7f9db9;
+    background-color: #fff;
+    box-sizing: border-box;
+
 }
 
 #inputdata label {
-  display: block;
+    display: block;
+    font-family: 'MS Gothic', monospace;
+    font-size: 11px;
+    margin-top: 4px;
 }
 
 #inputdata ::placeholder {
-
+    font-size: 11px;
+    color: #99aab9;
 }
 
 #inputdata input:focus {
@@ -169,15 +181,7 @@ html, body {
 
 /* Specific reset for the radio inputs */
 .radio-container input[type="radio"] {
-    appearance: auto; /* Restores standard radio look */
-    width: 14px !important; /* Forces the small size */
-    height: 14px !important;
-    margin: 0;
-    padding: 0;
-    box-shadow: none !important; /* Removes the heavy yellow shadow */
-    border: none;
-    cursor: pointer;
-    accent-color: #fff7b3; /* Matches your button color */
+
 }
 
 .radio-label {
