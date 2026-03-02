@@ -27,7 +27,7 @@ html, body {
     -moz-osx-font-smoothing: grayscale;
     font-smooth: never;
     text-rendering: pixelated;
-    overflow: hidden; /* Prevents stray scrollbars on the desktop */
+    overflow-x: hidden; /* Prevents stray scrollbars on the desktop */
 }
 
 /* Welcome page */
