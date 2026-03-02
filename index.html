@@ -22,39 +22,41 @@
                 Virtual Pilot Scheduler
             </div>
             <div id="websitesubheader">
-                Create your simulated<br>pilot's rostered trip below...
+                Create your simulated pilot's rostered trip below...
             </div>
-            <div id="inputdata">
-                <label for="airlineCode">Airline (ICAO code)</label>
-                <input type="text" id="airlineCode" placeholder="UAL" autocomplete="off" autocapitalize="characters">
-                <label for="equipmentCode">Aircraft (ICAO code)</label>
-                <input type="text" id="equipmentCode" placeholder="B38M" autocomplete="off" autocapitalize="characters">
-                <label for="homeBase">Home base</label>
-                <input type="text" id="homeBase" placeholder="KORD" autocomplete="off" autocapitalize="characters">
-                <label for="dutyLength">Duty length (days)</label>
-                <input type="text" id="dutyLength" placeholder="4" inputmode="numeric">
-                <label>Flight Type Preference</label>
-                <div class="radio-group">
-                    <label class="radio-container">
-                        <input type="radio" name="haulPreference" value="short">
-                        <span class="radio-label">Short</span>
-                    </label>
-                    <label class="radio-container">
-                        <input type="radio" name="haulPreference" value="medium" checked>
-                        <span class="radio-label">Medium</span>
-                    </label>
-                    <label class="radio-container">
-                        <input type="radio" name="haulPreference" value="long">
-                        <span class="radio-label">Long</span>
-                    </label>
+            <div id="inputdata-container">
+                <div id="inputdata">
+                    <label for="airlineCode">Airline (ICAO code)</label>
+                    <input type="text" id="airlineCode" placeholder="UAL" autocomplete="off" autocapitalize="characters">
+                    <label for="equipmentCode">Aircraft (ICAO code)</label>
+                    <input type="text" id="equipmentCode" placeholder="B38M" autocomplete="off" autocapitalize="characters">
+                    <label for="homeBase">Home base</label>
+                    <input type="text" id="homeBase" placeholder="KORD" autocomplete="off" autocapitalize="characters">
+                    <label for="dutyLength">Duty length (days)</label>
+                    <input type="text" id="dutyLength" placeholder="4" inputmode="numeric">
+                    <label>Flight Type Preference</label>
+                    <div class="radio-group">
+                        <label class="radio-container">
+                            <input type="radio" name="haulPreference" value="short">
+                            <span class="radio-label">Short</span>
+                        </label>
+                        <label class="radio-container">
+                            <input type="radio" name="haulPreference" value="medium" checked>
+                            <span class="radio-label">Medium</span>
+                        </label>
+                        <label class="radio-container">
+                            <input type="radio" name="haulPreference" value="long">
+                            <span class="radio-label">Long</span>
+                        </label>
+                    </div>
+                    <label for="desiredAirports">Preferred airports (optional)</label>
+                    <input type="text" id="desiredAirports" placeholder="KDEN,KSFO,..." autocomplete="off" autocapitalize="characters">
+                    <label for="excludedAirports">Excluded airports (optional)</label>
+                    <input type="text" id="excludedAirports" placeholder="KJFK,KLGA,..." autocomplete="off" autocapitalize="characters">
                 </div>
-                <label for="desiredAirports">Preferred airports (optional)</label>
-                <input type="text" id="desiredAirports" placeholder="KDEN,KSFO,..." autocomplete="off" autocapitalize="characters">
-                <label for="excludedAirports">Excluded airports (optional)</label>
-                <input type="text" id="excludedAirports" placeholder="KJFK,KLGA,..." autocomplete="off" autocapitalize="characters">
-            </div>
-            <div id="flightschedulebutton">
-                <button id="generateFlightRoster">Generate flight trip</button>
+                <div id="flightschedulebutton">
+                    <button id="generateFlightRoster">Generate flight trip</button>
+                </div>
             </div>
         </div>
         <div id="flightSchedule" style="display: none;">
