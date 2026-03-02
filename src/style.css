@@ -12,8 +12,17 @@ button {
 }
 
 button:active {
-  transform: translate(0.05em, 0.05em);
-  box-shadow: 0.05em 0.05em;
+    /* Remove the modern movement */
+    transform: none; 
+    
+    /* Invert the gradient to look sunken */
+    background: linear-gradient(180deg, #d8d0c4 0%, #ecebe5 14%, #fff 100%);
+    
+    /* Darken the border to simulate a shadow */
+    border-color: #002e5a;
+    
+    /* Optional: Add the classic XP 'focused/active' dotted inner ring or orange tint */
+    box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 /* Main HTML */
