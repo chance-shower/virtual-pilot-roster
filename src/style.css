@@ -160,9 +160,7 @@ html, body {
     color: #99aab9;
 }
 
-#inputdata input:focus {
 
-}
 
 /* Container alignment */
 .radio-group {
@@ -252,7 +250,8 @@ html, body {
 /* Table page */
 
 #flightSchedule {
-    color: #fffcdf;
+    color: #222;
+    background-color: #ece9d8;
 }
 
 #roster-header-container {
