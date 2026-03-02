@@ -30,6 +30,15 @@ html, body {
 
 /* Welcome page */
 
+#startpage {
+    width: 95%;
+    background-color: #ece9d8;
+    color: #222;
+    font-weight: 200;
+    text-align: left;
+    font-size: 14px;
+}
+
 #websiteheader {
     width: 100%;
     height: 30px;
@@ -59,12 +68,6 @@ html, body {
 
 #websitesubheader {
     width: 100%;
-    background-color: #ece9d8;
-    /* font setting */
-    color: #222;
-    font-weight: 200;
-    text-align: left;
-    font-size: 14px;
     /* padding (text offscreen)*/
     padding: 5px;
     box-sizing: border-box;
