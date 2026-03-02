@@ -310,10 +310,8 @@ html, body {
 }
 /* Briefcase Styling - The Toolbar Container */
 #briefcase-area {
-    background: #00557c; /* Match the dark teal in your diagram */
+    background: #e0e0e0; /* Match the dark teal in your diagram */
     padding: 5px;
-    margin: 20px 10px;
-    border: 1px solid #002e5a;
     
     /* Force everything into one horizontal line */
     display: flex;
@@ -334,19 +332,19 @@ html, body {
     order: -1; /* Forces it to the absolute start */
     width: 32px;
     height: 32px;
-    background-color: #00557c;
-    border: 1px solid #003c74;
+    background-color: #c9c8c8;
+    border: 1px solid #afafaf;
 }
 
 /* 2. DROPDOWN (Middle) */
 #tripSelect {
     width: 150px; /* Adjust based on your text length */
     height: 24px;
-    background: #00557c; /* Match toolbar background */
+    background: #c9c8c8; /* Match toolbar background */
     color: #fff;
     font-family: 'MS Gothic', monospace;
     font-size: 11px;
-    border: 1px solid #003c74;
+    border: 1px solid #afafaf;
     padding: 2px;
     
     /* Remove default arrow to make it look like your diagram */
@@ -368,8 +366,8 @@ html, body {
 #briefcase-area button {
     width: 32px;
     height: 32px;
-    background-color: #00557c;
-    border: 1px solid #003c74;
+    background-color: #c9c8c8;
+    border: 1px solid #afafaf;
     color: #fff;
     font-size: 9px;
     cursor: pointer;
