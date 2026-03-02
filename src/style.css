@@ -151,6 +151,7 @@ html, body {
     display: block;
     font-family: 'MS Gothic', monospace;
     font-size: 11px;
+    margin-top: 4px;
 }
 
 #inputdata ::placeholder {
@@ -180,15 +181,7 @@ html, body {
 
 /* Specific reset for the radio inputs */
 .radio-container input[type="radio"] {
-    appearance: auto; /* Restores standard radio look */
-    width: 14px !important; /* Forces the small size */
-    height: 14px !important;
-    margin: 0;
-    padding: 0;
-    box-shadow: none !important; /* Removes the heavy yellow shadow */
-    border: none;
-    cursor: pointer;
-    accent-color: #fff7b3; /* Matches your button color */
+
 }
 
 .radio-label {
