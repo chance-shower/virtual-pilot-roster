@@ -57,9 +57,9 @@ html, body {
 
     background: linear-gradient(180deg, #0997ff, #0053ee 8%, #0050ee 40%, #06f 88%, #06f 93%, #005bff 95%, #003dd7 96%, #003dd7);
     padding: 3px 5px 3px 3px;
-    border-top: 2px solid #0831d9;
-    border-left: 2px solid #0831d9;
-    border-right: 2px solid #001ea0;
+    border-top: 1px solid #0831d9;
+    border-left: 1px solid #0831d9;
+    border-right: 1px solid #001ea0;
     border-top-left-radius: 8px;
     border-top-right-radius: 7px;
 
@@ -80,9 +80,9 @@ html, body {
     width: 100%;
     /* padding (text offscreen)*/
     font-size: 12px;
-    padding: 5px;
-    border-left: 2px solid #0052d1;
-    border-right: 2px solid #0052d1;
+    padding: 5px 5px 0 10px;
+    border-left: 1px solid #0052d1;
+    border-right: 1px solid #0052d1;
     box-sizing: border-box;
 }
 
@@ -96,17 +96,17 @@ html, body {
     font-size: 12px;
 
     /* The container provides the side and bottom blue borders */
-    border-left: 2px solid #0052d1;
-    border-right: 2px solid #0052d1;
-    border-bottom: 2px solid #0052d1;
+    border-left: 1px solid #0052d1;
+    border-right: 1px solid #0052d1;
+    border-bottom: 1px solid #0052d1;
     box-sizing: border-box;
 }
 
 #inputdata {
     max-width: 325px;
-    width: 90%;
+    width: 85%;
     background-color: #f9f8f6;
-    padding: 15px;
+    padding: 10px;
     text-align: left;
     
     /* Centering logic */
@@ -140,7 +140,11 @@ html, body {
 }
 
 #inputdata label {
-  display: block;
+    display: block;
+    font-size: 11px;
+    -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeSpeed;
 }
 
 #inputdata ::placeholder {
