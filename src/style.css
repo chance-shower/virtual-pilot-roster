@@ -32,30 +32,23 @@ html, body {
 
 #websiteheader {
     width: 100%;
-    height: 30px;
-    
-    background: linear-gradient(to bottom, 
-        #0058ee 0%, 
-        #3593ff 4%, 
-        #288eff 6%, 
-        #127ae0 71%, 
-        #0052d1 84%, 
-        #0052d1 100%);
-    
-    /* The "Lighter Border" & 3D Effect */
+    height: 21px;
+
+    background: linear-gradient(180deg, #0997ff, #0053ee 8%, #0050ee 40%, #06f 88%, #06f 93%, #005bff 95%, #003dd7 96%, #003dd7);
+    padding: 3px 5px 3px 3px;
+    border-top: 1px solid #0831d9;
+    border-left: 1px solid #0831d9;
+    border-right: 1px solid #001ea0;
     border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    border: 1px solid #00309a;
-    border-bottom: none;
-    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.8); /* This creates the light top highlight */
-    
+    border-top-right-radius: 7px;
+
     /* font setting */
 
     color: #fff;
-    font-weight: 700;
+    font-weight: 400;
     text-align: left;
-    font-size: 16px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    font-size: 13px;
+    text-shadow: 1px 1px #0f1089;
 
     /* Layout */
     display: flex;
