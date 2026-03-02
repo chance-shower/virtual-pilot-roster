@@ -19,19 +19,27 @@ button:active {
 /* Main HTML */
 
 html, body {
-    background: #018281;
+    height: 100%; /* Necessary for the parent to know how tall "middle" is */
+    margin: 0;
+    background: #018281; /* Classic Teal Desktop Color */
     font-family: 'Tahoma', sans-serif;
     -webkit-font-smoothing: none;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeSpeed;
-    max-width: 100vw;
-    overflow-x: hidden;
+    overflow: hidden; /* Prevents stray scrollbars on the desktop */
 }
 
 /* Welcome page */
 
+#startPage {
+    display: flex;
+    justify-content: center; /* Horizontal centering */
+    align-items: center;     /* Vertical centering */
+    width: 100vw;
+    height: 100vh;
+}
+
 #welcom-screen-container {
     width: 95%;
+    max-width: 500px;
     background-color: #ece9d8;
     color: #222;
     font-weight: 200;
@@ -41,6 +49,8 @@ html, body {
     border-left: 3px solid #0052d1;
     border-right: 3px solid #0052d1;
     border-bottom: 3px solid #0052d1;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 7px;
     box-sizing: border-box;
 }
 
