@@ -19,7 +19,7 @@ button:active {
 /* Main HTML */
 
 html, body {
-    background: linear-gradient(180deg, #0366c2, #004E98 50%, #0366c2);
+    background: #018281;
     font-family: 'Tahoma', sans-serif;
     -webkit-font-smoothing: none;
     -moz-osx-font-smoothing: grayscale;
@@ -37,6 +37,11 @@ html, body {
     font-weight: 200;
     text-align: left;
     font-size: 14px;
+    /* XP Style border */
+    border-left: 3px solid #0052d1;
+    border-right: 3px solid #0052d1;
+    border-bottom: 3px solid #0052d1;
+    box-sizing: border-box;
 }
 
 #websiteheader {
@@ -81,12 +86,6 @@ html, body {
     flex-direction: column;
     align-items: center; /* Centers the child #inputdata horizontally */
     padding-bottom: 20px;
-    
-    /* Optional: This adds the Blue side-borders from your first image */
-    border-left: 3px solid #0052d1;
-    border-right: 3px solid #0052d1;
-    border-bottom: 3px solid #0052d1;
-    box-sizing: border-box;
 }
 
 #inputdata {
