@@ -317,7 +317,7 @@ This update applies the dark-teal background and the square, boxed-in look for t
 CSS
 /* Briefcase Styling - The "Menu Bar" */
 #briefcase-area {
-    background: #00557c; /* The dark teal from your diagram */
+    background: #aeaeae; /* The dark teal from your diagram */
     padding: 8px;
     margin: 20px 10px;
     /* XP style thin border */
@@ -325,6 +325,7 @@ CSS
     display: flex;
     flex-direction: column;
     gap: 8px;
+    
 }
 
 /* The Select/Dropdown Row */
@@ -335,7 +336,7 @@ CSS
 }
 
 #tripSelect {
-    width: 100%;
+    width: 125px;
     background: #fff;
     font-family: 'MS Gothic', monospace;
     font-size: 11px;
