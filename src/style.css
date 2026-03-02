@@ -309,53 +309,79 @@ html, body {
     cursor: pointer;
 }
 
-/* Briefcase Styling */
+To transform your "Briefcase" area into that classic Windows XP / Luna toolbar aesthetic from your diagrams, we need to swap the dark background for the "Teal/Blue" theme and apply the specific button-box styling seen in your reference images.
+
+The Refined "Briefcase" CSS
+This update applies the dark-teal background and the square, boxed-in look for the action buttons.
+
+CSS
+/* Briefcase Styling - The "Menu Bar" */
 #briefcase-area {
-    background: #444;
-    padding: 10px;
-    margin: 20px 10px; /* Added side margin for breathing room */
-    border: 2px solid #fff7b3;
+    background: #00557c; /* The dark teal from your diagram */
+    padding: 8px;
+    margin: 20px 10px;
+    /* XP style thin border */
+    border: 1px solid #003c74; 
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
 }
 
-.briefcase-row {
-    display: flex;
-    gap: 10px;
-}
-
+/* The Select/Dropdown Row */
 .briefcase-row:first-child {
     display: grid;
-    grid-template-columns: 1fr auto; /* Dropdown takes 1fr, Button takes auto */
-    gap: 10px;
-    align-items: stretch;
-}
-
-#tripSelect {
-    width: 100%; /* Ensures it fills its grid cell */
-    min-width: 0; /* Prevents flex/grid blowouts */
-    background: #fff;
-    font-family: 'IBM Plex Mono', monospace;
-    border: 2px solid #fff7b3;
-    padding: 5px;
-}
-
-#saveCurrentTrip {
-    white-space: nowrap; /* Prevents the text from wrapping */
-    padding: 0 15px;
-    height: 100%;
-}
-
-.buttons-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: 1fr 40px; /* Make Save button square like the others */
     gap: 5px;
 }
 
-.buttons-grid button {
+#tripSelect {
+    width: 100%;
+    background: #fff;
+    font-family: 'MS Gothic', monospace;
     font-size: 11px;
-    padding: 5px 2px;
+    border: 1px solid #7f9db9;
+    padding: 3px;
+    height: 24px;
+}
+
+/* Common style for the Menu Action Buttons */
+#briefcase-area button {
+    background-color: #00557c; /* Match the bar background */
+    border: 1px solid #003c74; /* Darker blue border for the "box" */
+    color: #fff;
+    font-family: 'MS Gothic', monospace;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    aspect-ratio: 1 / 1; /* Keep them square */
+}
+
+/* The Grid for PDF, Backup, Import, Delete */
+.buttons-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 40px); /* Fixed width squares */
+    gap: 5px;
+}
+
+/* Delete button specific styling (The Red Circle Icon look) */
+#deleteSelectedTrip {
+    border-color: #003c74 !important;
+    color: #ff4d4d !important; /* Red text for the DEL icon */
+}
+
+/* Hover effect to match XP toolbar highlights */
+#briefcase-area button:hover {
+    background-color: #0078b0;
+    border-color: #fff;
+}
+
+/* Active/Pressed state */
+#briefcase-area button:active {
+    background-color: #003c74;
+    box-shadow: inset 1px 1px 2px rgba(0,0,0,0.5);
 }
 
 /* Table Styles */
