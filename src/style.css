@@ -19,7 +19,7 @@ button:active {
 /* Main HTML */
 
 html, body {
-    background-color: #ECE9D8;
+    background: linear-gradient(180deg, #0366c2, #004E98);
     font-family: 'Tahoma', sans-serif;
     -webkit-font-smoothing: none;
     -moz-osx-font-smoothing: grayscale;
