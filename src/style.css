@@ -1,14 +1,14 @@
 /* Global CSS changes */
 
 button {
-    background: #fff7b3;
-    font-family: 'IBM Plex Mono', monospace;
-    color: #363636;
-    padding: 0.6em 1.3em;
-    font-weight: 600;
-    font-size: 16px;
-    border: 3px solid #fdfced;
-    box-shadow: 0.1em 0.1em #fff;
+    font-family: "Tahoma", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-size: 11px;
+    box-sizing: border-box;
+    border: 1px solid #003c74;
+    background: linear-gradient(180deg, #fff, #ecebe5 86%, #d8d0c4);
+    box-shadow: none;
+    border-radius: 3px;
 }
 
 button:active {
