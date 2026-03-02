@@ -30,7 +30,7 @@ html, body {
 
 /* Welcome page */
 
-#startpage {
+#welcom-screen-container {
     width: 95%;
     background-color: #ece9d8;
     color: #222;
