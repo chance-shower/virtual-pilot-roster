@@ -73,18 +73,32 @@ html, body {
 #inputdata-container {
     width: 100%;
     background-color: #ece9d8;
+    /* This ensures the container expands to show the background */
+    display: flex; 
+    flex-direction: column;
+    align-items: center; /* Centers the child #inputdata horizontally */
+    padding-bottom: 20px;
+    
+    /* Optional: This adds the Blue side-borders from your first image */
+    border-left: 3px solid #0052d1;
+    border-right: 3px solid #0052d1;
+    border-bottom: 3px solid #0052d1;
+    box-sizing: border-box;
 }
 
 #inputdata {
     max-width: 325px;
-    background-color: #f9f8f6;
     width: 90%;
-    padding: 10px;
+    background-color: #f9f8f6;
+    padding: 15px;
     text-align: left;
-    font-weight: 200;
-    font-size: 14px;
-    color:#222;
-    border: solid, #b8b8b8;
+    
+    /* Centering logic */
+    margin: 10px auto; 
+    
+    /* XP Border Style: Sunken/Etched look */
+    border: 1px solid #aca899;
+    box-shadow: inset 1px 1px 0 #fff, 1px 1px 0 #fff;
 }
 
 #flightschedulebutton {
