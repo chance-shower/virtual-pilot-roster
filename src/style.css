@@ -135,8 +135,13 @@ html, body {
 /* Input text fields */
 
 #inputdata input[type="text"] {
-  width: 100%;
-  max-width: 300px;
+    width: 200px;
+    height: 23px;
+    padding: 3px 4px;
+    border: 1px solid #7f9db9;
+    background-color: #fff;
+    box-sizing: border-box;
+
 }
 
 #inputdata label {
