@@ -308,81 +308,78 @@ html, body {
     border: 3px solid #fdfced;
     cursor: pointer;
 }
-
-To transform your "Briefcase" area into that classic Windows XP / Luna toolbar aesthetic from your diagrams, we need to swap the dark background for the "Teal/Blue" theme and apply the specific button-box styling seen in your reference images.
-
-The Refined "Briefcase" CSS
-This update applies the dark-teal background and the square, boxed-in look for the action buttons.
-
-CSS
-/* Briefcase Styling - The "Menu Bar" */
+/* Briefcase Styling - The Toolbar Container */
 #briefcase-area {
-    background: #aeaeae; /* The dark teal from your diagram */
-    padding: 8px;
+    background: #00557c; /* Match the dark teal in your diagram */
+    padding: 5px;
     margin: 20px 10px;
-    /* XP style thin border */
-    border: 1px solid #003c74; 
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    border: 1px solid #002e5a;
     
+    /* Force everything into one horizontal line */
+    display: flex;
+    flex-direction: row; 
+    align-items: center;
+    gap: 6px;
 }
 
-/* The Select/Dropdown Row */
-.briefcase-row:first-child {
-    display: grid;
-    grid-template-columns: 1fr 40px; /* Make Save button square like the others */
-    gap: 5px;
+/* Ensure the internal row divs don't break the line */
+.briefcase-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
 }
 
+/* 1. SAVE BUTTON (First on the left) */
+#saveCurrentTrip {
+    order: -1; /* Forces it to the absolute start */
+    width: 32px;
+    height: 32px;
+    background-color: #00557c;
+    border: 1px solid #003c74;
+}
+
+/* 2. DROPDOWN (Middle) */
 #tripSelect {
-    width: 125px;
-    background: #fff;
-    font-family: 'MS Gothic', monospace;
-    font-size: 11px;
-    border: 1px solid #7f9db9;
-    padding: 3px;
+    width: 150px; /* Adjust based on your text length */
     height: 24px;
-}
-
-/* Common style for the Menu Action Buttons */
-#briefcase-area button {
-    background-color: #00557c; /* Match the bar background */
-    border: 1px solid #003c74; /* Darker blue border for the "box" */
+    background: #00557c; /* Match toolbar background */
     color: #fff;
     font-family: 'MS Gothic', monospace;
-    font-size: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    padding: 0;
-    aspect-ratio: 1 / 1; /* Keep them square */
+    font-size: 11px;
+    border: 1px solid #003c74;
+    padding: 2px;
+    
+    /* Remove default arrow to make it look like your diagram */
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: left 5px center; /* Triangle on the left as per diagram */
+    background-size: 10px;
+    padding-left: 20px;
 }
 
-/* The Grid for PDF, Backup, Import, Delete */
+/* 3. ACTION BUTTONS (The Grid) */
 .buttons-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 40px); /* Fixed width squares */
-    gap: 5px;
+    display: flex; /* Switch from grid to flex for single row */
+    gap: 4px;
 }
 
-/* Delete button specific styling (The Red Circle Icon look) */
+#briefcase-area button {
+    width: 32px;
+    height: 32px;
+    background-color: #00557c;
+    border: 1px solid #003c74;
+    color: #fff;
+    font-size: 9px;
+    cursor: pointer;
+    flex-shrink: 0; /* Prevent buttons from squishing */
+}
+
+/* DEL Button Icon Style */
 #deleteSelectedTrip {
-    border-color: #003c74 !important;
-    color: #ff4d4d !important; /* Red text for the DEL icon */
-}
-
-/* Hover effect to match XP toolbar highlights */
-#briefcase-area button:hover {
-    background-color: #0078b0;
-    border-color: #fff;
-}
-
-/* Active/Pressed state */
-#briefcase-area button:active {
-    background-color: #003c74;
-    box-shadow: inset 1px 1px 2px rgba(0,0,0,0.5);
+    color: #ff4d4d !important;
+    font-weight: bold;
 }
 
 /* Table Styles */
