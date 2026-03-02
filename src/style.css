@@ -16,21 +16,16 @@ button:active {
   box-shadow: 0.05em 0.05em;
 }
 
-/* Main HTML and body */
+/* Main HTML */
 
-html {
-    /* Force the background to cover the entire screen */
-    min-height: 100vh;
-    /* Prevent the gradient from starting over (tiling) */
-    background: linear-gradient(180deg, #0366c2, #004E98) no-repeat fixed;
-}
-
-body {
-    margin: 0;
-    padding: 0;
+html, body {
+    background: linear-gradient(180deg, #0366c2, #004E98 50%, #0366c2);
     font-family: 'Tahoma', sans-serif;
     -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeSpeed;
+    max-width: 100vw;
+    overflow-x: hidden;
 }
 
 /* Welcome page */
