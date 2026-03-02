@@ -79,11 +79,12 @@ html, body {
     max-width: 325px;
     background-color: #f9f8f6;
     width: 90%;
-    padding-left: 10px;
+    padding: 10px;
     text-align: left;
-    font-weight: 300;
-    font-size: 16px;
+    font-weight: 200;
+    font-size: 14px;
     color:#222;
+    border: solid, #b8b8b8;
 }
 
 #flightschedulebutton {
