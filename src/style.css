@@ -22,8 +22,11 @@ html, body {
     height: 100%; /* Necessary for the parent to know how tall "middle" is */
     margin: 0;
     background: #018281; /* Classic Teal Desktop Color */
-    font-family: 'Tahoma', sans-serif;
+    font-family: "MS Sans Serif", "Tahoma", sans-serif;
     -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: grayscale;
+    font-smooth: never;
+    text-rendering: pixelated;
     overflow: hidden; /* Prevents stray scrollbars on the desktop */
 }
 
@@ -154,7 +157,7 @@ html, body {
 
 #inputdata ::placeholder {
     font-size: 11px;
-    color: #7f9db9;
+    color: #99aab9;
 }
 
 #inputdata input:focus {
