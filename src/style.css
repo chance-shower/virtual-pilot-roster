@@ -58,7 +58,7 @@ html, body {
 }
 
 #websitesubheader {
-    width: 85%;
+    width: 100%;
     background-color: #ece9d8;
     /* font setting */
     color: #222;
@@ -66,13 +66,12 @@ html, body {
     text-align: left;
     font-size: 14px;
     /* padding (text offscreen)*/
-    padding: 5px 5% 5px 0;
+    padding: 5px;
     box-sizing: border-box;
-    /* div position */
 }
 
 #inputdata-container {
-    width: 85%;
+    width: 100%;
     background-color: #ece9d8;
 }
 
@@ -105,33 +104,20 @@ html, body {
 /* Input text fields */
 
 #inputdata input[type="text"] {
-  border: 2px solid #fffcdf;
-  padding: 1px;
-  box-shadow: 4px 6px #fff7b3;
   width: 100%;
   max-width: 300px;
-  height: 30px;
-  font-family: 'IBM Plex Mono', monospace;
-  margin-bottom: 10px;
 }
 
 #inputdata label {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 16px;
-  font-weight: 300;
-  color: #f1f1f1;
-  margin-bottom: 10px;
   display: block;
 }
 
 #inputdata ::placeholder {
-    color: #363636;
-    font-weight: 300;
-    font-size: 16px;
+
 }
 
 #inputdata input:focus {
-  border: 3px solid #f1e894
+
 }
 
 .radio-group {
