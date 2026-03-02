@@ -144,7 +144,8 @@ html, body {
     border: 1px solid #7f9db9;
     background-color: #fff;
     box-sizing: border-box;
-
+    font-family: 'MS Gothic', monospace;
+    font-size: 11px;
 }
 
 #inputdata label {
@@ -221,8 +222,7 @@ html, body {
 
 /* Fix text contrast in your subheader */
 .radio-label {
-    color: #000;
-    text-transform: uppercase;
+    color: #222;
 }
 
 /* Loading spinner */
