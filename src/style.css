@@ -261,6 +261,7 @@ html, body {
 #flightSchedule {
     color: #222;
     background-color: #E4DFDB;
+    border-bottom: 1px solid #0052d1;
 }
 
 #roster-header-container {
