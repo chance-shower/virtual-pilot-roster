@@ -396,8 +396,8 @@ html, body {
 #briefcase-area button {
     width: 32px;
     height: 32px;
-    background-color: #c9c8c8;
-    border: 1px solid #afafaf;
+    background-color: #e0e0e0;
+    border: none;
     color: #fff;
     font-size: 9px;
     cursor: pointer;
