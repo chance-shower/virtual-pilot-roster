@@ -260,7 +260,7 @@ html, body {
 
 #flightSchedule {
     color: #222;
-    background-color: #ece9d8;
+    background-color: #E4DFDB;
 }
 
 #roster-header-container {
@@ -283,7 +283,7 @@ html, body {
     flex: 1; /* Allows text to take remaining space and wrap */
     font-size: 14px;
     line-height: 1.4;
-    color: #fffcdf;
+    color: #222;
     padding-right: 15px; /* Space between text and button */
     word-break: break-word; /* Ensures long strings of text don't overflow */
     overflow-wrap: break-word;
