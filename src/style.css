@@ -267,7 +267,7 @@ html, body {
     display: flex;
     width: 100%;
     align-items: flex-start;
-    padding: 0 10px 0 10px; /* Added bottom padding to space out the line */
+    padding: 10px 10px 0 10px; /* Added bottom padding to space out the line */
     box-sizing: border-box;
     position: relative;
 
@@ -345,12 +345,12 @@ html, body {
 /* 2. DROPDOWN (Middle) */
 #tripSelect {
     width: 150px; /* Adjust based on your text length */
-    height: 24px;
-    background: #c9c8c8; /* Match toolbar background */
+    height: 23px;
     color: #fff;
     font-family: 'MS Gothic', monospace;
     font-size: 11px;
-    border: 1px solid #afafaf;
+    border: 1px solid #7f9db9;
+    background-color: #fff;
     padding: 2px;
     
     /* Remove default arrow to make it look like your diagram */
