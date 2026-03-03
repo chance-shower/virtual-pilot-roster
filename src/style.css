@@ -343,7 +343,7 @@ html, body {
 }
 
 .select-wrapper {
-    width: 180px;      /* This is your visual 'window' */
+    width: 150px;      /* This is your visual 'window' */
     overflow: hidden;  /* This cuts off the excess from the select inside */
     position: relative;
     display: inline-block;
