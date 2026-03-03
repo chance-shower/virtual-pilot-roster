@@ -266,10 +266,24 @@ html, body {
 #roster-header-container {
     display: flex;
     width: 100%;
-    align-items: flex-start; /* Aligns button to the top of the text block */
+    align-items: flex-start;
     margin-bottom: 20px;
-    padding: 0 10px;
+    padding: 0 10px 15px 10px; /* Added bottom padding to space out the line */
     box-sizing: border-box;
+    position: relative;
+
+    /* The 'Etched' Groove effect */
+    border-bottom: 1px solid #aca899; /* Darker grey (shadow) */
+}
+
+#roster-header-container::after {
+    content: "";
+    position: absolute;
+    bottom: -1px; /* Sits exactly under the border above */
+    left: 10px;
+    right: 10px;
+    height: 1px;
+    background-color: #fff; /* White (highlight) */
 }
 
 #preamble {
