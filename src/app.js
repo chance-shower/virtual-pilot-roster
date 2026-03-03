@@ -430,17 +430,16 @@ function updateBriefcaseDropdown() {
     const select = document.getElementById('tripSelect');
     const briefcase = JSON.parse(localStorage.getItem('tripBriefcase') || "[]");
     
-    // Clear but keep first option
     select.innerHTML = '<option value="">-- List of trips --</option>';
     
     briefcase.forEach(trip => {
         const opt = document.createElement('option');
         opt.value = trip.id;
-        opt.innerText = trip.name;
+        // Trim just in case
+        opt.innerText = trip.name.trim(); 
         select.appendChild(opt);
     });
 }
-
 function saveToBriefcase() {
     const legs = JSON.parse(localStorage.getItem('savedRoster'));
     if (!legs || legs.length === 0) return;
