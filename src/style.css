@@ -393,21 +393,6 @@ html, body {
     gap: 4px;
 }
 
-.buttons-grid button {
-    display: inline-flex;    /* Keeps buttons in a line but allows internal alignment */
-    align-items: center;     /* Centers items vertically */
-    justify-content: center; /* Centers items horizontally */
-    gap: 8px;                /* Creates a nice space between icon and text */
-    padding: 10px 15px;
-    cursor: pointer;
-}
-
-.buttons-grid button img {
-    width: 20px;             /* Adjust based on your PNG size */
-    height: 20px;
-    object-fit: contain;     /* Prevents your icons from looking squished */
-}
-
 #briefcase-area button {
     width: 32px;
     height: 32px;
