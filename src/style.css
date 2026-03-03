@@ -342,49 +342,53 @@ html, body {
     border: 1px solid #afafaf;
 }
 
+I hear you—the "oversizing" trick backfired because the browser is simply rendering the list at that new, larger physical width. Since standard <select> menus are notoriously difficult to constrain in mobile browsers and modern Webkit engines, we need to abandon the "clip" method and use a strict-width containment strategy.
+
+The goal is to force the element and its content to stay at exactly 180px by preventing the text from pushing the boundaries.
+
+1. The CSS: Absolute Containment
+We are going to set a rigid max-width on the select and use text-overflow to handle the long strings.
+
+CSS
 .select-wrapper {
-    width: 180px;      /* This is your visual 'window' */
-    overflow: hidden;  /* This cuts off the excess from the select inside */
-    position: relative;
+    width: 180px;      
     display: inline-block;
     vertical-align: middle;
-    border: none;      /* Ensure no double borders */
+    position: relative;
+    overflow: hidden; /* Safety net */
 }
 
 #tripSelect {
-    width: 210px;      /* WE MAKE THIS WIDER THAN THE PARENT */
+    width: 180px;      /* Back to 180px */
+    max-width: 180px;  /* Strict limit */
     height: 23px;
     box-sizing: border-box;
     
-    /* This ensures the text stays left-aligned */
-    padding: 0 40px 0 4px; 
+    /* This is critical: it tells the browser NOT to expand for text */
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    white-space: nowrap;
 
-    /* Your existing aesthetic styles */
     color: #000;
     font-family: 'MS Gothic', monospace;
     font-size: 11px;
     background-color: #fff;
+    
+    /* 3D Inset Border */
     border-top: 1px solid #808080;
     border-left: 1px solid #808080;
     border-bottom: 1px solid #fff;
     border-right: 1px solid #fff;
     box-shadow: inset 1px 1px 0px #000, inset -1px -1px 0px #c0c0c0;
 
+    padding: 0 22px 0 4px; 
     appearance: none;
     -webkit-appearance: none;
     
-    /* Move the custom arrow further left so it's not cut off by the wrapper */
     background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Crect width='18' height='18' fill='%23d4d0c8'/%3E%3Cpath d='M5 8h8l-4 4z' fill='black'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: right 30px center; /* Adjusted to 30px from right */
+    background-position: right 0px center;
     background-size: 18px 100%;
-}
-
-/* Ensure the popup options don't try to inherit weird spacing */
-#tripSelect option {
-    width: 180px;
-    background-color: #fff;
-    color: #222;
 }
 
 /* 3. ACTION BUTTONS (The Grid) */

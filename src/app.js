@@ -455,7 +455,7 @@ function saveToBriefcase() {
     const home = localStorage.getItem('savedHomeBase') || "BASE";
     const equip = localStorage.getItem('savedEquipment') || "ACFT";
     const timestamp = new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'short'});
-    const tripName = `${airline} | ${home} | ${equip} (${timestamp})`;
+    const tripName = `${airline} ${home} ${equip} (${timestamp})`;
 
     let briefcase = JSON.parse(localStorage.getItem('tripBriefcase') || "[]");
     const newId = Date.now(); // Create the unique ID
