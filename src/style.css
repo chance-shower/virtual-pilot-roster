@@ -342,8 +342,16 @@ html, body {
     border: 1px solid #afafaf;
 }
 
+.select-wrapper {
+    width: 180px;       /* Hard limit */
+    overflow: hidden;   /* Clips anything that pokes out */
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+}
+
 #tripSelect {
-    width: 150px; 
+    width: 180px; 
     height: 23px;
     box-sizing: border-box; /* Ensures padding/border stay INSIDE the 150px */
     
@@ -379,7 +387,7 @@ html, body {
 
 /* Ensure the popup options don't try to inherit weird spacing */
 #tripSelect option {
-    width: 150px;
+    width: 180px;
     background-color: #fff;
     color: #000;
 }
