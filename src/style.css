@@ -343,12 +343,15 @@ html, body {
 }
 
 #tripSelect {
-    /* Use a fixed pixel width or a percentage, but ensure box-sizing is border-box */
     width: 150px; 
     height: 23px;
-    box-sizing: border-box; /* Crucial: Includes border and padding in the 150px width */
+    box-sizing: border-box; /* Ensures padding/border stay INSIDE the 150px */
     
-    /* Font & Colors */
+    /* ADD THESE TO CONTROL THE TEXT */
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    white-space: nowrap;
+
     color: #000;
     font-family: 'MS Gothic', monospace;
     font-size: 11px;
@@ -361,7 +364,7 @@ html, body {
     border-right: 1px solid #fff;
     box-shadow: inset 1px 1px 0px #000, inset -1px -1px 0px #c0c0c0;
 
-    /* Adjust padding to prevent text overlap with the arrow */
+    /* Padding: Left for text, Right (22px) to clear the arrow button */
     padding: 0 22px 0 4px; 
 
     appearance: none;
@@ -374,11 +377,11 @@ html, body {
     background-size: 18px 100%;
 }
 
-/* Force the options list to inherit the container's width logic */
+/* Ensure the popup options don't try to inherit weird spacing */
 #tripSelect option {
+    width: 150px;
     background-color: #fff;
     color: #000;
-    font-family: 'MS Gothic', monospace;
 }
 
 /* 3. ACTION BUTTONS (The Grid) */
