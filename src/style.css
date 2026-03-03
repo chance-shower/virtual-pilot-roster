@@ -290,10 +290,12 @@ html, body {
 }
 
 #rerun-container {
-    flex: 0 0 40px; /* Give it a fixed width so it doesn't shrink */
+    flex: 0 0 120px; /* Give it a fixed width so it doesn't shrink */
     display: flex;
     justify-content: flex-end;
     border-left: 1px solid #aca899;
+    padding-left: 1-px;
+    font-size: 14px;
 }
 
 #rerunButton {
