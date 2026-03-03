@@ -267,8 +267,7 @@ html, body {
     display: flex;
     width: 100%;
     align-items: flex-start;
-    margin-bottom: 20px;
-    padding: 0 10px 15px 10px; /* Added bottom padding to space out the line */
+    padding: 0 10px 0 10px; /* Added bottom padding to space out the line */
     box-sizing: border-box;
     position: relative;
 
