@@ -347,7 +347,7 @@ html, body {
 .xp-input-box {
     width: 50px;          /* Defined width for the stacked look */
     height: 16px;          /* Slightly more compact */
-    background-color: #E4DFDB;
+    background-color: #e0e0e0;
     padding: 0 4px;
     font-size: 12px;
     color: #000;
