@@ -296,7 +296,9 @@ function renderTable(legs) {
     localStorage.setItem('savedEquipment', equipment);
 
     // Update preamble data
-    document.getElementById('preamble').innerHTML = `Here is your ${tripDays} day trip, based at ${homeBase}, flying the ${equipment}<br><br>`;
+    document.getElementById('display-equipment').innerHTML = `${equipment}`;
+    document.getElementById('display-base').innerHTML = `${homeBase}`;
+    document.getElementById('display-length').innerHTML = `${tripDays}`;
 }
 
 /* Event listeners */ 
