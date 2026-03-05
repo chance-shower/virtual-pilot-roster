@@ -112,7 +112,7 @@ html, body {
 #splash-image {
     flex: 0 0 75%; /* Image takes up 75% of the width */
     height: 100%;
-    background-image: url('/media/splash.jpg'); /* Replace with your image path */
+    background-image: url('media/splash.jpg'); /* Replace with your image path */
     background-size: cover;
     background-position: center;
     
