@@ -306,7 +306,7 @@ html, body {
 
 #flightSchedule {
     color: #222;
-    background-color: #E4DFDB;
+    background-color: #e0e0e0;
     border-bottom: 1px solid #0052d1;
 }
 
@@ -386,7 +386,7 @@ html, body {
 }
 
 #rerunText {
-    font-size: 11px;         /* Slightly larger for readability */
+    font-size: 12px;         /* Slightly larger for readability */
     color: #222;
     white-space: nowrap;     /* Keeps the text on one line */
     line-height: 1;          /* Helps with vertical centering */
