@@ -112,7 +112,7 @@ html, body {
 #splash-image {
     flex: 0 0 75%; /* Image takes up 75% of the width */
     height: 100%;
-    background-image: url('media/splash.jpg'); /* Replace with your image path */
+    background-image: url('../media/splash.jpg'); /* Replace with your image path */
     background-size: cover;
     background-position: center;
     
@@ -130,10 +130,9 @@ html, body {
     padding-right: 20px;
     
     /* Styling for the text */
-    font-size: 24px;
-    font-weight: bold;
-    color: #003c74; /* Classic Windows XP Dark Blue */
-    text-align: right;
+    font-size: 30px;
+    color: #222; /* Classic Windows XP Dark Blue */
+    text-align: left;
     z-index: 2; /* Ensures text stays on top */
     
     /* This allows the text container to overlap the faded image area */
