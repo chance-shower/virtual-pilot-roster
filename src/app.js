@@ -131,7 +131,7 @@ function generateDay(dayNum, startCity, isFinalDay, airline, equipment, homeBase
                             // 2. TIME & REST LOGIC
                             let depM = rawDep;
                             if (i > 0) {
-                                let requiredMinRest = 15; 
+                                let requiredMinRest = 15; // Kept at 15 per your request
                                 if (lastFlightDuration > 300) {
                                     requiredMinRest = Math.floor(lastFlightDuration / 2);
                                 }
@@ -145,30 +145,34 @@ function generateDay(dayNum, startCity, isFinalDay, airline, equipment, homeBase
                             const turn = i > 0 ? (depM - arrivalTime) : 0;
                             const duty = (absArr + 15) - currentDutyStart;
 
-                            // 3. START TIME RESTRICTIONS
+                            // 3. START/CONNECTION LOGIC
                             if (i === 0) {
                                 const local = toMins(flt.dep_local);
-                                // ONLY Short haul is restricted to specific morning/afternoon blocks
                                 const isInsideWindow = (local >= 300 && local <= 600) || (local >= 780 && local <= 1020);
                                 
                                 if (haulPref !== 'short' || isInsideWindow) {
                                     let priority = 1;
                                     if (haulPref === 'medium' && (duration > 180 && duration < 480)) priority = 2;
                                     if (haulPref === 'long' && duration > 480) priority = 3;
-                                    if (haulPref === 'long' && (duration > 180 && duration <= 480)) priority = 2;
-
                                     pool.push({ ...flt, dep: city, arr: dest, equip: ac, absArr, absDep: depM, priority, duration });
                                 }
                             } else {
                                 // CONNECTION LOGIC
                                 const maxDuty = (haulPref === 'long') ? 1080 : 840;
-                                const maxTurn = (haulPref === 'short') ? 180 : 600; // 10 hour max turn for long haul
+                                // Reduced maxTurn for short-haul from 180 to 120 to naturally discourage long gaps
+                                const maxTurn = (haulPref === 'short') ? 120 : 600; 
 
                                 if (turn >= 15 && turn <= maxTurn && duty <= maxDuty) {
                                     let priority = 1;
-                                    if (haulPref === 'medium' && (duration > 180 && duration < 480)) priority = 2;
-                                    if (haulPref === 'long' && duration > 480) priority = 3;
-                                    if (haulPref === 'long' && (duration > 180 && duration <= 480)) priority = 2;
+
+                                    // NEW: Efficiency Priority (Favor turns between 15 and 75 mins)
+                                    if (turn >= 15 && turn <= 75) {
+                                        priority = 4;
+                                    } else if (haulPref === 'medium' && (duration > 180 && duration < 480)) {
+                                        priority = 2;
+                                    } else if (haulPref === 'long' && duration > 480) {
+                                        priority = 3;
+                                    }
 
                                     pool.push({ ...flt, dep: city, arr: dest, equip: ac, absArr, absDep: depM, priority, duration });
                                 }
@@ -180,14 +184,17 @@ function generateDay(dayNum, startCity, isFinalDay, airline, equipment, homeBase
 
             if (pool.length === 0) break;
 
-            // SMART PICKER
+            // SMART PICKER - Prioritize Efficiency (P4) first
             let chosen = null;
             if (isFinalDay && i >= 1) chosen = pool.find(f => f.arr === homeBase);
 
             if (!chosen) {
+                const p4 = pool.filter(f => f.priority === 4); // Efficiency Tier
                 const p3 = pool.filter(f => f.priority === 3);
                 const p2 = pool.filter(f => f.priority === 2);
-                if (p3.length > 0) chosen = p3[Math.floor(Math.random() * p3.length)];
+
+                if (p4.length > 0) chosen = p4[Math.floor(Math.random() * p4.length)];
+                else if (p3.length > 0) chosen = p3[Math.floor(Math.random() * p3.length)];
                 else if (p2.length > 0) chosen = p2[Math.floor(Math.random() * p2.length)];
                 else {
                     chosen = pool[Math.floor(Math.random() * pool.length)];
@@ -208,7 +215,6 @@ function generateDay(dayNum, startCity, isFinalDay, airline, equipment, homeBase
             lastFlightDuration = chosen.duration;
 
             if (isFinalDay && city === homeBase) return legs;
-            // Stop adding legs if we are deep into a long haul duty day
             if (dutyStart && (arrivalTime - dutyStart) > 900) break; 
         }
 
