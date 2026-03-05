@@ -345,12 +345,11 @@ html, body {
 }
 
 .xp-input-box {
-    width: 100px;          /* Defined width for the stacked look */
-    height: 18px;          /* Slightly more compact */
-    background-color: #fff;
+    width: 50px;          /* Defined width for the stacked look */
+    height: 16px;          /* Slightly more compact */
+    background-color: #E4DFDB;
     padding: 0 4px;
-    font-family: 'MS Gothic', monospace;
-    font-size: 11px;
+    font-size: 12px;
     color: #000;
     display: flex;
     align-items: center;
@@ -364,34 +363,33 @@ html, body {
 }
 
 #rerun-container {
-    flex: 0 0 120px;
+    flex: 0 0 160px;         /* Increased from 120px to 160px for more width */
     display: flex;
-    flex-direction: column;  /* Stack button and text */
-    justify-content: center; /* Vertical centering */
-    align-items: center;     /* Horizontal centering */
+    flex-direction: row;     /* Align button and text side-by-side */
+    justify-content: flex-start; /* Align to the start of the container */
+    align-items: center;     /* Perfectly centers text vertically with button */
     border-left: 1px solid #aca899;
-    padding-left: 10px;
+    padding-left: 15px;      /* Space after the vertical divider line */
     margin-left: 10px;
+    gap: 10px;               /* Space between the button and the text */
 }
 
 #rerunButton {
     width: 28px; 
     height: 28px;
-    padding: 0;
+    flex-shrink: 0;          /* Prevents the button from squishing */
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 16px;
-    line-height: 1;
     cursor: pointer;
 }
 
 #rerunText {
-    font-size: 10px;
-    margin-top: 4px;
+    font-size: 11px;         /* Slightly larger for readability */
     color: #222;
-    text-align: center;
-    line-height: 1;
+    white-space: nowrap;     /* Keeps the text on one line */
+    line-height: 1;          /* Helps with vertical centering */
 }
 
 /* Briefcase Styling - The Toolbar Container */
