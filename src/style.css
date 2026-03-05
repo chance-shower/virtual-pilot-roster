@@ -313,30 +313,25 @@ html, body {
 #roster-header-container {
     display: flex;
     width: 100%;
-    align-items: flex-start;
-    padding: 10px 10px 0 10px; /* Added bottom padding to space out the line */
+    align-items: stretch; /* Changed to stretch to help centering the rerun area */
+    padding: 10px 10px 10px 10px; 
     box-sizing: border-box;
     position: relative;
-
-    /* Top line: The dark shadow */
     border-top: 1px solid #aca899; 
-    
-    /* Bottom line: The white highlight sitting inside the top edge */
     box-shadow: inset 0 1px 0 #ffffff;
 }
 
 #preamble {
     flex: 1;
     display: flex;
-    gap: 15px; /* Spacing between the three boxes */
-    padding: 5px 15px 5px 0;
-    align-items: center;
+    flex-direction: column; /* Stack boxes vertically */
+    gap: 4px;               /* Tight spacing like the XP reference */
+    padding: 2px 0;
 }
 
 .xp-field {
     display: flex;
     align-items: center;
-    gap: 5px;
 }
 
 .xp-label {
@@ -345,54 +340,60 @@ html, body {
     font-weight: bold;
     color: #000;
     text-transform: uppercase;
+    width: 50px;           /* Fixed width ensures the boxes align vertically */
+    flex-shrink: 0;
 }
 
 .xp-input-box {
-    min-width: 60px;
-    height: 20px;
+    width: 100px;          /* Defined width for the stacked look */
+    height: 18px;          /* Slightly more compact */
     background-color: #fff;
-    padding: 2px 4px;
+    padding: 0 4px;
     font-family: 'MS Gothic', monospace;
-    font-size: 12px;
+    font-size: 11px;
     color: #000;
     display: flex;
     align-items: center;
 
     /* The Classic Sunken Border Effect */
-    border-top: 1px solid #808080;   /* Dark gray top */
-    border-left: 1px solid #808080;  /* Dark gray left */
-    border-bottom: 1px solid #fff;     /* White bottom */
-    border-right: 1px solid #fff;      /* White right */
-    
-    /* Secondary inner shadow for depth */
+    border-top: 1px solid #808080;
+    border-left: 1px solid #808080;
+    border-bottom: 1px solid #fff;
+    border-right: 1px solid #fff;
     box-shadow: inset 1px 1px 0px #000; 
 }
 
 #rerun-container {
-    flex: 0 0 120px; /* Give it a fixed width so it doesn't shrink */
+    flex: 0 0 120px;
     display: flex;
-    justify-content: flex-end;
+    flex-direction: column;  /* Stack button and text */
+    justify-content: center; /* Vertical centering */
+    align-items: center;     /* Horizontal centering */
     border-left: 1px solid #aca899;
-    padding-left: 1-px;
-    font-size: 14px;
+    padding-left: 10px;
+    margin-left: 10px;
 }
 
 #rerunButton {
-    /* Forces the button to be a square */
     width: 28px; 
     height: 28px;
-    
-    /* Centers the icon perfectly */
     padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    
-    /* Font adjustments */
     font-size: 16px;
     line-height: 1;
-
+    cursor: pointer;
 }
+
+#rerunText {
+    font-size: 10px;
+    margin-top: 4px;
+    color: #222;
+    text-align: center;
+    line-height: 1;
+}
+
 /* Briefcase Styling - The Toolbar Container */
 #briefcase-area {
     background: #e0e0e0; /* Match the dark teal in your diagram */
