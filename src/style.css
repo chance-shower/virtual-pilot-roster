@@ -80,6 +80,7 @@ html, body {
     color: #fff;
     text-align: left;
     text-shadow: 1px 1px #0f1089;
+    font-size: 14px;
 
     /* Layout */
     display: flex;
