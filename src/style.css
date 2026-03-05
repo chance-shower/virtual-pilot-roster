@@ -326,13 +326,46 @@ html, body {
 }
 
 #preamble {
-    flex: 1; /* Allows text to take remaining space and wrap */
-    font-size: 14px;
-    line-height: 1.4;
-    color: #222;
-    padding-right: 15px; /* Space between text and button */
-    word-break: break-word; /* Ensures long strings of text don't overflow */
-    overflow-wrap: break-word;
+    flex: 1;
+    display: flex;
+    gap: 15px; /* Spacing between the three boxes */
+    padding: 5px 15px 5px 0;
+    align-items: center;
+}
+
+.xp-field {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.xp-label {
+    font-family: "Tahoma", sans-serif;
+    font-size: 11px;
+    font-weight: bold;
+    color: #000;
+    text-transform: uppercase;
+}
+
+.xp-input-box {
+    min-width: 60px;
+    height: 20px;
+    background-color: #fff;
+    padding: 2px 4px;
+    font-family: 'MS Gothic', monospace;
+    font-size: 12px;
+    color: #000;
+    display: flex;
+    align-items: center;
+
+    /* The Classic Sunken Border Effect */
+    border-top: 1px solid #808080;   /* Dark gray top */
+    border-left: 1px solid #808080;  /* Dark gray left */
+    border-bottom: 1px solid #fff;     /* White bottom */
+    border-right: 1px solid #fff;      /* White right */
+    
+    /* Secondary inner shadow for depth */
+    box-shadow: inset 1px 1px 0px #000; 
 }
 
 #rerun-container {
