@@ -54,12 +54,19 @@ async function createTrip() {
         try {
             let fullRoster = [];
             let currentCity = homeBase;
+            let tripHistory = []; // Track EVERY route in the trip
 
             for (let day = 1; day <= dutyLength; day++) {
-                let dayLegs = generateDay(day, currentCity, (day === dutyLength), airline, equipment, homeBase, desired, excluded, haulPref);
+                // Pass tripHistory into the function
+                let dayLegs = generateDay(day, currentCity, (day === dutyLength), airline, equipment, homeBase, desired, excluded, haulPref, tripHistory);
+                
                 if (!dayLegs || dayLegs.length === 0) throw `Failed on day ${day}`; 
+                
                 fullRoster = fullRoster.concat(dayLegs);
                 currentCity = dayLegs[dayLegs.length - 1].arr;
+
+                // Update the trip history with the legs from this day
+                dayLegs.forEach(leg => tripHistory.push(`${leg.dep}-${leg.arr}`));
             }
 
             // --- TRIP SUCCESSFUL: UPDATE ACTIVE SESSION & UI ---
@@ -94,7 +101,7 @@ async function createTrip() {
 }
 
 // A dedicated function to try and build a 2-6 leg day
-function generateDay(dayNum, startCity, isFinalDay, airline, equipment, homeBase, desired, excluded, haulPref) {
+function generateDay(dayNum, startCity, isFinalDay, airline, equipment, homeBase, desired, excluded, haulPref, tripHistory) {
     let attempts = 0;
     const maxDayAttempts = (haulPref === 'short') ? 20 : 150;
 
@@ -104,6 +111,7 @@ function generateDay(dayNum, startCity, isFinalDay, airline, equipment, homeBase
         let arrivalTime = 0;
         let dutyStart = null;
         let lastFlightDuration = 0;
+        let localDayHistory = []; // To track repeats within the same day specifically
 
         for (let i = 0; i < 6; i++) {
             const possibleData = flightData[city]?.[airline];
@@ -123,21 +131,15 @@ function generateDay(dayNum, startCity, isFinalDay, airline, equipment, homeBase
                             const rawArr = toMins(flt.arr_utc);
                             let duration = (rawArr - rawDep + 1440) % 1440; 
 
-                            // 1. HAUL FILTERS
                             if (haulPref === 'short' && duration > 180) return; 
                             if (haulPref === 'medium' && duration < 45) return; 
                             if (haulPref === 'long' && duration < 60) return; 
 
-                            // 2. TIME & REST LOGIC
                             let depM = rawDep;
                             if (i > 0) {
                                 let requiredMinRest = 15; 
-                                if (lastFlightDuration > 300) {
-                                    requiredMinRest = Math.floor(lastFlightDuration / 2);
-                                }
-                                while (depM < (arrivalTime + requiredMinRest)) {
-                                    depM += 1440;
-                                }
+                                if (lastFlightDuration > 300) requiredMinRest = Math.floor(lastFlightDuration / 2);
+                                while (depM < (arrivalTime + requiredMinRest)) depM += 1440;
                             }
                             
                             let absArr = depM + duration;
@@ -145,33 +147,30 @@ function generateDay(dayNum, startCity, isFinalDay, airline, equipment, homeBase
                             const turn = i > 0 ? (depM - arrivalTime) : 0;
                             const duty = (absArr + 15) - currentDutyStart;
 
-                            // 3. START TIME RESTRICTIONS
-                            if (i === 0) {
-                                const local = toMins(flt.dep_local);
-                                // ONLY Short haul is restricted to specific morning/afternoon blocks
-                                const isInsideWindow = (local >= 300 && local <= 600) || (local >= 780 && local <= 1020);
-                                
-                                if (haulPref !== 'short' || isInsideWindow) {
-                                    let priority = 1;
-                                    if (haulPref === 'medium' && (duration > 180 && duration < 480)) priority = 2;
-                                    if (haulPref === 'long' && duration > 480) priority = 3;
-                                    if (haulPref === 'long' && (duration > 180 && duration <= 480)) priority = 2;
+                            const maxDuty = (haulPref === 'long') ? 1080 : 840;
+                            const maxTurn = (haulPref === 'short') ? 120 : 600;
 
-                                    pool.push({ ...flt, dep: city, arr: dest, equip: ac, absArr, absDep: depM, priority, duration });
+                            // Validation Check
+                            const isFirstLegValid = (i === 0 && (haulPref !== 'short' || ((toMins(flt.dep_local) >= 300 && toMins(flt.dep_local) <= 600) || (toMins(flt.dep_local) >= 780 && toMins(flt.dep_local) <= 1020))));
+                            const isSubsequentValid = (i > 0 && turn >= 15 && turn <= maxTurn && duty <= maxDuty);
+
+                            if (isFirstLegValid || isSubsequentValid) {
+                                let priority = 1;
+
+                                // 1. Check if we've flown this route before (Trip-wide)
+                                const routeKey = `${city}-${dest}`;
+                                const isRepeat = tripHistory.includes(routeKey) || localDayHistory.includes(routeKey);
+
+                                if (isRepeat) {
+                                    priority = 0; // "Soft Avoid" - Put it at the bottom of the list
+                                } else {
+                                    // 2. Otherwise apply normal priorities
+                                    if (i > 0 && turn >= 15 && turn <= 75) priority = 4; // Efficiency
+                                    else if (haulPref === 'medium' && (duration > 180 && duration < 480)) priority = 2;
+                                    else if (haulPref === 'long' && duration > 480) priority = 3;
                                 }
-                            } else {
-                                // CONNECTION LOGIC
-                                const maxDuty = (haulPref === 'long') ? 1080 : 840;
-                                const maxTurn = (haulPref === 'short') ? 180 : 600; // 10 hour max turn for long haul
 
-                                if (turn >= 15 && turn <= maxTurn && duty <= maxDuty) {
-                                    let priority = 1;
-                                    if (haulPref === 'medium' && (duration > 180 && duration < 480)) priority = 2;
-                                    if (haulPref === 'long' && duration > 480) priority = 3;
-                                    if (haulPref === 'long' && (duration > 180 && duration <= 480)) priority = 2;
-
-                                    pool.push({ ...flt, dep: city, arr: dest, equip: ac, absArr, absDep: depM, priority, duration });
-                                }
+                                pool.push({ ...flt, dep: city, arr: dest, equip: ac, absArr, absDep: depM, priority, duration });
                             }
                         });
                     });
@@ -180,25 +179,27 @@ function generateDay(dayNum, startCity, isFinalDay, airline, equipment, homeBase
 
             if (pool.length === 0) break;
 
-            // SMART PICKER
             let chosen = null;
             if (isFinalDay && i >= 1) chosen = pool.find(f => f.arr === homeBase);
 
             if (!chosen) {
-                const p3 = pool.filter(f => f.priority === 3);
-                const p2 = pool.filter(f => f.priority === 2);
-                if (p3.length > 0) chosen = p3[Math.floor(Math.random() * p3.length)];
-                else if (p2.length > 0) chosen = p2[Math.floor(Math.random() * p2.length)];
-                else {
-                    chosen = pool[Math.floor(Math.random() * pool.length)];
-                    chosen.isFallback = true;
+                // Pick by Priority (4 -> 3 -> 2 -> 1 -> 0)
+                const priorities = [4, 3, 2, 1, 0];
+                for (let p of priorities) {
+                    const subPool = pool.filter(f => f.priority === p);
+                    if (subPool.length > 0) {
+                        chosen = subPool[Math.floor(Math.random() * subPool.length)];
+                        break;
+                    }
                 }
             }
 
             if (i === 0) dutyStart = chosen.absDep - 30;
             
-            let note = "-";
-            if (chosen.isFallback && haulPref !== 'short') note = "Duration Fallback";
+            // Add to local history so we don't repeat within the same day attempt
+            localDayHistory.push(`${chosen.dep}-${chosen.arr}`);
+
+            let note = chosen.priority === 0 ? "Repeat Route" : "-";
             if (chosen.duration > 300 && i > 0) note = "Crew Rest Applied";
             if (isFinalDay && chosen.arr === homeBase) note = "End of trip";
 
@@ -208,7 +209,6 @@ function generateDay(dayNum, startCity, isFinalDay, airline, equipment, homeBase
             lastFlightDuration = chosen.duration;
 
             if (isFinalDay && city === homeBase) return legs;
-            // Stop adding legs if we are deep into a long haul duty day
             if (dutyStart && (arrivalTime - dutyStart) > 900) break; 
         }
 
@@ -430,16 +430,17 @@ function updateBriefcaseDropdown() {
     const select = document.getElementById('tripSelect');
     const briefcase = JSON.parse(localStorage.getItem('tripBriefcase') || "[]");
     
+    // Clear but keep first option
     select.innerHTML = '<option value="">-- List of trips --</option>';
     
     briefcase.forEach(trip => {
         const opt = document.createElement('option');
         opt.value = trip.id;
-        // Trim just in case
-        opt.innerText = trip.name.trim(); 
+        opt.innerText = trip.name;
         select.appendChild(opt);
     });
 }
+
 function saveToBriefcase() {
     const legs = JSON.parse(localStorage.getItem('savedRoster'));
     if (!legs || legs.length === 0) return;
@@ -455,7 +456,7 @@ function saveToBriefcase() {
     const home = localStorage.getItem('savedHomeBase') || "BASE";
     const equip = localStorage.getItem('savedEquipment') || "ACFT";
     const timestamp = new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'short'});
-    const tripName = `${airline} ${home} ${equip} (${timestamp})`;
+    const tripName = `${airline} | ${home} | ${equip} (${timestamp})`;
 
     let briefcase = JSON.parse(localStorage.getItem('tripBriefcase') || "[]");
     const newId = Date.now(); // Create the unique ID
