@@ -90,12 +90,59 @@ html, body {
 
 #websitesubheader {
     width: 100%;
-    /* padding (text offscreen)*/
     font-size: 12px;
-    padding: 5px 5px 0 10px;
+    /* Remove standard padding to allow splash-screen to hit the edges */
+    padding: 0; 
     border-left: 1px solid #0052d1;
     border-right: 1px solid #0052d1;
     box-sizing: border-box;
+    background-color: #ece9d8;
+}
+
+#splash-screen {
+    display: flex;
+    align-items: center; /* Vertical center */
+    justify-content: space-between; /* Pushes image left, text right */
+    width: 100%;
+    height: 150px; /* Adjust height based on your image size */
+    overflow: hidden;
+    position: relative;
+}
+
+#splash-image {
+    flex: 0 0 75%; /* Image takes up 75% of the width */
+    height: 100%;
+    background-image: url('/media/splash.jpg'); /* Replace with your image path */
+    background-size: cover;
+    background-position: center;
+    
+    /* The Fading Mask: Fades the right 25% of the image */
+    -webkit-mask-image: linear-gradient(to right, black 70%, transparent 100%);
+    mask-image: linear-gradient(to right, black 70%, transparent 100%);
+}
+
+#splash-text {
+    flex: 1; /* Takes remaining space */
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Right justify text content */
+    padding-right: 20px;
+    
+    /* Styling for the text */
+    font-size: 24px;
+    font-weight: bold;
+    color: #003c74; /* Classic Windows XP Dark Blue */
+    text-align: right;
+    z-index: 2; /* Ensures text stays on top */
+    
+    /* This allows the text container to overlap the faded image area */
+    margin-left: -15%; 
+}
+
+/* The instruction text below the splash screen */
+.instruction-text {
+    padding: 10px 10px 5px 10px;
 }
 
 #inputdata-container {
