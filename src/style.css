@@ -110,7 +110,7 @@ html, body {
 }
 
 #splash-image {
-    flex: 0 0 75%; /* Image takes up 75% of the width */
+    flex: 0 0 60%; /* Image takes up 75% of the width */
     height: 100%;
     background-image: url('../media/splash.jpg'); /* Replace with your image path */
     background-size: cover;
@@ -136,7 +136,7 @@ html, body {
     z-index: 2; /* Ensures text stays on top */
     
     /* This allows the text container to overlap the faded image area */
-    margin-left: -15%; 
+    margin-left: -10%; 
 }
 
 /* The instruction text below the splash screen */
