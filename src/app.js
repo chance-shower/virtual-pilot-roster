@@ -124,7 +124,7 @@ function generateDay(dayNum, startCity, isFinalDay, airline, equipment, homeBase
         let arrivalTime = 0;
         let dutyStart = null;
         let lastFlightDuration = 0;
-        let localDayHistory = []; // To track repeats within the same day specifically
+        let localDayHistory = [];
 
         for (let i = 0; i < 6; i++) {
             const possibleData = flightData[city]?.[airline];
@@ -152,33 +152,38 @@ function generateDay(dayNum, startCity, isFinalDay, airline, equipment, homeBase
                             if (i > 0) {
                                 let requiredMinRest = 15; 
                                 if (lastFlightDuration > 300) requiredMinRest = Math.floor(lastFlightDuration / 2);
+                                
+                                // Adjust depM to be after previous arrival
                                 while (depM < (arrivalTime + requiredMinRest)) depM += 1440;
                             }
                             
+                            // --- NEW: MIDNIGHT GUARD ---
+                            // For Short/Medium, scheduled departure must be before midnight of the duty day
+                            if (haulPref !== 'long' && depM >= 1440) return;
+
                             let absArr = depM + duration;
                             let currentDutyStart = dutyStart || (depM - 30);
                             const turn = i > 0 ? (depM - arrivalTime) : 0;
                             const duty = (absArr + 15) - currentDutyStart;
 
                             const maxDuty = (haulPref === 'long') ? 1080 : 840;
-                            const maxTurn = (haulPref === 'short') ? 120 : 600;
+                            
+                            // --- NEW: LAYOVER EFFICIENCY ---
+                            let maxTurn = (haulPref === 'short') ? 120 : 600;
+                            if (haulPref === 'medium') maxTurn = 120; // Cap medium haul layovers at 2h
 
-                            // Validation Check
                             const isFirstLegValid = (i === 0 && (haulPref !== 'short' || ((toMins(flt.dep_local) >= 300 && toMins(flt.dep_local) <= 600) || (toMins(flt.dep_local) >= 780 && toMins(flt.dep_local) <= 1020))));
                             const isSubsequentValid = (i > 0 && turn >= 15 && turn <= maxTurn && duty <= maxDuty);
 
                             if (isFirstLegValid || isSubsequentValid) {
                                 let priority = 1;
-
-                                // 1. Check if we've flown this route before (Trip-wide)
                                 const routeKey = `${city}-${dest}`;
                                 const isRepeat = tripHistory.includes(routeKey) || localDayHistory.includes(routeKey);
 
                                 if (isRepeat) {
-                                    priority = 0; // "Soft Avoid" - Put it at the bottom of the list
+                                    priority = 0;
                                 } else {
-                                    // 2. Otherwise apply normal priorities
-                                    if (i > 0 && turn >= 15 && turn <= 75) priority = 4; // Efficiency
+                                    if (i > 0 && turn >= 15 && turn <= 75) priority = 4;
                                     else if (haulPref === 'medium' && (duration > 180 && duration < 480)) priority = 2;
                                     else if (haulPref === 'long' && duration > 480) priority = 3;
                                 }
@@ -196,7 +201,6 @@ function generateDay(dayNum, startCity, isFinalDay, airline, equipment, homeBase
             if (isFinalDay && i >= 1) chosen = pool.find(f => f.arr === homeBase);
 
             if (!chosen) {
-                // Pick by Priority (4 -> 3 -> 2 -> 1 -> 0)
                 const priorities = [4, 3, 2, 1, 0];
                 for (let p of priorities) {
                     const subPool = pool.filter(f => f.priority === p);
@@ -208,8 +212,6 @@ function generateDay(dayNum, startCity, isFinalDay, airline, equipment, homeBase
             }
 
             if (i === 0) dutyStart = chosen.absDep - 30;
-            
-            // Add to local history so we don't repeat within the same day attempt
             localDayHistory.push(`${chosen.dep}-${chosen.arr}`);
 
             let note = chosen.priority === 0 ? "Repeat Route" : "-";
