@@ -325,9 +325,16 @@ html, body {
 #preamble {
     flex: 1;
     display: flex;
-    flex-direction: column; /* Stack boxes vertically */
-    gap: 4px;               /* Tight spacing like the XP reference */
+    flex-direction: row; /* Change to row */
+    align-items: center; 
+    gap: 15px; 
     padding: 2px 0;
+}
+
+#xp-fields-container {
+    display: flex;
+    flex-direction: column; /* Keep the boxes themselves stacked */
+    gap: 4px;
 }
 
 .xp-field {

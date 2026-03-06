@@ -27,8 +27,9 @@ async function loadFlightData() {
         // Load airline logos
         const mapResponse = await fetch('airline_map.json'); 
         if (mapResponse.ok) {
-            airlineMap = await mapResponse.json();
-            console.log("Airline mapping loaded");
+            // CRITICAL FIX: Add 'await' here so the map actually populates before use
+            airlineMap = await mapResponse.json(); 
+            console.log("Airline mapping loaded successfully");
         }
 
         console.log("Database loaded");
@@ -434,7 +435,7 @@ function showModal(title, message, confirmText, cancelText, onConfirm, onCancel)
 }
 
 window.onload = function() {
-    updateBriefcaseDropdown(); // Ensure list is populated on load
+    updateBriefcaseDropdown(); 
     const savedData = localStorage.getItem('savedRoster');
     
     if (savedData) {
@@ -444,23 +445,33 @@ window.onload = function() {
             "RESUME", 
             "NEW TRIP",
             function() {
-                // Restore inputs
-                document.getElementById('airlineCode').value = localStorage.getItem('savedAirline') || "";
-                document.getElementById('homeBase').value = localStorage.getItem('savedHomeBase') || "";
-                document.getElementById('dutyLength').value = localStorage.getItem('savedDutyLength') || "";
-                document.getElementById('equipmentCode').value = localStorage.getItem('savedEquipment') || "";
+                // 1. Get saved values
+                const savedAirline = localStorage.getItem('savedAirline') || "";
+                const savedBase = localStorage.getItem('savedHomeBase') || "";
+                const savedLen = localStorage.getItem('savedDutyLength') || "";
+                const savedEquip = localStorage.getItem('savedEquipment') || "";
 
+                // 2. Restore inputs on start page (hidden)
+                document.getElementById('airlineCode').value = savedAirline;
+                document.getElementById('homeBase').value = savedBase;
+                document.getElementById('dutyLength').value = savedLen;
+                document.getElementById('equipmentCode').value = savedEquip;
+
+                // 3. Fill the "Preamble" boxes in the schedule view
+                document.getElementById('display-equipment').innerText = savedEquip;
+                document.getElementById('display-base').innerText = savedBase;
+                document.getElementById('display-length').innerText = savedLen;
+
+                // 4. Switch Views
                 document.getElementById('startPage').style.display = 'none';
                 document.getElementById('flightSchedule').style.display = 'block';
 
+                // 5. Render Table and Logo
                 const legs = JSON.parse(savedData);
                 renderTable(legs);
-
-                const savedICAO = localStorage.getItem('savedAirline') || "";
-                updateAirlineLogo(savedICAO);
+                updateAirlineLogo(savedAirline);
             },
             function() {
-                // FIXED: Only clear session keys, NOT the briefcase
                 const sessionKeys = ['savedRoster', 'savedAirline', 'savedHomeBase', 'savedDutyLength', 'savedEquipment'];
                 sessionKeys.forEach(key => localStorage.removeItem(key));
             }
