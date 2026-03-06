@@ -351,88 +351,89 @@ document.getElementById('rosterTable').addEventListener('input', (e) => {
     }
 });
 
+// Manual entry function
+
 document.getElementById('manualEntry').addEventListener('click', function() {
     const csvInput = prompt(
-        "Paste your CSV roster here.\n\nRequired Format:\nAirline: ICAO, Aircraft: TYPE, Homebase: ICAO\nDep,Arr,Flt,STD,STA,Day"
+        "Paste your CSV roster here:"
     );
 
     if (!csvInput) return;
 
     try {
-        // 1. Clean and split lines - handle any combination of line breaks
-        const allLines = csvInput.split(/\r?\n/).map(l => l.trim()).filter(l => l !== "");
+        // 1. NORMALIZE: Replace potential squashed lines with actual line breaks
+        // If the browser turned it into one line, we look for "ESSA," or "ENBO," etc. 
+        // but a safer way is to detect the "Airline," "Departing," headers.
+        let cleanedInput = csvInput.trim();
         
-        if (allLines.length < 2) throw new Error("Input empty or too short.");
+        // 2. Split by line breaks OR by looking for common patterns
+        let lines = cleanedInput.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
 
-        // 2. Extract Metadata (Look through all lines just in case)
-        let airline = "FLT", equip = "ACFT", base = "BASE";
-        allLines.forEach(line => {
-            if (line.toLowerCase().includes('airline:')) airline = (line.match(/Airline:\s*([A-Z0-9]+)/i)?.[1] || airline).toUpperCase();
-            if (line.toLowerCase().includes('aircraft:')) equip = (line.match(/Aircraft:\s*([A-Z0-9]+)/i)?.[1] || equip).toUpperCase();
-            if (line.toLowerCase().includes('homebase:')) base = (line.match(/Homebase:\s*([A-Z0-9]+)/i)?.[1] || base).toUpperCase();
-        });
+        // 3. EMERGENCY FALLBACK: If only 1 line detected, it's squashed.
+        // We will attempt to split by the known headers.
+        if (lines.length === 1) {
+            console.warn("Squashed input detected. Attempting repair...");
+            cleanedInput = cleanedInput.replace(/Departing,arriving/i, "\nDeparting,arriving");
+            // Look for 4-letter ICAO codes followed by a comma (like ESSA,) and add a newline before them
+            // except for the very first one.
+            cleanedInput = cleanedInput.replace(/(?!\bAirline\b)([A-Z]{4},[A-Z]{4},)/g, "\n$1");
+            lines = cleanedInput.split(/\n/).map(l => l.trim()).filter(l => l.length > 0);
+        }
 
-        // 3. Time Formatter Helper
-        const fixTime = (t) => {
-            if (!t) return "00:00";
-            let clean = t.replace(':', '').trim();
-            if (clean.length === 3) clean = "0" + clean;
-            if (clean.length === 4) return clean.slice(0, 2) + ":" + clean.slice(2);
-            return t;
-        };
+        if (lines.length < 3) throw new Error("Input format error. Ensure metadata and flight data are present.");
 
-        // 4. Parse Flight Rows
+        // 4. Extract Metadata
+        const metaParts = lines[0].split(',').map(s => s.trim());
+        const airline = (metaParts[1] || "FLT").toUpperCase();
+        const equip = (metaParts[3] || "ACFT").toUpperCase();
+        const base = (metaParts[5] || "BASE").toUpperCase();
+
+        // 5. Parse Flight Rows
         const manualLegs = [];
-        allLines.forEach(line => {
-            const cols = line.split(',').map(c => c.trim());
-            // Identify a flight row: must have at least 5 columns and 1st/2nd are 4-letter ICAO codes
-            // We ignore lines that start with "Airline" or "Departing"
-            if (cols.length >= 5 && cols[0].length >= 3 && !line.toLowerCase().includes('airline') && !line.toLowerCase().includes('departing')) {
-                const std = fixTime(cols[3]);
-                const sta = fixTime(cols[4]);
-                
+        for (let i = 2; i < lines.length; i++) {
+            const cols = lines[i].split(',').map(c => c.trim());
+            if (cols.length >= 6 && cols[0].length >= 3) {
                 manualLegs.push({
                     day: parseInt(cols[5]) || 1,
                     dep: cols[0].toUpperCase(),
                     arr: cols[1].toUpperCase(),
-                    callsign: (cols[2] || "FLT").toUpperCase(),
-                    dep_utc: std,
-                    arr_utc: sta,
-                    dep_local: std,
-                    arr_local: sta,
+                    callsign: cols[2].toUpperCase(),
+                    dep_utc: cols[3], 
+                    arr_utc: cols[4], 
+                    dep_local: cols[3],
+                    arr_local: cols[4],
                     equip: equip,
                     note: "Manual Entry"
                 });
             }
-        });
+        }
 
-        if (manualLegs.length === 0) throw new Error("No flight rows could be read. Check column order.");
+        if (manualLegs.length === 0) throw new Error("Could not find flight data rows.");
 
-        // 5. Update UI & Storage
+        // 6. Sync UI and Storage
         document.getElementById('airlineCode').value = airline;
         document.getElementById('homeBase').value = base;
         document.getElementById('equipmentCode').value = equip;
-        const lastDay = manualLegs[manualLegs.length - 1].day;
-        document.getElementById('dutyLength').value = lastDay;
-
         localStorage.setItem('savedRoster', JSON.stringify(manualLegs));
         localStorage.setItem('savedAirline', airline);
         localStorage.setItem('savedHomeBase', base);
         localStorage.setItem('savedEquipment', equip);
-        localStorage.setItem('savedDutyLength', lastDay);
+        localStorage.setItem('savedDutyLength', manualLegs[manualLegs.length - 1].day);
 
-        // 6. View Switch
         renderTable(manualLegs);
         document.getElementById('startPage').style.display = 'none';
         document.getElementById('flightSchedule').style.display = 'block';
 
-        alert(`Success! Loaded ${manualLegs.length} legs for ${airline}.`);
+        alert(`Imported ${manualLegs.length} legs!`);
 
     } catch (err) {
         alert("Parsing Error: " + err.message);
         console.error("Manual Import Detail:", err);
     }
 });
+
+// end of manual entry
+
 
 document.getElementById('closethisflighttrip').addEventListener('click', function() {
     showModal(
