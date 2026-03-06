@@ -518,77 +518,80 @@ html, body {
 
 .table-container {
     width: 100%;
-    /* Enable horizontal scrolling */
     overflow-x: auto; 
-    /* Smooth scrolling for mobile touch */
     -webkit-overflow-scrolling: touch; 
-    border-right: 2px solid #d46f6f; /* A visual cue that the table "ends" elsewhere */
-    box-shadow: inset -10px 0 10px -10px rgba(0,0,0,0.5); /* Shadow on the right edge */
+    background-color: #fff;
+    /* XP-style deep border for the data area */
+    border: 1px solid #7f9db9; 
+    box-sizing: border-box;
 }
 
 #rosterTable {
     min-width: 1150px;
-    /* CHANGE: Switch to separate to allow individual border styling */
     border-collapse: separate; 
     border-spacing: 0; 
-    margin: 0 0;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 16px;
-    font-weight: 200;
-    color: #bb5050;
+    margin: 0;
+    font-family: 'Tahoma', sans-serif; /* Standard Enterprise Font */
+    font-size: 11px; /* Dense corporate data size */
+    color: #000;
     background-color: #fff;
-}
-
-#rosterTable thead {
-    background-color: #bb5050;
-    color: #ffffff;
-    font-weight: 400;
 }
 
 #rosterTable thead th { 
     position: sticky; 
     top: 0; 
-    z-index: 10; }
-
-#rosterTable td:first-child, #rosterTable th:first-child {
-    border-left: 1px solid #d46f6f;
+    z-index: 10;
+    /* Classic XP Column Header Gradient */
+    background: linear-gradient(to bottom, #f9f8f4 0%, #ece9d8 100%);
+    color: #000;
+    font-weight: normal;
+    padding: 4px 6px;
+    border-right: 1px solid #aca899;
+    border-bottom: 1px solid #aca899;
+    text-align: center;
+    white-space: nowrap;
+    /* Bevel effect to make headers look like buttons */
+    box-shadow: inset 1px 1px 0px #fff;
 }
 
-#rosterTable th, 
 #rosterTable td {
-    /* Use a very light border as the default for all sides */
-    border-right: 1px solid #d46f6f;
-    border-bottom: 1px solid #d46f6f;
-    padding: 0px 5px;
+    border-right: 1px solid #d4d0c8;
+    border-bottom: 1px solid #d4d0c8;
+    padding: 4px 8px;
     text-align: center;
     white-space: nowrap;
 }
 
-/* Zebra Striping for readability */
+/* Zebra Striping: Subtle blue-gray for Enterprise lists */
 #rosterTable tbody tr:nth-child(even) {
-    background-color: #fff0f0;
-    color: #943a3a;
+    background-color: #f1f3f6;
 }
 
-/* Highlighting the Day column or Notes */
+/* Day Column: Styled like a vertical header */
 #rosterTable td:first-child {
-    font-weight: 400;
-    background-color: #bb5050;
-    color: #fff;
+    font-weight: bold;
+    background-color: #ece9d8;
+    color: #000;
+    border-left: 1px solid #aca899;
 }
 
-/* Make "End of Tour" and "Equipment Change" stand out */
-#rosterTable td:last-child {
-    color: #5a3030;
-    font-weight: 400;
+/* Flight Data Highlighting */
+#rosterTable td:nth-child(3) { /* Flight Number */
+    font-weight: bold;
+    color: #000080; /* Navy Blue */
+}
+
+#rosterTable td:nth-child(5), #rosterTable td:nth-child(6) { /* ICAO Codes */
+    font-family: 'Lucida Console', Monaco, monospace;
+    font-weight: bold;
+    color: #a00000; /* Dark Red */
 }
 
 /* Prevent iOS from zooming in on input (happens if font < 16px) */
 .editable-cell {
-    font-size: 16px !important; 
-    min-height: 44px; /* Standard mobile tap target height */
-    padding: 12px 8px !important;
-    -webkit-tap-highlight-color: transparent;
+    background-color: #fafafa;
+    box-shadow: inset 1px 1px 2px rgba(0,0,0,0.1);
+    color: #21a121 !important; /* Green for user-entered data */
 }
 
 /* Visual cue for touch */
@@ -598,7 +601,7 @@ html, body {
 
 /* Styling for the thick RED day-break border */
 .day-break-row td {
-    border-bottom: 3px solid #d46f6f !important;
+    border-bottom: 2px solid #003c74 !important;
 }
 
 /* Dashed line for equipment change */
@@ -619,61 +622,71 @@ html, body {
 
 #modalOverlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6); /* Dim the background */
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex; justify-content: center; align-items: center;
     z-index: 9999;
+}
+
+#customModal {
+    background-color: #ece9d8; /* Windows Sand */
+    width: 90%;
+    max-width: 320px;
+    /* Standard blue border for Windows dialogs */
+    border: 3px solid #0054e3; 
+    border-radius: 5px 5px 0 0;
+    box-shadow: 4px 4px 12px rgba(0,0,0,0.5);
+    padding: 0; /* Let title bar hit the edges */
+    text-align: left;
+    overflow: hidden;
+}
+
+#modalTitle {
+    /* Iconic Luna Blue Gradient Title Bar */
+    background: linear-gradient(to right, #0058e6 0%, #3a91ff 100%);
+    color: #fff;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 6px 10px;
+    margin: 0;
+    font-family: "Tahoma", sans-serif;
+    text-shadow: 1px 1px #003399;
+}
+
+#modalMessage {
+    padding: 20px;
+    font-size: 12px;
+    color: #000;
+    font-family: "Tahoma", sans-serif;
+    margin: 0;
+    background-color: #ece9d8;
+}
+
+.modal-buttons {
+    background-color: #ece9d8;
+    padding: 10px 15px 15px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
 }
 
 .modal-hidden {
     display: none !important;
 }
 
-#customModal {
-    background: white;
-    padding: 25px;
-    width: 85%;
-    max-width: 320px;
-    border: 3px solid #323232;
-    box-shadow: 8px 8px #e2db99; /* Matches your input shadow style */
-    text-align: center;
-    font-family: 'IBM Plex Mono', monospace;
+/* Button Overrides for Dialog Consistency */
+#modalConfirm, #modalCancel {
+    min-width: 75px;
+    box-shadow: none;
 }
 
-#customModal h3 {
-    margin-top: 0;
-    font-size: 1.2rem;
-    color: #323232;
-}
-
-#customModal p {
-    font-size: 0.9rem;
-    color: #666;
-    margin-bottom: 25px;
-}
-
-.modal-buttons {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-}
-
-/* These reuse your global button styles but allow for color overrides */
 #modalConfirm {
-    background-color: #e2db99;
-    color: #323232;
+    font-weight: bold;
 }
 
 #modalCancel {
-    background-color: #fff;
-    color: #e74c3c;
-    border-color: #e74c3c;
-    box-shadow: 4px 4px #e74c3c;
+    color: #000;
+    border-color: #003c74;
 }
 
 /* Print / PDF Formatting */
