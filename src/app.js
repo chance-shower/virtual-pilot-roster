@@ -351,6 +351,89 @@ document.getElementById('rosterTable').addEventListener('input', (e) => {
     }
 });
 
+document.getElementById('manualEntry').addEventListener('click', function() {
+    const csvInput = prompt(
+        "Paste your CSV roster here.\n\nRequired Format:\nAirline: ICAO, Aircraft: TYPE, Homebase: ICAO\nDep,Arr,Flt,STD,STA,Day"
+    );
+
+    if (!csvInput) return;
+
+    try {
+        // 1. Clean and split lines - handle any combination of line breaks
+        const allLines = csvInput.split(/\r?\n/).map(l => l.trim()).filter(l => l !== "");
+        
+        if (allLines.length < 2) throw new Error("Input empty or too short.");
+
+        // 2. Extract Metadata (Look through all lines just in case)
+        let airline = "FLT", equip = "ACFT", base = "BASE";
+        allLines.forEach(line => {
+            if (line.toLowerCase().includes('airline:')) airline = (line.match(/Airline:\s*([A-Z0-9]+)/i)?.[1] || airline).toUpperCase();
+            if (line.toLowerCase().includes('aircraft:')) equip = (line.match(/Aircraft:\s*([A-Z0-9]+)/i)?.[1] || equip).toUpperCase();
+            if (line.toLowerCase().includes('homebase:')) base = (line.match(/Homebase:\s*([A-Z0-9]+)/i)?.[1] || base).toUpperCase();
+        });
+
+        // 3. Time Formatter Helper
+        const fixTime = (t) => {
+            if (!t) return "00:00";
+            let clean = t.replace(':', '').trim();
+            if (clean.length === 3) clean = "0" + clean;
+            if (clean.length === 4) return clean.slice(0, 2) + ":" + clean.slice(2);
+            return t;
+        };
+
+        // 4. Parse Flight Rows
+        const manualLegs = [];
+        allLines.forEach(line => {
+            const cols = line.split(',').map(c => c.trim());
+            // Identify a flight row: must have at least 5 columns and 1st/2nd are 4-letter ICAO codes
+            // We ignore lines that start with "Airline" or "Departing"
+            if (cols.length >= 5 && cols[0].length >= 3 && !line.toLowerCase().includes('airline') && !line.toLowerCase().includes('departing')) {
+                const std = fixTime(cols[3]);
+                const sta = fixTime(cols[4]);
+                
+                manualLegs.push({
+                    day: parseInt(cols[5]) || 1,
+                    dep: cols[0].toUpperCase(),
+                    arr: cols[1].toUpperCase(),
+                    callsign: (cols[2] || "FLT").toUpperCase(),
+                    dep_utc: std,
+                    arr_utc: sta,
+                    dep_local: std,
+                    arr_local: sta,
+                    equip: equip,
+                    note: "Manual Entry"
+                });
+            }
+        });
+
+        if (manualLegs.length === 0) throw new Error("No flight rows could be read. Check column order.");
+
+        // 5. Update UI & Storage
+        document.getElementById('airlineCode').value = airline;
+        document.getElementById('homeBase').value = base;
+        document.getElementById('equipmentCode').value = equip;
+        const lastDay = manualLegs[manualLegs.length - 1].day;
+        document.getElementById('dutyLength').value = lastDay;
+
+        localStorage.setItem('savedRoster', JSON.stringify(manualLegs));
+        localStorage.setItem('savedAirline', airline);
+        localStorage.setItem('savedHomeBase', base);
+        localStorage.setItem('savedEquipment', equip);
+        localStorage.setItem('savedDutyLength', lastDay);
+
+        // 6. View Switch
+        renderTable(manualLegs);
+        document.getElementById('startPage').style.display = 'none';
+        document.getElementById('flightSchedule').style.display = 'block';
+
+        alert(`Success! Loaded ${manualLegs.length} legs for ${airline}.`);
+
+    } catch (err) {
+        alert("Parsing Error: " + err.message);
+        console.error("Manual Import Detail:", err);
+    }
+});
+
 document.getElementById('closethisflighttrip').addEventListener('click', function() {
     showModal(
         "EXIT TO MENU?", 
