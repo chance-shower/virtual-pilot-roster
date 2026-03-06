@@ -25,7 +25,7 @@ async function loadFlightData() {
         flightData = await response.json();
 
         // Load airline logos
-        const mapResponse = await fetch('airline_map.json'); 
+        const mapResponse = await fetch('data/airline_map.json'); 
         if (mapResponse.ok) {
             // CRITICAL FIX: Add 'await' here so the map actually populates before use
             airlineMap = await mapResponse.json(); 
