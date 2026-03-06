@@ -1,4 +1,5 @@
 let flightData = null;
+let airlineMap = {};
 
 // Convert HH:mm to total minutes
 const toMins = (timeStr) => {
@@ -18,14 +19,25 @@ const formatDuration = (mins) => {
 
 async function loadFlightData() {
     try {
+        // Load flight schedules
         const response = await fetch('data/flight_schedules_202212.json');
         if (!response.ok) throw new Error("Issue reading data (1)");
         flightData = await response.json();
+
+        // Load airline logos
+        const mapResponse = await fetch('airline_map.json'); 
+        if (mapResponse.ok) {
+            airlineMap = await mapResponse.json();
+            console.log("Airline mapping loaded");
+        }
+
         console.log("Database loaded");
     } catch (error) {
         console.error("Issue reading data (2)");
     }
 }
+
+
 
 loadFlightData();
 
@@ -299,6 +311,9 @@ function renderTable(legs) {
     document.getElementById('display-equipment').innerHTML = `${equipment}`;
     document.getElementById('display-base').innerHTML = `${homeBase}`;
     document.getElementById('display-length').innerHTML = `${tripDays}`;
+
+    const currentICAO = document.getElementById('airlineCode').value.toUpperCase();
+    updateAirlineLogo(currentICAO);
 }
 
 /* Event listeners */ 
@@ -370,6 +385,27 @@ document.getElementById('rerunButton').addEventListener('click', () => {
     createTrip();
 });
 
+function updateAirlineLogo(icao) {
+    const logoImg = document.getElementById('airline-logo');
+    if (!logoImg) return;
+
+    const airlineEntry = airlineMap[icao.toUpperCase()];
+
+    if (airlineEntry && airlineEntry.iata) {
+        const iata = airlineEntry.iata;
+        logoImg.src = `https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/${iata}.svg`;
+        logoImg.style.display = 'block';
+
+        // Hide if Duffel returns a 404 (logo missing on their end)
+        logoImg.onerror = function() {
+            this.style.display = 'none';
+        };
+    } else {
+        // Hide if no ICAO found or no IATA code available
+        logoImg.style.display = 'none';
+        logoImg.src = ""; 
+    }
+}
 
 /* Startup functions */
 
@@ -419,6 +455,9 @@ window.onload = function() {
 
                 const legs = JSON.parse(savedData);
                 renderTable(legs);
+
+                const savedICAO = localStorage.getItem('savedAirline') || "";
+                updateAirlineLogo(savedICAO);
             },
             function() {
                 // FIXED: Only clear session keys, NOT the briefcase
@@ -500,6 +539,8 @@ document.getElementById('tripSelect').addEventListener('change', (e) => {
 
         localStorage.setItem('savedRoster', JSON.stringify(trip.data));
         renderTable(trip.data);
+
+        updateAirlineLogo(trip.settings.airline);
     }
 });
 

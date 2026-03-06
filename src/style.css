@@ -314,10 +314,9 @@ html, body {
 #roster-header-container {
     display: flex;
     width: 100%;
-    align-items: stretch; /* Changed to stretch to help centering the rerun area */
-    padding: 10px 10px 10px 10px; 
+    align-items: stretch;
+    padding: 10px;
     box-sizing: border-box;
-    position: relative;
     border-top: 1px solid #aca899; 
     box-shadow: inset 0 1px 0 #ffffff;
 }
@@ -325,72 +324,55 @@ html, body {
 #preamble {
     flex: 1;
     display: flex;
-    flex-direction: column; /* Stack boxes vertically */
-    gap: 4px;               /* Tight spacing like the XP reference */
-    padding: 2px 0;
+    flex-direction: row; /* Align boxes and logo side-by-side */
+    align-items: center; /* Vertical center logo vs boxes */
+    gap: 30px;           /* Space between boxes and logo */
 }
 
-.xp-field {
+#xp-fields-container {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .xp-label {
     font-family: "Tahoma", sans-serif;
     font-size: 11px;
     font-weight: bold;
-    color: #222;
-    text-transform: uppercase;
-    width: 50px;           /* Fixed width ensures the boxes align vertically */
-    flex-shrink: 0;
+    width: 50px;
 }
 
-.xp-input-box {
-    width: 50px;          /* Defined width for the stacked look */
-    height: 16px;          /* Slightly more compact */
-    background-color: #e0e0e0;
-    padding: 0 4px;
-    font-size: 12px;
-    color: #222;
-    display: flex;
-    align-items: center;
-
-    /* The Classic Sunken Border Effect */
-    border-top: 1px solid #808080;
-    border-left: 1px solid #808080;
-    border-bottom: 1px solid #fff;
-    border-right: 1px solid #fff;
-    box-shadow: inset 1px 1px 0px #000; 
-}
-
-#rerun-container {
-    flex: 0 0 160px;         /* Increased from 120px to 160px for more width */
-    display: flex;
-    flex-direction: row;     /* Align button and text side-by-side */
-    justify-content: flex-start; /* Align to the start of the container */
-    align-items: center;     /* Perfectly centers text vertically with button */
-    border-left: 1px solid #aca899;
-    padding-left: 15px;      /* Space after the vertical divider line */
-    margin-left: 10px;
-    gap: 10px;               /* Space between the button and the text */
-}
-
-#rerunButton {
-    width: 28px; 
-    height: 28px;
-    flex-shrink: 0;          /* Prevents the button from squishing */
+#airline-icon-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 16px;
-    cursor: pointer;
+    width: 80px; 
+    height: 50px;
+}
+
+#airline-logo {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* Rerun styling - Row layout with vertical centering */
+#rerun-container {
+    flex: 0 0 160px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    border-left: 1px solid #aca899;
+    padding-left: 15px;
+    margin-left: 10px;
+    gap: 10px;
 }
 
 #rerunText {
-    font-size: 12px;         /* Slightly larger for readability */
-    color: #222;
-    white-space: nowrap;     /* Keeps the text on one line */
-    line-height: 1;          /* Helps with vertical centering */
+    font-size: 11px;
+    white-space: nowrap;
+    line-height: 1;
 }
 
 /* Briefcase Styling - The Toolbar Container */
