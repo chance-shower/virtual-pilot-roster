@@ -749,7 +749,6 @@ html, body {
     color: #fff;
     font-size: 13px;
     font-weight: lighter;
-    padding: 6px 10px;
     margin: 0;
     font-family: "Tahoma", sans-serif;
     text-shadow: 1px 1px #003399;
@@ -767,13 +766,13 @@ html, body {
 }
 
 #modalMessage {
-    padding: 25px 15px;
-    text-align: center;
     background-color: #ece9d8;
     min-height: 60px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: left;
+    font-size: 12px;
+    padding-left: 15px;
 }
 
 .modal-buttons {
@@ -792,10 +791,6 @@ html, body {
 #modalConfirm, #modalCancel {
     min-width: 75px;
     box-shadow: none;
-}
-
-#modalConfirm {
-    font-weight: bold;
 }
 
 #modalCancel {
