@@ -3,8 +3,16 @@ let airlineMap = {};
 
 // Convert HH:mm to total minutes
 const toMins = (timeStr) => {
-    const [h,m] = timeStr.split(':').map(Number);
-    return h * 60 + m;
+    if (!timeStr) return 0;
+    let h, m;
+    if (timeStr.includes(':')) {
+        [h, m] = timeStr.split(':').map(Number);
+    } else {
+        // Handles "0730" format
+        h = parseInt(timeStr.substring(0, 2));
+        m = parseInt(timeStr.substring(2, 4));
+    }
+    return (h * 60) + m;
 };
 
 
@@ -391,10 +399,9 @@ document.getElementById('manualEntry').addEventListener('click', function() {
                 // --- IN-LINE OFFSET LOOKUP ---
                 const getLocalTime = (icao, utcTime) => {
                     const airportEntry = flightData[icao];
-                    if (!airportEntry) return utcTime; // Fallback if ICAO not in database
+                    if (!airportEntry) return utcTime; 
 
                     try {
-                        // Find the first available flight in flightData for this airport
                         const firstCarrier = Object.values(airportEntry)[0];
                         const firstType = Object.values(firstCarrier)[0];
                         const firstDest = Object.values(firstType)[0];
@@ -407,13 +414,13 @@ document.getElementById('manualEntry').addEventListener('click', function() {
                         if (offset > 720) offset -= 1440;
                         if (offset < -720) offset += 1440;
 
-                        // Apply offset to the manually entered UTC
                         let totalMins = (toMins(utcTime) + offset + 1440) % 1440;
                         const h = Math.floor(totalMins / 60);
                         const m = totalMins % 60;
+                        // Return with colon for the table display
                         return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
                     } catch (e) {
-                        return utcTime; // Fallback on error
+                        return utcTime; 
                     }
                 };
 
