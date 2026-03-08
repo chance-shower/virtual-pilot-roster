@@ -182,6 +182,7 @@ html, body {
 .input-main-form {
     display: flex;
     flex-direction: column;
+    border-right: 1px solid #aca899;
 }
 
 /* Sidebar for Open and Manual buttons */
@@ -190,7 +191,6 @@ html, body {
     flex-direction: column;
     gap: 15px;
     padding-left: 15px;
-    border-left: 1px solid #aca899; /* XP-style divider */
     margin-top: 5px;
 }
 
@@ -202,8 +202,7 @@ html, body {
 
 .sidebar-section label {
     margin-top: 0 !important; /* Reset existing label margin */
-    color: #003c74; /* Navy blue label for distinct sections */
-    font-weight: bold;
+    color: #222; /* Navy blue label for distinct sections */
 }
 
 /* Sidebar Button Styling - Inheriting your global button look */
@@ -217,6 +216,8 @@ html, body {
     cursor: pointer;
     text-align: left;
     white-space: nowrap; /* Prevents text wrapping */
+    background: #ece9d8;
+    border: none;
 }
 
 .sidebar-btn img {
@@ -234,7 +235,6 @@ html, body {
     }
 
     .input-sidebar {
-        border-left: 1px solid #aca899; /* Keep the divider */
         padding-left: 10px;
         margin-top: 5px;
     }
