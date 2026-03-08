@@ -388,15 +388,19 @@ document.getElementById('manualEntry').addEventListener('click', function() {
 
         const manualLegs = [];
 
+        // Helper to ensure 0730 becomes 07:30 for calculations
+        const formatTime = (t) => t.includes(':') ? t : `${t.substring(0, 2)}:${t.substring(2, 4)}`;
+
         for (let i = 2; i < lines.length; i++) {
             const cols = lines[i].split(',').map(c => c.trim());
             if (cols.length >= 6 && cols[0].length >= 3) {
                 const depICAO = cols[0].toUpperCase();
                 const arrICAO = cols[1].toUpperCase();
-                const depUTC = cols[3];
-                const arrUTC = cols[4];
+                
+                // Clean the raw UTC strings immediately
+                const depUTC = formatTime(cols[3]); 
+                const arrUTC = formatTime(cols[4]);
 
-                // --- IN-LINE OFFSET LOOKUP ---
                 const getLocalTime = (icao, utcTime) => {
                     const airportEntry = flightData[icao];
                     if (!airportEntry) return utcTime; 
@@ -417,7 +421,6 @@ document.getElementById('manualEntry').addEventListener('click', function() {
                         let totalMins = (toMins(utcTime) + offset + 1440) % 1440;
                         const h = Math.floor(totalMins / 60);
                         const m = totalMins % 60;
-                        // Return with colon for the table display
                         return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
                     } catch (e) {
                         return utcTime; 
@@ -434,14 +437,13 @@ document.getElementById('manualEntry').addEventListener('click', function() {
                     dep_local: getLocalTime(depICAO, depUTC),
                     arr_local: getLocalTime(arrICAO, arrUTC),
                     equip: equip,
-                    note: "-" // Note reset to simple dash
+                    note: "-"
                 });
             }
         }
 
         if (manualLegs.length === 0) throw new Error("Could not find flight data rows.");
 
-        // Sync UI and Storage
         document.getElementById('airlineCode').value = airline;
         document.getElementById('homeBase').value = base;
         document.getElementById('equipmentCode').value = equip;
@@ -456,7 +458,7 @@ document.getElementById('manualEntry').addEventListener('click', function() {
         document.getElementById('startPage').style.display = 'none';
         document.getElementById('flightSchedule').style.display = 'block';
 
-        alert(`Imported ${manualLegs.length} legs with auto-calculated local times!`);
+        alert(`Imported ${manualLegs.length} legs!`);
 
     } catch (err) {
         alert("Parsing Error: " + err.message);
