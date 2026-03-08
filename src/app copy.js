@@ -358,87 +358,66 @@ document.getElementById('rosterTable').addEventListener('input', (e) => {
 // Manual entry function
 
 document.getElementById('manualEntry').addEventListener('click', function() {
-    const csvInput = prompt("Paste your CSV roster here:");
+    const csvInput = prompt(
+        "Paste your CSV roster here:"
+    );
+
     if (!csvInput) return;
 
     try {
+        // 1. NORMALIZE: Replace potential squashed lines with actual line breaks
+        // If the browser turned it into one line, we look for "ESSA," or "ENBO," etc. 
+        // but a safer way is to detect the "Airline," "Departing," headers.
         let cleanedInput = csvInput.trim();
+        
+        // 2. Split by line breaks OR by looking for common patterns
         let lines = cleanedInput.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
 
+        // 3. EMERGENCY FALLBACK: If only 1 line detected, it's squashed.
+        // We will attempt to split by the known headers.
         if (lines.length === 1) {
+            console.warn("Squashed input detected. Attempting repair...");
             cleanedInput = cleanedInput.replace(/Departing,arriving/i, "\nDeparting,arriving");
+            // Look for 4-letter ICAO codes followed by a comma (like ESSA,) and add a newline before them
+            // except for the very first one.
             cleanedInput = cleanedInput.replace(/(?!\bAirline\b)([A-Z]{4},[A-Z]{4},)/g, "\n$1");
             lines = cleanedInput.split(/\n/).map(l => l.trim()).filter(l => l.length > 0);
         }
 
-        if (lines.length < 3) throw new Error("Input format error.");
+        if (lines.length < 3) throw new Error("Input format error. Ensure metadata and flight data are present.");
 
+        // 4. Extract Metadata
         const metaParts = lines[0].split(',').map(s => s.trim());
         const airline = (metaParts[1] || "FLT").toUpperCase();
         const equip = (metaParts[3] || "ACFT").toUpperCase();
         const base = (metaParts[5] || "BASE").toUpperCase();
 
+        // 5. Parse Flight Rows
         const manualLegs = [];
-
         for (let i = 2; i < lines.length; i++) {
             const cols = lines[i].split(',').map(c => c.trim());
             if (cols.length >= 6 && cols[0].length >= 3) {
-                const depICAO = cols[0].toUpperCase();
-                const arrICAO = cols[1].toUpperCase();
-                const depUTC = cols[3];
-                const arrUTC = cols[4];
-
-                // --- IN-LINE OFFSET LOOKUP ---
-                const getLocalTime = (icao, utcTime) => {
-                    const airportEntry = flightData[icao];
-                    if (!airportEntry) return utcTime; // Fallback if ICAO not in database
-
-                    try {
-                        // Find the first available flight in flightData for this airport
-                        const firstCarrier = Object.values(airportEntry)[0];
-                        const firstType = Object.values(firstCarrier)[0];
-                        const firstDest = Object.values(firstType)[0];
-                        const sample = firstDest[0];
-
-                        const sUTC = toMins(sample.dep_utc);
-                        const sLoc = toMins(sample.dep_local);
-                        
-                        let offset = sLoc - sUTC;
-                        if (offset > 720) offset -= 1440;
-                        if (offset < -720) offset += 1440;
-
-                        // Apply offset to the manually entered UTC
-                        let totalMins = (toMins(utcTime) + offset + 1440) % 1440;
-                        const h = Math.floor(totalMins / 60);
-                        const m = totalMins % 60;
-                        return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
-                    } catch (e) {
-                        return utcTime; // Fallback on error
-                    }
-                };
-
                 manualLegs.push({
                     day: parseInt(cols[5]) || 1,
-                    dep: depICAO,
-                    arr: arrICAO,
+                    dep: cols[0].toUpperCase(),
+                    arr: cols[1].toUpperCase(),
                     callsign: cols[2].toUpperCase(),
-                    dep_utc: depUTC, 
-                    arr_utc: arrUTC, 
-                    dep_local: getLocalTime(depICAO, depUTC),
-                    arr_local: getLocalTime(arrICAO, arrUTC),
+                    dep_utc: cols[3], 
+                    arr_utc: cols[4], 
+                    dep_local: cols[3],
+                    arr_local: cols[4],
                     equip: equip,
-                    note: "-" // Note reset to simple dash
+                    note: "-"
                 });
             }
         }
 
         if (manualLegs.length === 0) throw new Error("Could not find flight data rows.");
 
-        // Sync UI and Storage
+        // 6. Sync UI and Storage
         document.getElementById('airlineCode').value = airline;
         document.getElementById('homeBase').value = base;
         document.getElementById('equipmentCode').value = equip;
-        
         localStorage.setItem('savedRoster', JSON.stringify(manualLegs));
         localStorage.setItem('savedAirline', airline);
         localStorage.setItem('savedHomeBase', base);
@@ -449,10 +428,11 @@ document.getElementById('manualEntry').addEventListener('click', function() {
         document.getElementById('startPage').style.display = 'none';
         document.getElementById('flightSchedule').style.display = 'block';
 
-        alert(`Imported ${manualLegs.length} legs with auto-calculated local times!`);
+        alert(`Imported ${manualLegs.length} legs!`);
 
     } catch (err) {
         alert("Parsing Error: " + err.message);
+        console.error("Manual Import Detail:", err);
     }
 });
 
