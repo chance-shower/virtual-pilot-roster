@@ -730,7 +730,9 @@ html, body {
     width: 90%;
     max-width: 320px;
     /* Standard blue border for Windows dialogs */
-    border: 3px solid #0054e3; 
+    border-left: 1px solid #0052d1;
+    border-right: 1px solid #0052d1;
+    border-bottom: 1px solid #0052d1;
     border-radius: 5px 5px 0 0;
     box-shadow: 4px 4px 12px rgba(0,0,0,0.5);
     padding: 0; /* Let title bar hit the edges */
@@ -740,7 +742,7 @@ html, body {
 
 #modalTitle {
     /* Iconic Luna Blue Gradient Title Bar */
-    background: linear-gradient(to right, #0058e6 0%, #3a91ff 100%);
+    background: linear-gradient(180deg, #0997ff, #0053ee 8%, #0050ee 40%, #06f 88%, #06f 93%, #005bff 95%, #003dd7 96%, #003dd7);
     color: #fff;
     font-size: 13px;
     font-weight: bold;
