@@ -680,6 +680,10 @@ html, body {
     color: #a00000; /* Dark Red */
 }
 
+#closeButton {
+    padding-left: 10px;
+}
+
 /* Prevent iOS from zooming in on input (happens if font < 16px) */
 .editable-cell {
     background-color: #fafafa;
