@@ -516,12 +516,22 @@ document.getElementById('manualConfirm').onclick = function() {
 
 
 document.getElementById('closethisflighttrip').addEventListener('click', function() {
-    showModal("Exit to menu?", "Return to the start page?", "Exit", "Cancel", function() {
-        document.getElementById('flightSchedule').style.display = 'none';
-        // Remove the hidden class to show the start page again
-        document.getElementById('startPage').classList.remove('modal-hidden');
-        window.scrollTo(0, 0);
-    });
+    showModal(
+        "Exit to menu?", 
+        "Return to the start page? (Your roster is safe!)", 
+        "Exit", 
+        "Cancel", 
+        function() {
+            // Only hide/show, don't clear storage!
+            document.getElementById('flightSchedule').style.display = 'none';
+            
+            // FIX: Set to 'flex' to maintain the centering defined in your CSS
+            document.getElementById('startPage').style.display = 'flex';
+            
+            // Ensure we're at the top of the page for the welcome screen
+            window.scrollTo(0, 0);
+        }
+    );
 });
 
 document.addEventListener('focusin', (e) => {
