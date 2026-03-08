@@ -720,25 +720,27 @@ html, body {
 
 #modalOverlay {
     position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
     background: rgba(0, 0, 0, 0.4);
-    display: flex; justify-content: center; align-items: center;
-    z-index: 9999;
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    z-index: 9999; /* Ensure it is above the table and header */
 }
 
 #customModal {
-    background-color: #ece9d8; /* Windows Sand */
+    background-color: #ece9d8;
     width: 90%;
     max-width: 320px;
-    /* Standard blue border for Windows dialogs */
     border-left: 1px solid #0052d1;
     border-right: 1px solid #0052d1;
     border-bottom: 1px solid #0052d1;
     border-radius: 5px 5px 0 0;
     box-shadow: 4px 4px 12px rgba(0,0,0,0.5);
-    padding: 0; /* Let title bar hit the edges */
-    text-align: left;
-    overflow: hidden;
+    overflow: hidden; /* Clips the gradient header correctly */
 }
 
 #modalTitle {
@@ -765,17 +767,18 @@ html, body {
 }
 
 #modalMessage {
-    padding: 20px;
-    font-size: 12px;
-    color: #000;
-    font-family: "Tahoma", sans-serif;
-    margin: 0;
+    padding: 25px 15px;
+    text-align: center;
     background-color: #ece9d8;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .modal-buttons {
     background-color: #ece9d8;
-    padding: 10px 15px 15px;
+    padding: 0 15px 15px;
     display: flex;
     justify-content: flex-end;
     gap: 8px;
