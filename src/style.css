@@ -201,7 +201,7 @@ html, body {
 /* Input text fields */
 
 #inputdata input[type="text"] {
-    width: 200px;
+    width: 175px;
     height: 23px;
     padding: 3px 4px;
     border: 1px solid #7f9db9;
