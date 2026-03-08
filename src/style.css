@@ -530,14 +530,15 @@ html, body {
 
 .table-container {
     width: 100%;
-    overflow-x: auto;            /* Keep horizontal scroll */
-    overflow-y: visible;         /* FORCE vertical expansion */
+    overflow-x: auto; 
+    overflow-y: visible; /* Confirms we only want horizontal scrolling here */
+    display: block;
+    height: auto !important;
+    flex: none;
     -webkit-overflow-scrolling: touch; 
     background-color: #fff;
     border: 1px solid #7f9db9; 
     box-sizing: border-box;
-    flex: none;                  
-    display: block;              
 }
 
 #rosterTable {
