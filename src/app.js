@@ -492,14 +492,19 @@ document.getElementById('manualEntry').addEventListener('click', function() {
 
 document.getElementById('closethisflighttrip').addEventListener('click', function() {
     showModal(
-        "EXIT TO MENU?", 
+        "Exit to menu?", 
         "Return to the start page? (Your roster is safe!)", 
-        "GO TO MENU", 
-        "STAY HERE", 
+        "Exit", 
+        "Cancel", 
         function() {
             // Only hide/show, don't clear storage!
             document.getElementById('flightSchedule').style.display = 'none';
-            document.getElementById('startPage').style.display = 'block';
+            
+            // FIX: Set to 'flex' to maintain the centering defined in your CSS
+            document.getElementById('startPage').style.display = 'flex';
+            
+            // Ensure we're at the top of the page for the welcome screen
+            window.scrollTo(0, 0);
         }
     );
 });
