@@ -309,6 +309,9 @@ html, body {
     color: #222;
     background-color: #e0e0e0;
     border-bottom: 1px solid #0052d1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensures it at least fills the screen */
 }
 
 #roster-header-container {
@@ -521,12 +524,16 @@ html, body {
     overflow-x: auto; 
     -webkit-overflow-scrolling: touch; 
     background-color: #fff;
-    /* XP-style deep border for the data area */
     border: 1px solid #7f9db9; 
     box-sizing: border-box;
+    flex: 1;           
+    display: flex;
+    flex-direction: column;
 }
 
 #rosterTable {
+    flex: 1;
+    width: 100%;
     min-width: 1150px;
     border-collapse: separate; 
     border-spacing: 0; 
