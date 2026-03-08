@@ -211,9 +211,11 @@ html, body {
     justify-content: flex-start;
     gap: 8px;
     padding: 6px 8px;
-    width: 100%;
+    width: fit-content; /* Only as wide as the content */
+    min-width: 120px;    /* Ensures a consistent look */
     cursor: pointer;
     text-align: left;
+    white-space: nowrap; /* Prevents text wrapping */
 }
 
 .sidebar-btn img {
@@ -223,14 +225,31 @@ html, body {
 
 @media (max-width: 480px) {
     #inputdata {
-        grid-template-columns: 1fr;
-        max-width: 325px;
+        /* Keep them side-by-side but tighten the left column */
+        grid-template-columns: 1.2fr 1fr; 
+        gap: 10px;
+        width: 100%;
+        padding: 0 10px;
     }
+
     .input-sidebar {
-        border-left: none;
-        border-top: 1px solid #aca899;
-        padding-left: 0;
-        padding-top: 15px;
+        border-left: 1px solid #aca899; /* Keep the divider */
+        padding-left: 10px;
+        margin-top: 5px;
+    }
+
+    .sidebar-section {
+        /* Stack buttons vertically but keep them tight, 
+           or use 'flex-direction: row' if you want them side-by-side */
+        flex-direction: column; 
+        gap: 8px;
+    }
+
+    .sidebar-btn {
+        /* Prevent the buttons from being massive */
+        width: auto; 
+        padding: 4px 6px;
+        font-size: 11px; /* Slightly smaller text for mobile */
     }
 }
 
