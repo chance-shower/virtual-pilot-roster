@@ -332,6 +332,28 @@ function renderTable(legs) {
 /* Event listeners */ 
 document.getElementById('generateFlightRoster').addEventListener('click', createTrip);
 
+document.getElementById('openBriefcaseBtn').addEventListener('click', () => {
+    const briefcase = JSON.parse(localStorage.getItem('tripBriefcase') || "[]");
+    
+    if (briefcase.length === 0) {
+        alert("Your briefcase is empty. Generate or Import a trip first!");
+        return;
+    }
+
+    // Switch views to reveal the briefcase area
+    document.getElementById('startPage').style.display = 'none';
+    document.getElementById('flightSchedule').style.display = 'block';
+    
+    // Smoothly focus the dropdown for the user
+    document.getElementById('tripSelect').focus();
+});
+
+// 2. Sidebar Manual Entry: Connects the new button to your existing manualEntry logic
+document.getElementById('sidebarManualEntry').addEventListener('click', () => {
+    // This triggers your existing 'manualEntry' click event
+    document.getElementById('manualEntry').click();
+});
+
 // Saving edited fields
 document.getElementById('rosterTable').addEventListener('input', (e) => {
     if (e.target.classList.contains('editable-cell')) {

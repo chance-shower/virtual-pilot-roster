@@ -169,18 +169,69 @@ html, body {
 }
 
 #inputdata {
-    max-width: 325px;
-    width: 85%;
-    background-color: #f9f8f6;
-    padding: 10px;
+    max-width: 450px; /* Increased to accommodate the sidebar */
+    display: grid;
+    grid-template-columns: 200px 1fr; /* Fixed 200px left, flexible right */
+    gap: 20px;
+    align-items: start;
+}
+
+/* Container for the existing entry fields */
+.input-main-form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Sidebar for Open and Manual buttons */
+.input-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding-left: 15px;
+    border-left: 1px solid #aca899; /* XP-style divider */
+    margin-top: 5px;
+}
+
+.sidebar-section {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.sidebar-section label {
+    margin-top: 0 !important; /* Reset existing label margin */
+    color: #003c74; /* Navy blue label for distinct sections */
+    font-weight: bold;
+}
+
+/* Sidebar Button Styling - Inheriting your global button look */
+.sidebar-btn {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    padding: 6px 8px;
+    width: 100%;
+    cursor: pointer;
     text-align: left;
-    
-    /* Centering logic */
-    margin: 10px auto; 
-    
-    /* XP Border Style: Sunken/Etched look */
-    border: 1px solid #aca899;
-    box-shadow: inset 1px 1px 0 #fff, 1px 1px 0 #fff;
+}
+
+.sidebar-btn img {
+    image-rendering: pixelated; /* Keeps icons sharp like XP */
+    flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+    #inputdata {
+        grid-template-columns: 1fr;
+        max-width: 325px;
+    }
+    .input-sidebar {
+        border-left: none;
+        border-top: 1px solid #aca899;
+        padding-left: 0;
+        padding-top: 15px;
+    }
 }
 
 #flightschedulebutton {

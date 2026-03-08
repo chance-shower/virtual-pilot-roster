@@ -33,36 +33,59 @@
                 </div>
                 <div id="inputdata-container">
                     <div id="inputdata">
-                        <label for="airlineCode">Airline (ICAO code)</label>
-                        <input type="text" id="airlineCode" placeholder="UAL" autocomplete="off" autocapitalize="characters">
-                        <label for="equipmentCode">Aircraft (ICAO code)</label>
-                        <input type="text" id="equipmentCode" placeholder="B38M" autocomplete="off" autocapitalize="characters">
-                        <label for="homeBase">Home base</label>
-                        <input type="text" id="homeBase" placeholder="KORD" autocomplete="off" autocapitalize="characters">
-                        <label for="dutyLength">Duty length (days)</label>
-                        <input type="text" id="dutyLength" placeholder="4" inputmode="numeric">
-                        <label>Flight Type Preference</label>
-                        <div class="radio-group">
-                            <label class="radio-container">
-                                <input type="radio" name="haulPreference" value="short">
-                                <span class="radio-label">Short</span>
-                            </label>
-                            <label class="radio-container">
-                                <input type="radio" name="haulPreference" value="medium" checked>
-                                <span class="radio-label">Medium</span>
-                            </label>
-                            <label class="radio-container">
-                                <input type="radio" name="haulPreference" value="long">
-                                <span class="radio-label">Long</span>
-                            </label>
+                        <div class="input-main-form">
+                            <label for="airlineCode">AIRLINE ICAO</label>
+                            <input type="text" id="airlineCode" placeholder="e.g. ANZ">
+
+                            <label for="homeBase">HOME BASE</label>
+                            <input type="text" id="homeBase" placeholder="e.g. NZAA">
+
+                            <label for="equipmentCode">AIRCRAFT TYPE(S)</label>
+                            <input type="text" id="equipmentCode" placeholder="A320, AT76">
+
+                            <label for="dutyLength">TRIP LENGTH (DAYS)</label>
+                            <input type="text" id="dutyLength" placeholder="e.g. 4">
+                            
+                            <label>HAUL PREFERENCE</label>
+                            <div class="radio-group">
+                                <label class="radio-container">
+                                    <input type="radio" name="haulPreference" value="short" checked>
+                                    <span class="radio-label">Short</span>
+                                </label>
+                                <label class="radio-container">
+                                    <input type="radio" name="haulPreference" value="medium">
+                                    <span class="radio-label">Med</span>
+                                </label>
+                                <label class="radio-container">
+                                    <input type="radio" name="haulPreference" value="long">
+                                    <span class="radio-label">Long</span>
+                                </label>
+                            </div>
+
+                            <label for="desiredAirports">DESIRED DESTINATIONS (OPTIONAL)</label>
+                            <input type="text" id="desiredAirports" placeholder="NZCH, NZDN">
+
+                            <label for="excludedAirports">EXCLUDED DESTINATIONS (OPTIONAL)</label>
+                            <input type="text" id="excludedAirports" placeholder="NZQN">
                         </div>
-                        <label for="desiredAirports">Preferred airports (optional)</label>
-                        <input type="text" id="desiredAirports" placeholder="KDEN,KSFO,..." autocomplete="off" autocapitalize="characters">
-                        <label for="excludedAirports">Excluded airports (optional)</label>
-                        <input type="text" id="excludedAirports" placeholder="KJFK,KLGA,..." autocomplete="off" autocapitalize="characters">
+
+                        <div class="input-sidebar">
+                            <div class="sidebar-section">
+                                <label>ROSTER TASKS</label>
+                                <button class="sidebar-btn" id="openBriefcaseBtn">
+                                    <img src="https://win98icons.alexmeub.com/icons/png/directory_open_cabinet_fc-4.png" width="16" height="16">
+                                    <u>O</u>pen Trip...
+                                </button>
+                                <button class="sidebar-btn" id="sidebarManualEntry">
+                                    <img src="https://win98icons.alexmeub.com/icons/png/write_yellow-1.png" width="16" height="16">
+                                    <u>M</u>anual Entry
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <div id="flightschedulebutton">
-                        <button id="generateFlightRoster">Generate flight trip</button>
+
+                    <div id="flightschedulebutton" style="margin-top: 15px;">
+                        <button id="generateFlightRoster" style="padding: 5px 20px; font-weight: bold;">GENERATE ROSTER</button>
                     </div>
                 </div>
             </div>
