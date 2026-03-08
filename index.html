@@ -181,11 +181,25 @@
                         style="width: 100%; height: 120px; font-family: 'Courier New', monospace; font-size: 11px; border: 2px inset #ffffff;"></textarea>
             </div>
             <div class="modal-footer" style="text-align: right; padding: 10px; background: #ece9d8;">
-                <button id="manualConfirm" class="xp-button" style="width: 80px; font-weight: bold;">IMPORT</button>
-                <button id="manualCancel" class="xp-button" style="width: 80px;">CANCEL</button>
+                <button id="manualConfirm" class="xp-button" style="width: 80px; font-weight: bold;">Import</button>
+                <button id="manualCancel" class="xp-button" style="width: 80px;">Cancel</button>
             </div>
         </div>
     </div>
+    <div id="modalOverlay" class="modal-overlay modal-hidden">
+    <div class="modal-content" style="max-width: 300px;">
+        <div class="modal-header">
+            <span id="modalTitle">Confirm Action</span>
+        </div>
+        <div class="modal-body" style="padding: 20px; text-align: center;">
+            <p id="modalMessage">Are you sure?</p>
+        </div>
+        <div class="modal-footer" style="text-align: right; padding: 10px; background: #ece9d8;">
+            <button id="modalConfirm" class="xp-button" style="width: 80px; font-weight: bold;">OK</button>
+            <button id="modalCancel" class="xp-button" style="width: 80px;">Cancel</button>
+        </div>
+    </div>
+</div>
     <script src="src/app.js"></script>
 </body>
 </html>
