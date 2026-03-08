@@ -28,15 +28,22 @@ button:active {
 /* Main HTML */
 
 html, body {
-    height: 100%; /* Necessary for the parent to know how tall "middle" is */
+    /* Layout: Allow the page to grow while keeping the teal background solid */
+    height: auto; 
+    min-height: 100%; 
     margin: 0;
     background: #018281; /* Classic Teal Desktop Color */
+    
+    /* Your Aesthetic Specs (Restored) */
     font-family: "Tahoma", sans-serif;
     -webkit-font-smoothing: none;
     -moz-osx-font-smoothing: grayscale;
     font-smooth: never;
     text-rendering: pixelated;
-    overflow-x: hidden; /* Prevents stray scrollbars on the desktop */
+    
+    /* Scroll Behavior */
+    overflow-x: hidden; 
+    overflow-y: auto; /* This ensures the scrollbar is on the edge of the screen, not the table */
 }
 
 /* Welcome page */
@@ -306,12 +313,12 @@ html, body {
 /* Table page */
 
 #flightSchedule {
+    display: block;         /* Change from flex to block */
+    height: auto;           /* Let it grow */
+    min-height: 100vh;
     color: #222;
     background-color: #e0e0e0;
     border-bottom: 1px solid #0052d1;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh; /* Ensures it at least fills the screen */
 }
 
 #roster-header-container {
@@ -521,25 +528,30 @@ html, body {
 
 .table-container {
     width: 100%;
-    overflow-x: auto; 
+    overflow-x: auto;            /* Keep horizontal scroll */
+    overflow-y: visible;         /* FORCE vertical expansion */
     -webkit-overflow-scrolling: touch; 
     background-color: #fff;
     border: 1px solid #7f9db9; 
     box-sizing: border-box;
-    flex: 1;           
-    display: flex;
-    flex-direction: column;
+    flex: none;                  
+    display: block;              
 }
 
 #rosterTable {
-    flex: 1;
+    /* Layout Fixes */
     width: 100%;
     min-width: 1150px;
+    height: auto !important;
+    table-layout: auto;
+    flex: none; /* Changed from flex: 1 to prevent height clamping */
+
+    /* Your Original Aesthetic Specifications */
     border-collapse: separate; 
     border-spacing: 0; 
     margin: 0;
-    font-family: 'Tahoma', sans-serif; /* Standard Enterprise Font */
-    font-size: 11px; /* Dense corporate data size */
+    font-family: 'Tahoma', sans-serif; 
+    font-size: 11px; 
     color: #000;
     background-color: #fff;
 }
