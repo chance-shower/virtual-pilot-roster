@@ -170,13 +170,19 @@
             </div>
         </div>
     </div>
-    <div id="modalOverlay" class="modal-hidden">
-        <div id="customModal">
-            <h3 id="modalTitle"></h3>
-            <p id="modalMessage"></p>
-            <div class="modal-buttons">
-                <button id="modalConfirm">RESUME</button>
-                <button id="modalCancel">NEW TRIP</button>
+    <div id="manualEntryOverlay" class="modal-overlay modal-hidden">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <span>Import roster data</span>
+            </div>
+            <div class="modal-body" style="padding: 15px;">
+                <p style="margin-bottom: 10px;">Paste your CSV roster here:</p>
+                <textarea id="csvTextArea" spellcheck="false" 
+                        style="width: 100%; height: 120px; font-family: 'Courier New', monospace; font-size: 11px; border: 2px inset #ffffff;"></textarea>
+            </div>
+            <div class="modal-footer" style="text-align: right; padding: 10px; background: #ece9d8;">
+                <button id="manualConfirm" class="xp-button" style="width: 80px; font-weight: bold;">IMPORT</button>
+                <button id="manualCancel" class="xp-button" style="width: 80px;">CANCEL</button>
             </div>
         </div>
     </div>

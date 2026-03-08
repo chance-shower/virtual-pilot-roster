@@ -387,9 +387,34 @@ document.getElementById('rosterTable').addEventListener('input', (e) => {
 
 // Manual entry function
 
-document.getElementById('manualEntry').addEventListener('click', function() {
-    const csvInput = prompt("Paste your CSV roster here:");
-    if (!csvInput) return;
+// 1. The Open Trigger
+const handleManualEntryClick = function() {
+    const overlay = document.getElementById('manualEntryOverlay');
+    const textArea = document.getElementById('csvTextArea');
+    
+    // Clear previous input and show modal
+    textArea.value = ""; 
+    overlay.classList.remove('modal-hidden');
+};
+
+// 2. Attach to both buttons
+document.getElementById('manualEntry').addEventListener('click', handleManualEntryClick);
+document.getElementById('sidebarManualEntry').addEventListener('click', handleManualEntryClick);
+
+// 3. The Cancel Logic
+document.getElementById('manualCancel').onclick = function() {
+    document.getElementById('manualEntryOverlay').classList.add('modal-hidden');
+};
+
+// 4. The Import Logic (Your Original Code, adapted for the Modal)
+document.getElementById('manualConfirm').onclick = function() {
+    const csvInput = document.getElementById('csvTextArea').value;
+    const overlay = document.getElementById('manualEntryOverlay');
+
+    if (!csvInput) {
+        overlay.classList.add('modal-hidden');
+        return;
+    }
 
     try {
         let cleanedInput = csvInput.trim();
@@ -409,8 +434,6 @@ document.getElementById('manualEntry').addEventListener('click', function() {
         const base = (metaParts[5] || "BASE").toUpperCase();
 
         const manualLegs = [];
-
-        // Helper to ensure 0730 becomes 07:30 for calculations
         const formatTime = (t) => t.includes(':') ? t : `${t.substring(0, 2)}:${t.substring(2, 4)}`;
 
         for (let i = 2; i < lines.length; i++) {
@@ -418,35 +441,27 @@ document.getElementById('manualEntry').addEventListener('click', function() {
             if (cols.length >= 6 && cols[0].length >= 3) {
                 const depICAO = cols[0].toUpperCase();
                 const arrICAO = cols[1].toUpperCase();
-                
-                // Clean the raw UTC strings immediately
                 const depUTC = formatTime(cols[3]); 
                 const arrUTC = formatTime(cols[4]);
 
                 const getLocalTime = (icao, utcTime) => {
                     const airportEntry = flightData[icao];
                     if (!airportEntry) return utcTime; 
-
                     try {
                         const firstCarrier = Object.values(airportEntry)[0];
                         const firstType = Object.values(firstCarrier)[0];
                         const firstDest = Object.values(firstType)[0];
                         const sample = firstDest[0];
-
                         const sUTC = toMins(sample.dep_utc);
                         const sLoc = toMins(sample.dep_local);
-                        
                         let offset = sLoc - sUTC;
                         if (offset > 720) offset -= 1440;
                         if (offset < -720) offset += 1440;
-
                         let totalMins = (toMins(utcTime) + offset + 1440) % 1440;
                         const h = Math.floor(totalMins / 60);
                         const m = totalMins % 60;
                         return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
-                    } catch (e) {
-                        return utcTime; 
-                    }
+                    } catch (e) { return utcTime; }
                 };
 
                 manualLegs.push({
@@ -466,6 +481,7 @@ document.getElementById('manualEntry').addEventListener('click', function() {
 
         if (manualLegs.length === 0) throw new Error("Could not find flight data rows.");
 
+        // UI Updates
         document.getElementById('airlineCode').value = airline;
         document.getElementById('homeBase').value = base;
         document.getElementById('equipmentCode').value = equip;
@@ -477,36 +493,35 @@ document.getElementById('manualEntry').addEventListener('click', function() {
         localStorage.setItem('savedDutyLength', manualLegs[manualLegs.length - 1].day);
 
         renderTable(manualLegs);
-        document.getElementById('startPage').style.display = 'none';
+
+        // --- THE FIX STARTS HERE ---
+        // 1. Hide the Start Page by adding the utility class (preserves CSS logic)
+        document.getElementById('startPage').classList.add('modal-hidden');
+        
+        // 2. Show the Flight Schedule
         document.getElementById('flightSchedule').style.display = 'block';
+
+        // 3. Hide the Manual Entry Overlay using the utility class
+        overlay.classList.add('modal-hidden');
+        // --- THE FIX ENDS HERE ---
 
         alert(`Imported ${manualLegs.length} legs!`);
 
     } catch (err) {
         alert("Parsing Error: " + err.message);
     }
-});
+};
 
 // end of manual entry
 
 
 document.getElementById('closethisflighttrip').addEventListener('click', function() {
-    showModal(
-        "Exit to menu?", 
-        "Return to the start page? (Your roster is safe!)", 
-        "Exit", 
-        "Cancel", 
-        function() {
-            // Only hide/show, don't clear storage!
-            document.getElementById('flightSchedule').style.display = 'none';
-            
-            // FIX: Set to 'flex' to maintain the centering defined in your CSS
-            document.getElementById('startPage').style.display = 'flex';
-            
-            // Ensure we're at the top of the page for the welcome screen
-            window.scrollTo(0, 0);
-        }
-    );
+    showModal("Exit to menu?", "Return to the start page?", "Exit", "Cancel", function() {
+        document.getElementById('flightSchedule').style.display = 'none';
+        // Remove the hidden class to show the start page again
+        document.getElementById('startPage').classList.remove('modal-hidden');
+        window.scrollTo(0, 0);
+    });
 });
 
 document.addEventListener('focusin', (e) => {
