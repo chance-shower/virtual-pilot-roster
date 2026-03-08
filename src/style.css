@@ -53,7 +53,7 @@ html, body {
     justify-content: center; /* Horizontal centering */
     align-items: center;     /* Vertical centering */
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
 }
 
 #welcom-screen-container {
@@ -313,9 +313,11 @@ html, body {
 /* Table page */
 
 #flightSchedule {
-    display: block;         /* Change from flex to block */
-    height: auto;           /* Let it grow */
+    display: block;
+    width: 100%;
+    height: auto !important; /* Force override any JS-injected heights */
     min-height: 100vh;
+    overflow: visible;       /* Ensure it doesn't try to scroll internally */
     color: #222;
     background-color: #e0e0e0;
     border-bottom: 1px solid #0052d1;
