@@ -574,47 +574,16 @@ function showModal(title, message, confirmText, cancelText, onConfirm, onCancel)
 }
 
 window.onload = function() {
+    // 1. Always keep the briefcase dropdown up to date
     updateBriefcaseDropdown(); 
+    
+    // 2. Silently check for a "Draft" (active session) 
+    // We don't show a modal, but we'll keep the data in storage 
+    // until the user either hits 'Generate' or 'Open'.
     const savedData = localStorage.getItem('savedRoster');
     
     if (savedData) {
-        showModal(
-            "PREVIOUS TRIP", 
-            "A previous flight trip was found. Do you want to continue?",
-            "RESUME", 
-            "NEW TRIP",
-            function() {
-                // 1. Get saved values
-                const savedAirline = localStorage.getItem('savedAirline') || "";
-                const savedBase = localStorage.getItem('savedHomeBase') || "";
-                const savedLen = localStorage.getItem('savedDutyLength') || "";
-                const savedEquip = localStorage.getItem('savedEquipment') || "";
-
-                // 2. Restore inputs on start page (hidden)
-                document.getElementById('airlineCode').value = savedAirline;
-                document.getElementById('homeBase').value = savedBase;
-                document.getElementById('dutyLength').value = savedLen;
-                document.getElementById('equipmentCode').value = savedEquip;
-
-                // 3. Fill the "Preamble" boxes in the schedule view
-                document.getElementById('display-equipment').innerText = savedEquip;
-                document.getElementById('display-base').innerText = savedBase;
-                document.getElementById('display-length').innerText = savedLen;
-
-                // 4. Switch Views
-                document.getElementById('startPage').style.display = 'none';
-                document.getElementById('flightSchedule').style.display = 'block';
-
-                // 5. Render Table and Logo
-                const legs = JSON.parse(savedData);
-                renderTable(legs);
-                updateAirlineLogo(savedAirline);
-            },
-            function() {
-                const sessionKeys = ['savedRoster', 'savedAirline', 'savedHomeBase', 'savedDutyLength', 'savedEquipment'];
-                sessionKeys.forEach(key => localStorage.removeItem(key));
-            }
-        );
+        console.log("Active session data is sitting in standby.");
     }
 };
 
