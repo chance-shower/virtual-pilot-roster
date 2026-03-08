@@ -505,12 +505,32 @@ document.getElementById('manualConfirm').onclick = function() {
         overlay.classList.add('modal-hidden');
         // --- THE FIX ENDS HERE ---
 
-        alert(`Imported ${manualLegs.length} legs!`);
+        showNotification(`Imported ${manualLegs.length} legs!`);
 
     } catch (err) {
         alert("Parsing Error: " + err.message);
     }
 };
+
+function showNotification(message) {
+    const overlay = document.getElementById('notificationOverlay');
+    const msgLabel = document.getElementById('notificationMessage');
+    
+    msgLabel.textContent = message;
+    overlay.classList.remove('modal-hidden');
+
+    // Handle clicking OK
+    document.getElementById('notificationClose').onclick = () => {
+        overlay.classList.add('modal-hidden');
+        
+        // Now that they've seen the success message, 
+        // we hide the manual entry box underneath it.
+        document.getElementById('manualEntryOverlay').classList.add('modal-hidden');
+        
+        // Clear the textarea for next time
+        document.getElementById('csvTextArea').value = '';
+    };
+}
 
 // end of manual entry
 
