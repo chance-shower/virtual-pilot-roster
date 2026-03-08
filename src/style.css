@@ -159,6 +159,8 @@ html, body {
     flex-direction: column;
     align-items: center;
     padding-bottom: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
     font-size: 12px;
 
     /* The container provides the side and bottom blue borders */
@@ -211,8 +213,7 @@ html, body {
     justify-content: flex-start;
     gap: 8px;
     padding: 6px 8px;
-    width: fit-content; /* Only as wide as the content */
-    min-width: 120px;    /* Ensures a consistent look */
+    width: 100px; /* Only as wide as the content */
     cursor: pointer;
     text-align: left;
     white-space: nowrap; /* Prevents text wrapping */
@@ -247,7 +248,7 @@ html, body {
 
     .sidebar-btn {
         /* Prevent the buttons from being massive */
-        width: auto; 
+        width: 100px; 
         padding: 4px 6px;
         font-size: 11px; /* Slightly smaller text for mobile */
     }
