@@ -535,23 +535,36 @@ function showNotification(message) {
 // end of manual entry
 
 
-document.getElementById('closethisflighttrip').addEventListener('click', function() {
-    showModal(
-        "Exit to menu?", 
-        "Return to the start page? (Your roster is safe!)", 
-        "Exit", 
-        "Cancel", 
-        function() {
-            // Only hide/show, don't clear storage!
-            document.getElementById('flightSchedule').style.display = 'none';
-            
-            // FIX: Set to 'flex' to maintain the centering defined in your CSS
-            document.getElementById('startPage').style.display = 'flex';
-            
-            // Ensure we're at the top of the page for the welcome screen
-            window.scrollTo(0, 0);
-        }
-    );
+document.getElementById('closethisflighttrip').addEventListener('click', () => {
+    // 1. Show the Exit Confirmation Modal
+    const modal = document.getElementById('modalOverlay');
+    const confirmBtn = document.getElementById('modalConfirm');
+    const cancelBtn = document.getElementById('modalCancel');
+
+    modal.classList.remove('modal-hidden');
+
+    // 2. If they click OK
+    confirmBtn.onclick = () => {
+        // Hide the table page
+        document.getElementById('flightSchedule').style.display = 'none';
+        
+        // Show the welcome/start page
+        document.getElementById('startPage').style.display = 'flex';
+        
+        // Reset scroll to top for the next trip
+        window.scrollTo(0, 0);
+        
+        // Hide the modal
+        modal.classList.add('modal-hidden');
+        
+        // Optional: Clear the table data so it's fresh for next time
+        document.getElementById('rosterTableBody').innerHTML = '';
+    };
+
+    // 3. If they click Cancel
+    cancelBtn.onclick = () => {
+        modal.classList.add('modal-hidden');
+    };
 });
 
 document.addEventListener('focusin', (e) => {
