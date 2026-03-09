@@ -608,7 +608,7 @@ html, body {
 .table-container {
     width: 100%;
     overflow-x: auto; 
-    overflow-y: visible; /* Confirms we only want horizontal scrolling here */
+    overflow-y: hidden; /* Confirms we only want horizontal scrolling here */
     display: block;
     height: auto !important;
     flex: none;
@@ -616,6 +616,7 @@ html, body {
     background-color: #fff;
     border: 1px solid #7f9db9; 
     box-sizing: border-box;
+    max-height: none !important;
 }
 
 #rosterTable {
@@ -631,7 +632,7 @@ html, body {
     border-spacing: 0; 
     margin: 0;
     font-family: 'Tahoma', sans-serif; 
-    font-size: 11px; 
+    font-size: 11px;
     color: #000;
     background-color: #fff;
 }
