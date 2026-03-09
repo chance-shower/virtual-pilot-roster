@@ -183,6 +183,7 @@ html, body {
     display: flex;
     flex-direction: column;
     border-right: 1px solid #aca899;
+    padding-right: 15px;
 }
 
 /* Sidebar for Open and Manual buttons */
@@ -225,6 +226,11 @@ html, body {
     flex-shrink: 0;
 }
 
+#databaseSelector {
+    border-top: 1px solid #aca899;
+    padding-top: 10px;
+}
+
 @media (max-width: 480px) {
     #inputdata {
         /* Keep them side-by-side but tighten the left column */
@@ -235,8 +241,9 @@ html, body {
     }
 
     .input-sidebar {
-        padding-left: 10px;
         margin-top: 5px;
+        margin-left: -10px;
+        max-width: 140px;
     }
 
     .sidebar-section {
@@ -272,7 +279,7 @@ html, body {
 /* Input text fields */
 
 #inputdata input[type="text"] {
-    width: 175px;
+    width: 165px;
     height: 23px;
     padding: 3px 4px;
     border: 1px solid #7f9db9;
