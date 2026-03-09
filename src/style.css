@@ -233,7 +233,6 @@ html, body {
 
 @media (max-width: 480px) {
     #inputdata {
-        /* Keep them side-by-side but tighten the left column */
         grid-template-columns: 1.2fr 1fr; 
         gap: 10px;
         width: 100%;
