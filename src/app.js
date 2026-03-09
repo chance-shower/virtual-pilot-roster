@@ -332,6 +332,40 @@ function renderTable(legs) {
 /* Event listeners */ 
 document.getElementById('generateFlightRoster').addEventListener('click', createTrip);
 
+document.addEventListener('DOMContentLoaded', () => {
+    const dbSelect = document.getElementById('dbSelect');
+
+    dbSelect.addEventListener('change', async (e) => {
+        const selectedFile = e.target.value;
+        
+        // Use your existing loader overlay
+        if (typeof showLoader === "function") showLoader();
+
+        try {
+            // Fetch the new data source
+            const response = await fetch(`./data/${selectedFile}.json`);
+            if (!response.ok) throw new Error(`Could not load ${selectedFile}`);
+            
+            // Overwrite the global flightData object
+            // This ensures generateRoster() uses the new data immediately
+            flightData = await response.json();
+
+            // Re-run the function that populates your 'Airline' dropdown
+            // This is necessary because Europe has different operators than NZ
+            if (typeof populateAirlines === "function") {
+                populateAirlines();
+            }
+
+            console.log(`Database switched to: ${selectedFile}`);
+        } catch (error) {
+            console.error("Data load error:", error);
+            alert("Failed to switch database. Using previous data.");
+        } finally {
+            if (typeof hideLoader === "function") hideLoader();
+        }
+    });
+});
+
 document.getElementById('openBriefcaseBtn').addEventListener('click', () => {
     const briefcase = JSON.parse(localStorage.getItem('tripBriefcase') || "[]");
     
